@@ -22,7 +22,7 @@ export const config = {
     size: "size",
   },
   db: {
-    connectionString: "postgres://postgres:abcd1234@localhost/masterdata",
+    connectionString: "postgres://postgres:abcd1234@localhost/cms5",
   },
 }
 
