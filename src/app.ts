@@ -6,6 +6,7 @@ import http from "http"
 import { createLogger } from "logger-core"
 import { Pool } from "pg"
 import { PoolManager } from "pg-extension"
+import { log } from "query-core"
 import { config, env } from "./config"
 import { useContext } from "./context"
 import { route } from "./route"
@@ -19,7 +20,7 @@ const middleware = new MiddlewareLogger(logger.info, conf.middleware)
 app.use(allow(conf.allow), json(), middleware.log)
 
 const pool = new Pool(conf.db)
-const db = new PoolManager(pool)
+const db = log(new PoolManager(pool), conf.log.db, logger, "sql")
 const ctx = useContext(db, logger, middleware)
 route(app, ctx)
 http.createServer(app).listen(conf.port, () => {

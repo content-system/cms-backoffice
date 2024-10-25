@@ -1,29 +1,26 @@
 import { Attributes, Filter, Repository, Service, TimeRange } from "onecore"
 
-export interface Article {
+export interface Company {
   id: string
-  title: string
+  name: string
+  slogan?: string
   description?: string
   thumbnail?: string
-  publishedAt: Date
-  tags?: string[]
-  type?: string
-  content: string
-  author?: string
+  coverURL?: string
   status?: string
 }
 
-export interface ArticleFilter extends Filter {
+export interface CompanyFilter extends Filter {
   id?: string
   title?: string
   description?: string
   publishedAt?: TimeRange
 }
 
-export interface ArticleRepository extends Repository<Article, string> {}
-export interface ArticleService extends Service<Article, string, ArticleFilter> {}
+export interface CompanyRepository extends Repository<Company, string> {}
+export interface CompanyService extends Service<Company, string, CompanyFilter> {}
 
-export const articleModel: Attributes = {
+export const companyModel: Attributes = {
   id: {
     key: true,
     length: 40,
@@ -34,12 +31,12 @@ export const articleModel: Attributes = {
     required: true,
   },
   title: {
-    length: 255,
+    length: 100,
     required: true,
     q: true,
   },
   description: {
-    length: 1000,
+    length: 100,
     required: true,
     q: true,
   },
@@ -47,12 +44,18 @@ export const articleModel: Attributes = {
     column: "published_at",
     type: "datetime",
   },
-  content: {
-    length: 5000,
+  coverURL: {
+    column: "cover_url",
+  },
+  name: {
     required: true,
+    q: true,
+    length: 100,
   },
-  tags: {
-    type: "primitives",
+  content: {
+    required: true,
+    q: true,
   },
+  tags: {},
   type: {},
 }
