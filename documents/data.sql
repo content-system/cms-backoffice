@@ -1,3 +1,19 @@
+create table companies (
+	id varchar(40) primary key,
+	name varchar(300),
+	description varchar(2000),
+	slogan varchar(300),
+	image_url varchar(500),
+	cover_url varchar(500),
+	sequence integer
+);
+
+insert into companies (id,name,description,slogan,image_url,cover_url,sequence) values
+	 ('fpt-automotive','FPT Automotive','With two decades of experience in the Automotive industry, FPT Software''s automotive technology subsidiary, FPT Automotive was launched in 2023 with a mission to drive the advancement of software-defined vehicles and shape the new mobility era.
+
+Our team of automotive experts is equipped and experienced to accompany car manufacturers and suppliers in advancing the mobility ecosystem, having enabled the world''s leading automakers, OEMs, Tier-1 suppliers, and semiconductor companies to innovate, optimize and maintain a competitive edge in the automotive industry. This support is crucial for navigating challenges such as industry volatility, disrupted supply chains, and rapidly evolving market demands.','Moving into the fast lane of smart, software-defined mobility.','https://fptsoftware.com/-/media/project/fpt-software/fso/industries/automotive/automotive-lp_banner-3_mobile.png','https://fptsoftware.com/-/media/project/fpt-software/fso/industries/automotive/automotive-lp_banner-3.png',1);
+
+
 create table if not exists users (
   id varchar(40) not null,
   username varchar(120),
