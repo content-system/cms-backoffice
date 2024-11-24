@@ -62,7 +62,7 @@ export const jobModel: Attributes = {
     type: "datetime",
   },
   skills: {
-    type: "primitives",
+    type: "strings",
   },
   location: {
     length: 120,
@@ -73,5 +73,8 @@ export const jobModel: Attributes = {
   applicantCount: {
     column: "applicant_count",
     type: "integer",
+  },
+  companyId: {
+    column: "company_id",
   },
 }

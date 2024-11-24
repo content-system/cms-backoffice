@@ -4,11 +4,11 @@ export interface Article {
   id: string
   title: string
   description?: string
+  content: string
   thumbnail?: string
   publishedAt: Date
   tags?: string[]
   type?: string
-  content: string
   author?: string
   status?: string
 }
@@ -52,7 +52,7 @@ export const articleModel: Attributes = {
     required: true,
   },
   tags: {
-    type: "primitives",
+    type: "strings",
   },
   type: {},
 }
