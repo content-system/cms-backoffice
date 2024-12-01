@@ -9,7 +9,7 @@ export interface Article {
   publishedAt: Date
   tags?: string[]
   type?: string
-  author?: string
+  authorId?: string
   status?: string
 }
 
@@ -18,6 +18,7 @@ export interface ArticleFilter extends Filter {
   title?: string
   description?: string
   publishedAt?: TimeRange
+  tags?: string[]
 }
 
 export interface ArticleRepository extends Repository<Article, string> {}
@@ -26,10 +27,6 @@ export interface ArticleService extends Service<Article, string, ArticleFilter> 
 export const articleModel: Attributes = {
   id: {
     key: true,
-    length: 40,
-    required: true,
-  },
-  author: {
     length: 40,
     required: true,
   },
@@ -51,8 +48,18 @@ export const articleModel: Attributes = {
     length: 5000,
     required: true,
   },
+  thumbnail: {},
+  highThumbnail: {
+    column: "high_thumbnail",
+  },
   tags: {
     type: "strings",
   },
+  /*
+  author: {
+    length: 40,
+  },
+  */
   type: {},
+  status: {},
 }
