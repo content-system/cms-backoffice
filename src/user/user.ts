@@ -1,43 +1,100 @@
-import { Attributes, DateRange, Filter, Repository, Service } from "onecore"
+import { Attributes, Filter, SearchResult } from "onecore"
 
 export interface UserFilter extends Filter {
-  id: string
-  username: string
+  id?: string
+  username?: string
   email?: string
   phone?: string
-  dateOfBirth?: Date | DateRange
+  status?: string
+  gender?: string
+  title?: string
+  position?: string
 }
 export interface User {
-  id: string
+  userId: string
   username: string
   email?: string
   phone?: string
   dateOfBirth?: Date
+  roles?: string[]
 }
-export interface UserRepository extends Repository<User, string> {}
-export interface UserService extends Service<User, string, UserFilter> {}
+export interface UserRepository {
+  all(): Promise<User[]>
+  load(id: string): Promise<User | null>
+  create(user: User): Promise<number>
+  update(user: User): Promise<number>
+  patch(user: Partial<User>): Promise<number>
+  delete(id: string): Promise<number>
+  search(filter: UserFilter, limit?: number, offset?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
+  getUsersOfRole(roleId: string): Promise<User[]>
+}
+export interface UserService {
+  all(): Promise<User[]>
+  load(id: string): Promise<User | null>
+  create(user: User): Promise<number>
+  update(user: User): Promise<number>
+  patch(user: Partial<User>): Promise<number>
+  delete(id: string): Promise<number>
+  search(filter: UserFilter, limit?: number, offset?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
+  getUsersOfRole(roleId: string): Promise<User[]>
+}
 
 export const userModel: Attributes = {
-  id: {
+  userId: {
     key: true,
+    match: "equal",
     length: 40,
   },
   username: {
     required: true,
     length: 255,
+    q: true,
+    match: "prefix",
   },
   email: {
     format: "email",
     required: true,
     length: 120,
+    q: true,
+  },
+  displayName: {
+    length: 120,
+    q: true,
+  },
+  status: {
+    match: "equal",
+    length: 1,
+  },
+  gender: {
+    length: 1,
   },
   phone: {
     format: "phone",
     required: true,
     length: 14,
   },
-  dateOfBirth: {
-    column: "date_of_birth",
+  title: {
+    length: 10,
+  },
+  position: {
+    length: 10,
+  },
+  imageURL: {
+    length: 255,
+  },
+  createdBy: {},
+  createdAt: {
     type: "datetime",
+  },
+  updatedBy: {},
+  updatedAt: {
+    type: "datetime",
+  },
+  lastLogin: {
+    type: "datetime",
+  },
+  roles: {
+    type: "strings",
+    ignored: true,
   },
 }
