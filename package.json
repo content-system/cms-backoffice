@@ -14,7 +14,10 @@
   "dependencies": {
     "authen-express": "^0.0.4",
     "authen-service": "^0.1.1",
+    "bcrypt": "^5.1.1",
+    "bcrypt-plus": "^0.0.1",
     "config-plus": "^0.0.4",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-ext": "^0.3.3",
@@ -29,11 +32,16 @@
     "query-mappers": "^0.0.3",
     "security-express": "^0.1.4",
     "types-validation": "^0.0.2",
+    "xmldom": "^0.6.0",
     "xvalidators": "^0.3.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.6",
     "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
     "@types/pg": "^8.11.10",
+    "@types/xmldom": "^0.1.34",
     "nodemon": "^3.1.7",
     "ts-loader": "^9.5.1",
     "ts-node-dev": "^2.0.0",
