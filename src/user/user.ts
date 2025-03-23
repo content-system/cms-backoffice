@@ -18,6 +18,7 @@ export interface User {
   dateOfBirth?: Date
   roles?: string[]
 }
+
 export interface UserRepository {
   all(): Promise<User[]>
   load(id: string): Promise<User | null>
@@ -41,6 +42,7 @@ export interface UserService {
 
 export const userModel: Attributes = {
   userId: {
+    column: "user_id",
     key: true,
     match: "equal",
     length: 40,
@@ -58,6 +60,7 @@ export const userModel: Attributes = {
     q: true,
   },
   displayName: {
+    column: "display_name",
     length: 120,
     q: true,
   },
@@ -80,17 +83,21 @@ export const userModel: Attributes = {
     length: 10,
   },
   imageURL: {
+    column: "image_url",
     length: 255,
   },
-  createdBy: {},
+  createdBy: {
+    column: "created_by",
+  },
   createdAt: {
+    column: "created_at",
     type: "datetime",
   },
-  updatedBy: {},
+  updatedBy: {
+    column: "updated_by",
+  },
   updatedAt: {
-    type: "datetime",
-  },
-  lastLogin: {
+    column: "updated_at",
     type: "datetime",
   },
   roles: {

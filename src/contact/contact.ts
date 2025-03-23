@@ -1,4 +1,4 @@
-import { Attributes, Filter, Repository, Service } from "onecore"
+import { Attributes, Filter, Result, Service } from "onecore"
 
 export interface Contact {
   id: string
@@ -23,8 +23,21 @@ export interface ContactFilter extends Filter {
   phone: string
 }
 
-export interface ContactRepository extends Repository<Contact, string> {}
-export interface ContactService extends Service<Contact, string, ContactFilter> {}
+export interface ContactRepository {
+  load(id: string): Promise<Contact | null>
+  create(contact: Contact): Promise<number>
+  update(contact: Contact): Promise<number>
+  patch(contact: Partial<Contact>): Promise<number>
+  delete(id: string): Promise<number>
+}
+export interface ContactService extends Service<Contact, string, ContactFilter> {
+  // search(filter: ContactFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Contact>>
+  load(id: string): Promise<Contact | null>
+  create(contact: Contact): Promise<Result<Contact>>
+  update(contact: Contact): Promise<Result<Contact>>
+  patch(contact: Partial<Contact>): Promise<Result<Contact>>
+  delete(id: string): Promise<number>
+}
 
 export const contactModel: Attributes = {
   id: {
