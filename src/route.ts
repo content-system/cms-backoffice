@@ -1,5 +1,6 @@
 import { Application } from "express"
 import { check } from "express-ext"
+import multer from "multer"
 import { articleModel } from "./article"
 import { contactModel } from "./contact"
 import { ApplicationContext } from "./context"
@@ -7,9 +8,11 @@ import { jobModel } from "./job"
 import { userModel } from "./user"
 
 export function route(app: Application, ctx: ApplicationContext): void {
+  const parser = multer()
   app.get("/health", ctx.health.check)
   app.patch("/log", ctx.log.config)
   app.patch("/middleware", ctx.middleware.config)
+  app.post("/authenticate", parser.none(), ctx.authentication.authenticate)
 
   const checkUser = check(userModel)
   app.post("/users/search", ctx.user.search)

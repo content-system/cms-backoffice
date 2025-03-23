@@ -1,5 +1,13 @@
 import { Attributes, Filter, SearchResult } from "onecore"
 
+export interface User {
+  userId: string
+  username: string
+  email?: string
+  phone?: string
+  dateOfBirth?: Date
+  roles?: string[]
+}
 export interface UserFilter extends Filter {
   id?: string
   username?: string
@@ -9,14 +17,6 @@ export interface UserFilter extends Filter {
   gender?: string
   title?: string
   position?: string
-}
-export interface User {
-  userId: string
-  username: string
-  email?: string
-  phone?: string
-  dateOfBirth?: Date
-  roles?: string[]
 }
 
 export interface UserRepository {
