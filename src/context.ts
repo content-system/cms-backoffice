@@ -3,6 +3,7 @@ import { Authenticator, initializeStatus, PrivilegeRepository, PrivilegesReader,
 import { compare } from "bcrypt"
 import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources, Search, useSearchController } from "express-ext"
 import { buildJwtError, generateToken, Payload, verify } from "jsonwebtoken-plus"
+import { StringMap } from "onecore"
 import { createChecker, DB, SearchBuilder, useGet } from "query-core"
 import { TemplateMap } from "query-mappers"
 import { Authorize, Authorizer, PrivilegeLoader, useToken } from "security-express"
@@ -21,6 +22,7 @@ resources.check = check
 export interface Config {
   cookie?: boolean
   auth: SqlAuthConfig
+  map: StringMap
   sql: {
     allPrivileges: string
     privileges: string
@@ -55,7 +57,7 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
 
   const status = initializeStatus(auth.status)
   const privilegeRepository = new PrivilegeRepository(db.query, conf.sql.privileges)
-  const userRepository = useUserRepository<string, SqlAuthConfig>(db, auth)
+  const userRepository = useUserRepository<string, SqlAuthConfig>(db, auth, conf.map)
   const authenticator = new Authenticator(
     status,
     compare,
@@ -75,8 +77,8 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const role = useRoleController(logger.error, db, mapper)
   const user = useUserController(logger.error, db, mapper)
 
-  const builder = new SearchBuilder<AuditLog, AuditLogFilter>(db.query, "auditlog", auditLogModel, db.driver)
-  const getAuditLog = useGet<AuditLog, string>(db.query, "auditlog", auditLogModel, db.param)
+  const builder = new SearchBuilder<AuditLog, AuditLogFilter>(db.query, "audit_logs", auditLogModel, db.driver)
+  const getAuditLog = useGet<AuditLog, string>(db.query, "audit_logs", auditLogModel, db.param)
   const auditLog = useSearchController(logger.error, builder.search, getAuditLog, ["status"], ["timestamp"])
 
   const article = useArticleController(logger.error, db)

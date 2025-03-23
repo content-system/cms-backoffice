@@ -1,4 +1,4 @@
-import { Attributes, Filter, ViewSearchService } from "onecore"
+import { Attributes, Filter, SearchResult, TimeRange } from "onecore"
 
 export interface AuditLog {
   id: string
@@ -6,7 +6,8 @@ export interface AuditLog {
   userId: string
   ip: string
   action: string
-  timestamp: string
+  time: Date
+  email: string
   status: string
   remark?: string
 }
@@ -16,20 +17,25 @@ export interface AuditLogFilter extends Filter {
   userId?: string
   ip?: string
   action?: string
-  timestamp?: string
+  time?: TimeRange
   status?: string
 }
-export interface AuditLogService extends ViewSearchService<AuditLog, string, AuditLogFilter> {}
+
+export interface AuditLogService {
+  search(filter: AuditLogFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<AuditLog>>
+  load(id: string): Promise<AuditLog | null>
+}
+
 export const auditLogModel: Attributes = {
   id: {
     key: true,
     length: 40,
   },
   resource: {
-    column: "resourceType",
     match: "equal",
   },
   userId: {
+    column: "user_id",
     required: true,
     length: 40,
     match: "equal",
@@ -38,7 +44,7 @@ export const auditLogModel: Attributes = {
   action: {
     match: "equal",
   },
-  timestamp: {
+  time: {
     type: "datetime",
   },
   status: {

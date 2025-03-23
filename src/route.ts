@@ -1,27 +1,48 @@
 import { Application } from "express"
 import { check } from "express-ext"
 import multer from "multer"
+import { del, get, patch, post, put, read, write } from "security-express"
 import { articleModel } from "./article"
 import { contactModel } from "./contact"
 import { ApplicationContext } from "./context"
 import { jobModel } from "./job"
-import { userModel } from "./user"
 
-export function route(app: Application, ctx: ApplicationContext): void {
+export function route(app: Application, ctx: ApplicationContext, secure?: boolean): void {
   const parser = multer()
   app.get("/health", ctx.health.check)
   app.patch("/log", ctx.log.config)
   app.patch("/middleware", ctx.middleware.config)
   app.post("/authenticate", parser.none(), ctx.authentication.authenticate)
 
-  const checkUser = check(userModel)
-  app.post("/users/search", ctx.user.search)
-  app.get("/users/search", ctx.user.search)
-  app.get("/users/:id", ctx.user.load)
-  app.post("/users", checkUser, ctx.user.create)
-  app.put("/users/:id", checkUser, ctx.user.update)
-  app.patch("/users/:id", checkUser, ctx.user.patch)
-  app.delete("/users/:id", ctx.user.delete)
+  const readRole = ctx.authorize("role", read)
+  const writeRole = ctx.authorize("role", write)
+  get(app, "/privileges", readRole, ctx.privilege.all, secure)
+  put(app, "/roles/:id/assign", writeRole, ctx.role.assign, secure)
+  get(app, "/roles", readRole, ctx.role.search, secure)
+  post(app, "/roles/search", readRole, ctx.role.search, secure)
+  get(app, "/roles/search", readRole, ctx.role.search, secure)
+  get(app, "/roles/:id", readRole, ctx.role.load, secure)
+  post(app, "/roles", writeRole, ctx.role.create, secure)
+  put(app, "/roles/:id", writeRole, ctx.role.update, secure)
+  patch(app, "/roles/:id", writeRole, ctx.role.patch, secure)
+  del(app, "/roles/:id", writeRole, ctx.role.delete, secure)
+
+  const readUser = ctx.authorize("user", read)
+  const writeUser = ctx.authorize("user", write)
+  get(app, "/users", readUser, ctx.user.all, secure)
+  post(app, "/users/search", readUser, ctx.user.search, secure)
+  get(app, "/users/search", readUser, ctx.user.search, secure)
+  get(app, "/users/:id", readUser, ctx.user.load, secure)
+  post(app, "/users", writeUser, ctx.user.create, secure)
+  put(app, "/users/:id", writeUser, ctx.user.update, secure)
+  patch(app, "/users/:id", writeUser, ctx.user.patch, secure)
+  del(app, "/users/:id", writeUser, ctx.user.delete, secure)
+
+  const readAuditLog = ctx.authorize("audit_log", read)
+  get(app, "/audit-logs", readAuditLog, ctx.auditLog.search, secure)
+  get(app, "/audit-logs/search", readAuditLog, ctx.auditLog.search, secure)
+  post(app, "/audit-logs/search", readAuditLog, ctx.auditLog.search, secure)
+  get(app, "/audit-logs/:id", readAuditLog, ctx.auditLog.load, secure)
 
   const checkArticle = check(articleModel)
   app.post("/articles/search", ctx.article.search)

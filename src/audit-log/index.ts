@@ -6,8 +6,8 @@ import { AuditLog, AuditLogFilter, auditLogModel } from "./audit-log"
 export * from "./audit-log"
 
 export function useAuditLogController(log: Log, db: DB): SearchManager {
-  const builder = new SearchBuilder<AuditLog, AuditLogFilter>(db.query, "auditlog", auditLogModel, db.driver)
-  const getAuditLog = useGet<AuditLog, string>(db.query, "auditlog", auditLogModel, db.param)
+  const builder = new SearchBuilder<AuditLog, AuditLogFilter>(db.query, "audit_logs", auditLogModel, db.driver)
+  const getAuditLog = useGet<AuditLog, string>(db.query, "audit_logs", auditLogModel, db.param)
   return useSearchController(log, builder.search, getAuditLog, ["status"], ["timestamp"])
   // return new AuditLogController(log, builder.search);
 }
