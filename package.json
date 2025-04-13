@@ -28,9 +28,9 @@
     "onecore": "^0.1.5",
     "pg": "^8.14.1",
     "pg-extension": "^0.2.3",
-    "query-core": "^0.2.0",
+    "query-core": "^0.2.1",
     "query-mappers": "^0.0.3",
-    "security-express": "^0.1.4",
+    "security-express": "^0.2.0",
     "types-validation": "^0.0.2",
     "xmldom": "^0.6.0",
     "xvalidators": "^0.3.2"
