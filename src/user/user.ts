@@ -20,24 +20,24 @@ export interface UserFilter extends Filter {
 }
 
 export interface UserRepository {
+  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<User>>
+  getUsersOfRole(roleId: string): Promise<User[]>
   all(): Promise<User[]>
   load(id: string): Promise<User | null>
   create(user: User): Promise<number>
   update(user: User): Promise<number>
   patch(user: Partial<User>): Promise<number>
   delete(id: string): Promise<number>
-  search(filter: UserFilter, limit?: number, offset?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
-  getUsersOfRole(roleId: string): Promise<User[]>
 }
 export interface UserService {
+  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<User>>
+  getUsersOfRole(roleId: string): Promise<User[]>
   all(): Promise<User[]>
   load(id: string): Promise<User | null>
   create(user: User): Promise<number>
   update(user: User): Promise<number>
   patch(user: Partial<User>): Promise<number>
   delete(id: string): Promise<number>
-  search(filter: UserFilter, limit?: number, offset?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
-  getUsersOfRole(roleId: string): Promise<User[]>
 }
 
 export const userModel: Attributes = {
