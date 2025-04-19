@@ -1,5 +1,5 @@
 import { Controller } from "express-ext"
-import { Log, Manager, Search } from "onecore"
+import { Log, Search, UseCase } from "onecore"
 import { DB, Repository, SearchBuilder } from "query-core"
 import { Article, ArticleFilter, articleModel, ArticleRepository, ArticleService } from "./article"
 export * from "./article"
@@ -9,7 +9,7 @@ export class SqlArticleRepository extends Repository<Article, string> implements
     super(db, "articles", articleModel)
   }
 }
-export class ArticleManager extends Manager<Article, string, ArticleFilter> implements ArticleService {
+export class ArticleUseCase extends UseCase<Article, string, ArticleFilter> implements ArticleService {
   constructor(search: Search<Article, ArticleFilter>, repository: ArticleRepository) {
     super(search, repository)
   }
@@ -23,6 +23,6 @@ export class ArticleController extends Controller<Article, string, ArticleFilter
 export function useArticleController(log: Log, db: DB): ArticleController {
   const builder = new SearchBuilder<Article, ArticleFilter>(db.query, "articles", articleModel, db.driver)
   const repository = new SqlArticleRepository(db)
-  const service = new ArticleManager(builder.search, repository)
+  const service = new ArticleUseCase(builder.search, repository)
   return new ArticleController(log, service)
 }

@@ -106,7 +106,7 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
   metadata(): Attributes {
     return roleModel
   }
-  search(filter: RoleFilter, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<Role>> {
+  search(filter: RoleFilter, limit: number, offset?: number | string, fields?: string[]): Promise<SearchResult<Role>> {
     return this.find(filter, limit, offset, fields)
   }
   all(): Promise<Role[]> {
