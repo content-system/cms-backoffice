@@ -17,7 +17,7 @@ export const config = {
   },
   middleware: {
     log: true,
-    skips: "health,log,middleware",
+    skips: "health,authenticate,middleware,log",
     request: "request",
     response: "response",
     status: "status",

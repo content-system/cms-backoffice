@@ -19,13 +19,11 @@ import { User, UserFilter, userModel, UserRepository, UserService } from "./user
 
 export * from "./user"
 
-export function useUserService(db: DB, mapper?: TemplateMap): UserService {
+export function useUserController(log: Log, db: DB, mapper?: TemplateMap): UserController {
   const query = useQuery("user", mapper, userModel, true)
   const builder = new SearchBuilder<User, UserFilter>(db.query, "users", userModel, db.driver, query)
-  return new SqlUserRepository(builder.search, db)
-}
-export function useUserController(log: Log, db: DB, mapper?: TemplateMap): UserController {
-  return new UserController(log, useUserService(db, mapper))
+  const service = new SqlUserRepository(builder.search, db)
+  return new UserController(log, service)
 }
 
 export class UserController extends Controller<User, string, UserFilter> {
@@ -66,9 +64,11 @@ export class UserController extends Controller<User, string, UserFilter> {
 
 const userRoleModel: Attributes = {
   userId: {
+    column: "user_id",
     key: true,
   },
   roleId: {
+    column: "role_id",
     key: true,
   },
 }
@@ -81,8 +81,10 @@ export class SqlUserRepository implements UserRepository {
     this.attributes = userModel
     const meta = metadata(userModel)
     this.primaryKeys = meta.keys
+    this.getUsersOfRole = this.getUsersOfRole.bind(this)
     this.search = this.search.bind(this)
     this.all = this.all.bind(this)
+    this.load = this.load.bind(this)
     this.create = this.create.bind(this)
     this.update = this.update.bind(this)
     this.patch = this.patch.bind(this)
@@ -97,16 +99,16 @@ export class SqlUserRepository implements UserRepository {
     if (!roleId || roleId.length === 0) {
       return Promise.resolve([])
     }
-    const q = `
+    const sql = `
       select u.*
       from user_roles ur
         inner join users u on u.user_id = ur.user_id
       where ur.role_id = ${this.db.param(1)}
       order by user_id`
-    return this.db.query(q, [roleId], this.map)
+    return this.db.query(sql, [roleId], this.map)
   }
-  search(s: UserFilter, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<User>> {
-    return this.find(s, limit, offset, fields)
+  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<User>> {
+    return this.find(filter, limit, page, fields)
   }
   all(): Promise<User[]> {
     return this.db.query("select * from users order by user_id asc", undefined, this.map)
@@ -121,8 +123,8 @@ export class SqlUserRepository implements UserRepository {
         return null
       }
       const user = users[0]
-      const q = `select role_id from user_roles where user_id = ${this.db.param(1)}`
-      return this.db.query<UserRole>(q, [user.userId]).then((roles) => {
+      const sql = `select role_id from user_roles where user_id = ${this.db.param(1)}`
+      return this.db.query<UserRole>(sql, [user.userId]).then((roles) => {
         if (roles && roles.length > 0) {
           user.roles = roles.map((i) => i.roleId)
         }

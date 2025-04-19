@@ -20,11 +20,9 @@ export class JobController extends Controller<Job, string, JobFilter> {
   }
 }
 
-export function useJobService(db: DB): JobService {
+export function useJobController(log: Log, db: DB): JobController {
   const builder = new SearchBuilder<Job, JobFilter>(db.query, "jobs", jobModel, db.driver)
   const repository = new SqlJobRepository(db)
-  return new JobManager(builder.search, repository)
-}
-export function useJobController(log: Log, db: DB): JobController {
-  return new JobController(log, useJobService(db))
+  const service = new JobManager(builder.search, repository)
+  return new JobController(log, service)
 }

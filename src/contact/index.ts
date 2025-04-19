@@ -20,11 +20,9 @@ export class ContactController extends Controller<Contact, string, ContactFilter
   }
 }
 
-export function useContactService(db: DB): ContactService {
+export function useContactController(log: Log, db: DB): ContactController {
   const builder = new SearchBuilder<Contact, ContactFilter>(db.query, "contacts", contactModel, db.driver)
   const repository = new SqlContactRepository(db)
-  return new ContactManager(builder.search, repository)
-}
-export function useContactController(log: Log, db: DB): ContactController {
-  return new ContactController(log, useContactService(db))
+  const service = new ContactManager(builder.search, repository)
+  return new ContactController(log, service)
 }

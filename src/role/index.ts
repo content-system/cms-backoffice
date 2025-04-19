@@ -20,13 +20,11 @@ import { Role, RoleFilter, roleModel, RoleService } from "./role"
 
 export * from "./role"
 
-export function useRoleService(db: DB, mapper?: TemplateMap): RoleService {
+export function useRoleController(log: Log, db: DB, mapper?: TemplateMap): RoleController {
   const query = useQuery("role", mapper, roleModel, true)
   const builder = new SearchBuilder<Role, RoleFilter>(db.query, "roles", roleModel, db.driver, query)
-  return new SqlRoleService(builder.search, db)
-}
-export function useRoleController(log: Log, db: DB, mapper?: TemplateMap): RoleController {
-  return new RoleController(log, useRoleService(db, mapper))
+  const service = new SqlRoleService(builder.search, db)
+  return new RoleController(log, service)
 }
 
 export class RoleController extends Controller<Role, string, RoleFilter> {
@@ -60,17 +58,21 @@ export class RoleController extends Controller<Role, string, RoleFilter> {
 
 const userRoleModel: Attributes = {
   userId: {
+    column: "user_id",
     key: true,
   },
   roleId: {
+    column: "role_id",
     key: true,
   },
 }
 const roleModuleModel: Attributes = {
   roleId: {
+    column: "role_id",
     key: true,
   },
   moduleId: {
+    column: "module_id",
     key: true,
   },
   permissions: {
@@ -104,11 +106,11 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
   metadata(): Attributes {
     return roleModel
   }
-  search(s: RoleFilter, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<Role>> {
-    return this.find(s, limit, offset, fields)
+  search(filter: RoleFilter, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<Role>> {
+    return this.find(filter, limit, offset, fields)
   }
   all(): Promise<Role[]> {
-    return this.query("select * from roles order by roleId asc", undefined, this.map)
+    return this.query("select * from roles order by role_id asc", undefined, this.map)
   }
   load(id: string): Promise<Role | null> {
     const stmt = select(id, "roles", this.primaryKeys, this.param)
@@ -120,7 +122,7 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
         return null
       }
       const role = roles[0]
-      const q = `select moduleId, permissions from roleModules where roleId = ${this.param(1)}`
+      const q = `select module_id, permissions from role_modules where role_id = ${this.param(1)}`
       return this.query<Module>(q, [role.roleId], this.roleModuleMap).then((modules) => {
         if (modules && modules.length > 0) {
           role.privileges = modules.map((i) => (i.permissions ? i.moduleId + " " + i.permissions.toString(16) : i.moduleId)) as any
@@ -146,7 +148,7 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
       return Promise.resolve(-1)
     }
     stmts.push(stmt)
-    const query = `delete from roleModules where roleId = ${this.param(1)}`
+    const query = `delete from role_modules where role_id = ${this.param(1)}`
     stmts.push({ query, params: [role.roleId] })
     insertRoleModules(stmts, role.roleId, role.privileges, this.param)
     return this.execBatch(stmts)
@@ -161,7 +163,7 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
       return Promise.resolve(-1)
     }
     stmts.push(stmt)
-    const query = `delete from roleModules where userId = ${this.param(1)}`
+    const query = `delete from role_modules where user_id = ${this.param(1)}`
     stmts.push({ query, params: [id] })
     return this.execBatch(stmts)
   }
@@ -170,9 +172,9 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
       return { roleId, userId: u }
     })
     const stmts: Statement[] = []
-    const q1 = `delete from userRoles where roleId = ${this.param(1)}`
+    const q1 = `delete from user_roles where role_id = ${this.param(1)}`
     stmts.push({ query: q1, params: [roleId] })
-    const s = buildToInsertBatch<UserRole>(userRoles, "userRoles", userRoleModel, this.param)
+    const s = buildToInsertBatch<UserRole>(userRoles, "user_roles", userRoleModel, this.param)
     if (s) {
       stmts.push(s)
     }
@@ -193,7 +195,7 @@ function insertRoleModules(stmts: Statement[], roleId: string, privileges: strin
       const ms: Module = { roleId, moduleId: i, permissions }
       return ms
     })
-    const stmt = buildToInsertBatch(modules, "roleModules", roleModuleModel, param)
+    const stmt = buildToInsertBatch(modules, "role_modules", roleModuleModel, param)
     if (stmt) {
       stmts.push(stmt)
     }
