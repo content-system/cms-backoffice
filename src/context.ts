@@ -11,7 +11,9 @@ import { check } from "types-validation"
 import { createValidator } from "xvalidators"
 import { ArticleController, useArticleController } from "./article"
 import { AuditLog, AuditLogFilter, auditLogModel } from "./audit-log"
+import { CategoryController, useCategoryController } from "./category"
 import { ContactController, useContactController } from "./contact"
+import { ContentController, useContentController } from "./content"
 import { JobController, useJobController } from "./job"
 import { RoleController, useRoleController } from "./role"
 import { UserController, useUserController } from "./user"
@@ -40,6 +42,8 @@ export interface ApplicationContext {
   role: RoleController
   user: UserController
   auditLog: Search
+  category: CategoryController
+  content: ContentController
   article: ArticleController
   job: JobController
   contact: ContactController
@@ -81,9 +85,11 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const getAuditLog = useGet<AuditLog, string>(db.query, "audit_logs", auditLogModel, db.param)
   const auditLog = useSearchController(logger.error, builder.search, getAuditLog, ["status"], ["timestamp"])
 
+  const content = useContentController(logger.error, db)
+  const category = useCategoryController(logger.error, db)
   const article = useArticleController(logger.error, db)
   const job = useJobController(logger.error, db)
   const contact = useContactController(logger.error, db)
 
-  return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, article, job, contact }
+  return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, content, category, article, job, contact }
 }
