@@ -1,4 +1,4 @@
-import { Attributes, Filter, Result, SearchResult, TimeRange } from "onecore"
+import { Attributes, Filter, Result, SearchService, TimeRange } from "onecore"
 
 export interface Job {
   id: string
@@ -38,8 +38,7 @@ export interface JobRepository {
   patch(job: Partial<Job>): Promise<number>
   delete(id: string): Promise<number>
 }
-export interface JobService {
-  search(filter: JobFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<Job>>
+export interface JobService extends SearchService<Job, JobFilter> {
   load(id: string): Promise<Job | null>
   create(job: Job): Promise<Result<Job>>
   update(job: Job): Promise<Result<Job>>

@@ -1,4 +1,4 @@
-import { Attributes, Filter, Result, SearchResult, TimeRange } from "onecore"
+import { Attributes, Filter, Result, SearchService, TimeRange } from "onecore"
 
 export interface Content {
   id: string
@@ -28,8 +28,7 @@ export interface ContentRepository {
   patch(obj: Partial<Content>): Promise<number>
   delete(id: string, lang: string): Promise<number>
 }
-export interface ContentService {
-  search(filter: ContentFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Content>>
+export interface ContentService extends SearchService<Content, ContentFilter> {
   load(id: string, lang: string): Promise<Content | null>
   create(obj: Content): Promise<Result<Content>>
   update(obj: Content): Promise<Result<Content>>

@@ -1,4 +1,4 @@
-import { Attributes, Filter, Result, SearchResult } from "onecore"
+import { Attributes, Filter, Result, SearchService } from "onecore"
 
 export interface Contact {
   id: string
@@ -30,8 +30,7 @@ export interface ContactRepository {
   patch(contact: Partial<Contact>): Promise<number>
   delete(id: string): Promise<number>
 }
-export interface ContactService {
-  search(filter: ContactFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<Contact>>
+export interface ContactService extends SearchService<Contact, ContactFilter> {
   load(id: string): Promise<Contact | null>
   create(contact: Contact): Promise<Result<Contact>>
   update(contact: Contact): Promise<Result<Contact>>
