@@ -39,7 +39,7 @@ export interface JobRepository {
   delete(id: string): Promise<number>
 }
 export interface JobService {
-  search(filter: JobFilter, limit: number | string, page?: number | string, fields?: string[]): Promise<SearchResult<Job>>
+  search(filter: JobFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<Job>>
   load(id: string): Promise<Job | null>
   create(job: Job): Promise<Result<Job>>
   update(job: Job): Promise<Result<Job>>
