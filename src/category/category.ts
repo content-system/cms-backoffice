@@ -11,8 +11,12 @@ export interface Category {
   type: string
   status: string
   version?: number
-}
 
+  createdAt?: Date
+  createdBy?: string
+  updatedAt?: Date
+  updatedBy?: string
+}
 export interface CategoryFilter extends Filter {
   id?: string
   name?: string
@@ -21,7 +25,7 @@ export interface CategoryFilter extends Filter {
   icon?: string
   sequence?: number
   type?: string
-  status: string[]
+  status?: string[]
 }
 
 export interface CategoryRepository {
@@ -32,6 +36,7 @@ export interface CategoryRepository {
   delete(id: string): Promise<number>
 }
 export interface CategoryService extends SearchService<Category, CategoryFilter> {
+  // search(filter: CategoryFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Category>>
   load(id: string): Promise<Category | null>
   create(category: Category): Promise<Result<Category>>
   update(category: Category): Promise<Result<Category>>
@@ -74,5 +79,22 @@ export const categoryModel: Attributes = {
   version: {
     type: "integer",
     version: true,
+  },
+
+  createdBy: {
+    column: "created_by",
+    noupdate: true,
+  },
+  createdAt: {
+    column: "created_at",
+    type: "datetime",
+    noupdate: true,
+  },
+  updatedBy: {
+    column: "updated_by",
+  },
+  updatedAt: {
+    column: "updated_at",
+    type: "datetime",
   },
 }

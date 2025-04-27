@@ -6,6 +6,11 @@ export interface Role {
   status?: string
   remark?: string
   privileges?: string[]
+
+  createdAt?: Date
+  createdBy?: string
+  updatedAt?: Date
+  updatedBy?: string
 }
 export interface RoleFilter extends Filter {
   roleId?: string
@@ -14,6 +19,16 @@ export interface RoleFilter extends Filter {
   remark?: string
 }
 
+export interface RoleRepository {
+  all(): Promise<Role[]>
+  search(filter: RoleFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<Role>>
+  load(id: string): Promise<Role | null>
+  create(role: Role): Promise<number>
+  update(role: Role): Promise<number>
+  patch(role: Partial<Role>): Promise<number>
+  delete(id: string): Promise<number>
+  assign(id: string, users: string[]): Promise<number>
+}
 export interface RoleService {
   all(): Promise<Role[]>
   search(filter: RoleFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<Role>>
@@ -47,12 +62,15 @@ export const roleModel: Attributes = {
     length: 255,
     q: true,
   },
+
   createdBy: {
     column: "created_by",
+    noupdate: true,
   },
   createdAt: {
     column: "created_at",
     type: "datetime",
+    noupdate: true,
   },
   updatedBy: {
     column: "updated_by",
@@ -61,6 +79,7 @@ export const roleModel: Attributes = {
     column: "updated_at",
     type: "datetime",
   },
+
   privileges: {
     type: "strings",
     ignored: true,

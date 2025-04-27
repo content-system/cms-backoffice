@@ -14,6 +14,11 @@ export interface Job {
   applicantCount?: number
   companyId?: string
   status: string
+
+  createdAt?: Date
+  createdBy?: string
+  updatedAt?: Date
+  updatedBy?: string
 }
 export interface JobFilter extends Filter {
   id?: string
@@ -39,6 +44,7 @@ export interface JobRepository {
   delete(id: string): Promise<number>
 }
 export interface JobService extends SearchService<Job, JobFilter> {
+  // search(filter: JobFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Job>>
   load(id: string): Promise<Job | null>
   create(job: Job): Promise<Result<Job>>
   update(job: Job): Promise<Result<Job>>
@@ -88,5 +94,22 @@ export const jobModel: Attributes = {
   applicantCount: {
     column: "applicant_count",
     type: "integer",
+  },
+
+  createdBy: {
+    column: "created_by",
+    noupdate: true,
+  },
+  createdAt: {
+    column: "created_at",
+    type: "datetime",
+    noupdate: true,
+  },
+  updatedBy: {
+    column: "updated_by",
+  },
+  updatedAt: {
+    column: "updated_at",
+    type: "datetime",
   },
 }

@@ -4,15 +4,19 @@ export interface Article {
   id: string
   title: string
   description?: string
+  publishedAt: Date
   content: string
   thumbnail?: string
-  publishedAt: Date
   tags?: string[]
   type?: string
-  authorId?: string
+  author?: string
   status?: string
-}
 
+  createdAt?: Date
+  createdBy?: string
+  updatedAt?: Date
+  updatedBy?: string
+}
 export interface ArticleFilter extends Filter {
   id?: string
   title?: string
@@ -29,6 +33,7 @@ export interface ArticleRepository {
   delete(id: string): Promise<number>
 }
 export interface ArticleService extends SearchService<Article, ArticleFilter> {
+  // search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>>
   load(id: string): Promise<Article | null>
   create(article: Article): Promise<Result<Article>>
   update(article: Article): Promise<Result<Article>>
@@ -39,6 +44,10 @@ export interface ArticleService extends SearchService<Article, ArticleFilter> {
 export const articleModel: Attributes = {
   id: {
     key: true,
+    length: 40,
+    required: true,
+  },
+  author: {
     length: 40,
     required: true,
   },
@@ -60,18 +69,25 @@ export const articleModel: Attributes = {
     length: 5000,
     required: true,
   },
-  thumbnail: {},
-  highThumbnail: {
-    column: "high_thumbnail",
-  },
   tags: {
     type: "strings",
   },
-  /*
-  author: {
-    length: 40,
-  },
-  */
   type: {},
-  status: {},
+
+  createdBy: {
+    column: "created_by",
+    noupdate: true,
+  },
+  createdAt: {
+    column: "created_at",
+    type: "datetime",
+    noupdate: true,
+  },
+  updatedBy: {
+    column: "updated_by",
+  },
+  updatedAt: {
+    column: "updated_at",
+    type: "datetime",
+  },
 }

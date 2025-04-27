@@ -1,4 +1,4 @@
-import { Attributes, Filter, SearchResult } from "onecore"
+import { Attributes, Filter, Result, SearchResult } from "onecore"
 
 export interface User {
   userId: string
@@ -7,6 +7,11 @@ export interface User {
   phone?: string
   dateOfBirth?: Date
   roles?: string[]
+
+  createdAt?: Date
+  createdBy?: string
+  updatedAt?: Date
+  updatedBy?: string
 }
 export interface UserFilter extends Filter {
   id?: string
@@ -20,9 +25,9 @@ export interface UserFilter extends Filter {
 }
 
 export interface UserRepository {
-  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<User>>
-  getUsersOfRole(roleId: string): Promise<User[]>
   all(): Promise<User[]>
+  getUsersOfRole(roleId: string): Promise<User[]>
+  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
   load(id: string): Promise<User | null>
   create(user: User): Promise<number>
   update(user: User): Promise<number>
@@ -30,13 +35,13 @@ export interface UserRepository {
   delete(id: string): Promise<number>
 }
 export interface UserService {
-  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<User>>
-  getUsersOfRole(roleId: string): Promise<User[]>
   all(): Promise<User[]>
+  getUsersOfRole(roleId: string): Promise<User[]>
+  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
   load(id: string): Promise<User | null>
-  create(user: User): Promise<number>
-  update(user: User): Promise<number>
-  patch(user: Partial<User>): Promise<number>
+  create(user: User): Promise<Result<User>>
+  update(user: User): Promise<Result<User>>
+  patch(user: Partial<User>): Promise<Result<User>>
   delete(id: string): Promise<number>
 }
 
@@ -86,12 +91,15 @@ export const userModel: Attributes = {
     column: "image_url",
     length: 255,
   },
+
   createdBy: {
     column: "created_by",
+    noupdate: true,
   },
   createdAt: {
     column: "created_at",
     type: "datetime",
+    noupdate: true,
   },
   updatedBy: {
     column: "updated_by",
@@ -100,6 +108,7 @@ export const userModel: Attributes = {
     column: "updated_at",
     type: "datetime",
   },
+
   roles: {
     type: "strings",
     ignored: true,
