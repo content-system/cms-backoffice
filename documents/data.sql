@@ -88,7 +88,6 @@ create table audit_logs (
   status varchar(255),
   remark varchar(255)
 );
-insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('dashboard','Dashboard','A','/dashboard','dashboard','assignment',1,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('admin','Admin','A','/admin','admin','contacts',2,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('setup','Setup','A','/setup','setup','settings',3,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('report','Report','A','/report','report','pie_chart',4,7,'');
@@ -97,9 +96,10 @@ insert into modules (module_id,module_name,status,path,resource_key,icon,sequenc
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('role','Role Management','A','/roles','role','credit_card',2,7,'admin');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('audit_log','Audit Log','A','/audit-logs','audit_log','zoom_in',4,1,'admin');
 
-insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('article','Article','A','/articles','article','public',1,7,'setup');
-insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('job','Job','A','/jobs','jobs','local_atm',2,7,'setup');
-insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('contact','Contact','A','/contacts','contact','public',3,7,'setup');
+insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('content','Content','A','/contents','content','public',1,7,'setup');
+insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('article','Article','A','/articles','article','assignment',2,7,'setup');
+insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('job','Job','A','/jobs','jobs','work',3,7,'setup');
+insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('contact','Contact','A','/contacts','contact','mail',4,7,'setup');
 
 insert into roles (role_id, role_name, status, remark) values ('admin','Admin','A','Admin');
 insert into roles (role_id, role_name, status, remark) values ('call_center','Call Center','A','Call Center');
@@ -150,8 +150,8 @@ insert into users (user_id,username,email,display_name,image_url,status,gender,p
 update users set language = 'en', dateformat = 'd/M/yyyy';
 
 insert into passwords(user_id, password)
-select user_id, '$2b$10$LWBgFYSRFpw/lysdne3ybuODJRAk1/qi2z.nhu9fXKA5vH/10AYY.'
-from users;
+select user_id, '$2b$10$LWBgFYSRFpw/lysdne3ybuODJRAk1/qi2z.nhu9fXKA5vH/10AYY.' from users;
+/* Password1! */
 
 insert into user_roles(user_id, role_id) values ('00001','admin');
 insert into user_roles(user_id, role_id) values ('00003','admin');
@@ -165,7 +165,6 @@ insert into user_roles(user_id, role_id) values ('00011','it_support');
 insert into user_roles(user_id, role_id) values ('00012','call_center');
 insert into user_roles(user_id, role_id) values ('00012','it_support');
 
-insert into role_modules(role_id, module_id, permissions) values ('admin', 'dashboard', 7);
 insert into role_modules(role_id, module_id, permissions) values ('admin', 'setup', 7);
 insert into role_modules(role_id, module_id, permissions) values ('admin', 'report', 7);
 insert into role_modules(role_id, module_id, permissions) values ('admin', 'admin', 7);
@@ -173,12 +172,12 @@ insert into role_modules(role_id, module_id, permissions) values ('admin', 'user
 insert into role_modules(role_id, module_id, permissions) values ('admin', 'role', 7);
 insert into role_modules(role_id, module_id, permissions) values ('admin', 'audit_log', 7);
 
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'dashboard', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'admin', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'user', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'role', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'audit_log', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'setup', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'content', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'article', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'job', 7);
 insert into role_modules(role_id, module_id, permissions) values ('it_support', 'contact', 7);
@@ -272,7 +271,7 @@ create table categories (
   resource_key varchar(255),
   icon varchar(255),
   sequence int not null,
-  actions int4 null,
+  type varchar(40) null,
   parent varchar(40),
   created_by varchar(40),
   created_at timestamptz,
@@ -280,26 +279,26 @@ create table categories (
   updated_at timestamptz
 );
 /*
-about
- + milestones
- + leadership
- + companies
-works
+home
 services
 news
 careers
 contact
+about
+ + milestones
+ + companies
+ + leadership
 */
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('about','About','A','/about','about','assignment',1,7,'');
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('works','Works','A','/works','works','assignment',2,7,'');
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('services','Services','A','/services','services','settings',3,7,'');
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('news','News','A','/news','news','assignment',4,7,'');
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('careers','Careers','A','/careers','careers','pie_chart',5,7,'');
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('contact','contact','A','/contact','contact','contacts',6,7,'');
-
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('milestones','Milestones','A','/milestones','milestones','local_atm',1,7,'about');
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('leadership','Leadership','A','/leadership','leadership','public',2,7,'about');
-insert into categories (id,name,status,path,resource_key,icon,sequence,actions,parent) values ('companies','companies','A','/companies','companies','zoom_in',2,7,'about');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values
+ ('home','Home','A','/','home','home',1,'content',''),
+ ('services','Services','A','/services','services','settings',2,'content',''),
+ ('news','News','A','/news','news','credit_card',3,'',''),
+ ('careers','Careers','A','/careers','careers','work',4,'',''),
+ ('contact','Contact','A','/contact','contact','mail',5,'',''),
+ ('about','About','A','/about','about','assignment',6,'',''),
+ ('milestones','Milestones','A','/milestones','milestones','public',1,'content','about'),
+ ('companies','Companies','A','/companies','companies','account_balance',2,'content','about'),
+ ('leadership','Leadership','A','/leadership','leadership','person',3,'content','about');
 
 create table companies (
   id character varying(40) not null primary key,
