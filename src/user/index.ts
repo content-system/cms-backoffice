@@ -1,19 +1,7 @@
 import { Request, Response } from "express"
 import { Controller, handleError, queryParam } from "express-ext"
 import { Attribute, Attributes, Log, Search, StringMap } from "onecore"
-import {
-  buildMap,
-  buildToDelete,
-  buildToInsert,
-  buildToInsertBatch,
-  buildToUpdate,
-  DB,
-  metadata,
-  SearchBuilder,
-  SearchResult,
-  select,
-  Statement,
-} from "query-core"
+import { buildMap, buildToInsert, buildToInsertBatch, buildToUpdate, DB, metadata, SearchBuilder, SearchResult, Statement } from "query-core"
 import { TemplateMap, useQuery } from "query-mappers"
 import { User, UserFilter, userModel, UserRepository, UserService } from "./user"
 
@@ -114,11 +102,7 @@ export class SqlUserRepository implements UserRepository {
     return this.db.query("select * from users order by user_id asc", undefined, this.map)
   }
   load(id: string): Promise<User | null> {
-    const stmt = select(id, "users", this.primaryKeys, this.db.param)
-    if (!stmt) {
-      return Promise.resolve(null)
-    }
-    return this.db.query<User>(stmt.query, stmt.params, this.map).then((users) => {
+    return this.db.query<User>(`select * from users where user_id = ${this.db.param(1)}`, [id], this.map).then((users) => {
       if (!users || users.length === 0) {
         return null
       }
@@ -158,13 +142,8 @@ export class SqlUserRepository implements UserRepository {
   }
   delete(id: string): Promise<number> {
     const stmts: Statement[] = []
-    const query = `delete from user_roles where user_id = ${this.db.param(1)}`
-    stmts.push({ query, params: [id] })
-    const stmt = buildToDelete(id, "users", this.primaryKeys, this.db.param)
-    if (!stmt) {
-      return Promise.resolve(-1)
-    }
-    stmts.push(stmt)
+    stmts.push({ query: `delete from users where user_id = ${this.db.param(1)}`, params: [id] })
+    stmts.push({ query: `delete from user_roles where user_id = ${this.db.param(1)}`, params: [id] })
     return this.db.execBatch(stmts)
   }
 }

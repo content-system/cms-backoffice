@@ -1,20 +1,7 @@
 import { Request, Response } from "express"
 import { Controller, param as getParam, handleError } from "express-ext"
 import { Attributes, Log, Search } from "onecore"
-import {
-  buildMap,
-  buildToDelete,
-  buildToInsert,
-  buildToInsertBatch,
-  buildToUpdate,
-  DB,
-  SearchBuilder,
-  SearchResult,
-  select,
-  Service,
-  Statement,
-  StringMap,
-} from "query-core"
+import { buildMap, buildToInsert, buildToInsertBatch, buildToUpdate, DB, SearchBuilder, SearchResult, Service, Statement, StringMap } from "query-core"
 import { TemplateMap, useQuery } from "query-mappers"
 import { Role, RoleFilter, roleModel, RoleService } from "./role"
 
@@ -113,17 +100,13 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
     return this.query("select * from roles order by role_id asc", undefined, this.map)
   }
   load(id: string): Promise<Role | null> {
-    const stmt = select(id, "roles", this.primaryKeys, this.param)
-    if (!stmt) {
-      return Promise.resolve(null)
-    }
-    return this.query<Role>(stmt.query, stmt.params, this.map).then((roles) => {
+    return this.query<Role>(`select * from roles where role_id = ${this.param(1)}`, [id], this.map).then((roles) => {
       if (!roles || roles.length === 0) {
         return null
       }
       const role = roles[0]
-      const q = `select module_id, permissions from role_modules where role_id = ${this.param(1)}`
-      return this.query<Module>(q, [role.roleId], this.roleModuleMap).then((modules) => {
+      const query = `select module_id, permissions from role_modules where role_id = ${this.param(1)}`
+      return this.query<Module>(query, [role.roleId], this.roleModuleMap).then((modules) => {
         if (modules && modules.length > 0) {
           role.privileges = modules.map((i) => (i.permissions ? i.moduleId + " " + i.permissions.toString(16) : i.moduleId)) as any
         }
@@ -158,13 +141,8 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
   }
   delete(id: string): Promise<number> {
     const stmts: Statement[] = []
-    const stmt = buildToDelete(id, "roles", this.primaryKeys, this.param)
-    if (!stmt) {
-      return Promise.resolve(-1)
-    }
-    stmts.push(stmt)
-    const query = `delete from role_modules where user_id = ${this.param(1)}`
-    stmts.push({ query, params: [id] })
+    stmts.push({ query: `delete from roles where role_id = ${this.param(1)}`, params: [id] })
+    stmts.push({ query: `delete from role_modules where role_id = ${this.param(1)}`, params: [id] })
     return this.execBatch(stmts)
   }
   assign(roleId: string, users: string[]): Promise<number> {
@@ -174,9 +152,9 @@ export class SqlRoleService extends Service<Role, string, RoleFilter> {
     const stmts: Statement[] = []
     const q1 = `delete from user_roles where role_id = ${this.param(1)}`
     stmts.push({ query: q1, params: [roleId] })
-    const s = buildToInsertBatch<UserRole>(userRoles, "user_roles", userRoleModel, this.param)
-    if (s) {
-      stmts.push(s)
+    const stmt = buildToInsertBatch<UserRole>(userRoles, "user_roles", userRoleModel, this.param)
+    if (stmt) {
+      stmts.push(stmt)
     }
     return this.execBatch(stmts)
   }
