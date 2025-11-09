@@ -1,4 +1,3 @@
-
 create table articles (
   id varchar(80) primary key,
   title varchar(255) not null,
@@ -99,7 +98,7 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
   Nanning, Suzhou, and Dalian. The IT firm is currently a strategic partner with leading Chinese firms in the automotive and semiconductor industries
   and actively collaborates with universities to develop a strong local talent pool.
 </p>
-<p>FPT’s new office is located at Zhonggeng Global Creative Center, Lane 166, Minhong Road, Minhang District, Shanghai 201102, China.</p>','2024-08-26 16:49:52.453+07','{}','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','A'),
+<p>FPT’s new office is located at Zhonggeng Global Creative Center, Lane 166, Minhong Road, Minhang District, Shanghai 201102, China.</p>','2024-08-26 16:49:52.453+07','{Shanghai,"FPT China","new office"}','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','A'),
 	 ('20240819001','FPT Software and Meerana Technologies Partner to Drive Digital Transformation in UAE','This partnership aims to expand FPT Software’s footprint in the region and address the market needs across various sectors, including Utilities, BFSI, Logistics, Transportation, and more.','<p>
   Global IT services provider FPT Software recently announced a strategic partnership with Meerana Technologies, an emerging provider of smart IT
   solutions. This collaboration not only strengthens FPT Software’s presence in the United Arab Emirates but also aligns with FPT Software’s vision of
@@ -173,7 +172,7 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
   climate change by providing more plant-based food at their dining premises. Launched in 2018, the campaign has helped prevent over 3.3 million lbs
   of animal products from being served at more than 50 institutions in India. Starting in 2023, the Green Tuesday Initiative extended its operation to
   Vietnam, one of the world’s top five most vulnerable countries to climate change.
-</p>','2024-07-17 17:08:14.069+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','A'),
+</p>','2024-07-17 17:08:14.069+07','{"Meerana Technologies",Meerana,UAE}','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','A'),
 	 ('20240930001','FPT Software Wins Job Creation Award at ESGBusiness Awards 2024','This recognition highlights FPT Software''s commitment to nurturing top talent and fostering diverse and inclusive workplaces across the global IT industry.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/1.webp"></img>
 </figure>
