@@ -1,8 +1,8 @@
-import { Controller } from "express-ext"
 import { Log, Search, UseCase } from "onecore"
 import { DB, Repository, SearchBuilder } from "query-core"
+import { JobController } from "./controller"
 import { Job, JobFilter, jobModel, JobRepository, JobService } from "./job"
-export * from "./job"
+export * from "./controller"
 
 export class SqlJobRepository extends Repository<Job, string> implements JobRepository {
   constructor(db: DB) {
@@ -12,11 +12,6 @@ export class SqlJobRepository extends Repository<Job, string> implements JobRepo
 export class JobUseCase extends UseCase<Job, string, JobFilter> implements JobService {
   constructor(search: Search<Job, JobFilter>, repository: JobRepository) {
     super(search, repository)
-  }
-}
-export class JobController extends Controller<Job, string, JobFilter> {
-  constructor(log: Log, service: JobService) {
-    super(log, service)
   }
 }
 

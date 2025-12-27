@@ -1,8 +1,8 @@
-import { Controller } from "express-ext"
 import { Log, Search, UseCase } from "onecore"
 import { DB, Repository, SearchBuilder } from "query-core"
 import { Category, CategoryFilter, categoryModel, CategoryRepository, CategoryService } from "./category"
-export * from "./category"
+import { CategoryController } from "./controller"
+export * from "./controller"
 
 export class SqlCategoryRepository extends Repository<Category, string> implements CategoryRepository {
   constructor(db: DB) {
@@ -12,11 +12,6 @@ export class SqlCategoryRepository extends Repository<Category, string> implemen
 export class CategoryUseCase extends UseCase<Category, string, CategoryFilter> implements CategoryService {
   constructor(search: Search<Category, CategoryFilter>, repository: CategoryRepository) {
     super(search, repository)
-  }
-}
-export class CategoryController extends Controller<Category, string, CategoryFilter> {
-  constructor(log: Log, service: CategoryService) {
-    super(log, service)
   }
 }
 

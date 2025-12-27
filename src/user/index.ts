@@ -1,53 +1,15 @@
-import { Request, Response } from "express"
-import { Controller, handleError, queryParam } from "express-ext"
 import { Attribute, Attributes, Log, Search, StringMap } from "onecore"
 import { buildMap, buildToInsert, buildToInsertBatch, buildToUpdate, DB, metadata, SearchBuilder, SearchResult, Statement } from "query-core"
 import { TemplateMap, useQuery } from "query-mappers"
-import { User, UserFilter, userModel, UserRepository, UserService } from "./user"
-
-export * from "./user"
+import { UserController } from "./controller"
+import { User, UserFilter, userModel, UserRepository } from "./user"
+export * from "./controller"
 
 export function useUserController(log: Log, db: DB, mapper?: TemplateMap): UserController {
   const query = useQuery("user", mapper, userModel, true)
   const builder = new SearchBuilder<User, UserFilter>(db.query, "users", userModel, db.driver, query)
   const service = new SqlUserRepository(builder.search, db)
   return new UserController(log, service)
-}
-
-export class UserController extends Controller<User, string, UserFilter> {
-  constructor(log: Log, private userService: UserService) {
-    super(log, userService)
-    this.array = ["status"]
-    this.all = this.all.bind(this)
-    this.getUsersOfRole = this.getUsersOfRole.bind(this)
-  }
-  all(req: Request, res: Response) {
-    const v = req.query["roleId"]
-    if (v && v.toString().length > 0) {
-      this.userService
-        .getUsersOfRole(v.toString())
-        .then((users) => res.status(200).json(users))
-        .catch((err) => handleError(err, res, this.log))
-    } else {
-      if (this.userService.all) {
-        this.userService
-          .all()
-          .then((users) => res.status(200).json(users))
-          .catch((err) => handleError(err, res, this.log))
-      } else {
-        res.status(400).end("roleId is required")
-      }
-    }
-  }
-  getUsersOfRole(req: Request, res: Response) {
-    const id = queryParam(req, res, "roleId")
-    if (id) {
-      this.userService
-        .getUsersOfRole(id)
-        .then((users) => res.status(200).json(users))
-        .catch((err) => handleError(err, res, this.log))
-    }
-  }
 }
 
 const userRoleModel: Attributes = {

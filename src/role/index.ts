@@ -1,46 +1,15 @@
-import { Request, Response } from "express"
-import { Controller, param as getParam, handleError } from "express-ext"
 import { Attributes, Log, Search } from "onecore"
 import { buildMap, buildToInsert, buildToInsertBatch, buildToUpdate, DB, SearchBuilder, SearchResult, Service, Statement, StringMap } from "query-core"
 import { TemplateMap, useQuery } from "query-mappers"
-import { Role, RoleFilter, roleModel, RoleService } from "./role"
-
-export * from "./role"
+import { RoleController } from "./controller"
+import { Role, RoleFilter, roleModel } from "./role"
+export * from "./controller"
 
 export function useRoleController(log: Log, db: DB, mapper?: TemplateMap): RoleController {
   const query = useQuery("role", mapper, roleModel, true)
   const builder = new SearchBuilder<Role, RoleFilter>(db.query, "roles", roleModel, db.driver, query)
   const service = new SqlRoleService(builder.search, db)
   return new RoleController(log, service)
-}
-
-export class RoleController extends Controller<Role, string, RoleFilter> {
-  constructor(log: (msg: any, ctx?: any) => void, private roleService: RoleService) {
-    super(log, roleService)
-    this.array = ["status"]
-    this.all = this.all.bind(this)
-    this.assign = this.assign.bind(this)
-  }
-  all(req: Request, res: Response) {
-    this.roleService
-      .all()
-      .then((roles) => res.status(200).json(roles))
-      .catch((err) => handleError(err, res, this.log))
-  }
-  assign(req: Request, res: Response) {
-    const id = getParam(req, res, "id")
-    if (id) {
-      const users: string[] = req.body
-      if (!Array.isArray(users)) {
-        res.status(400).end(`'Body must be an array`)
-      } else {
-        this.roleService
-          .assign(id, users)
-          .then((r) => res.status(200).json(r))
-          .catch((err) => handleError(err, res, this.log))
-      }
-    }
-  }
 }
 
 const userRoleModel: Attributes = {

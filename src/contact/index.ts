@@ -1,8 +1,9 @@
-import { Controller } from "express-ext"
 import { Log, Manager, Search } from "onecore"
 import { DB, Repository, SearchBuilder } from "query-core"
 import { Contact, ContactFilter, contactModel, ContactRepository, ContactService } from "./contact"
+import { ContactController } from "./controller"
 export * from "./contact"
+export * from "./controller"
 
 export class SqlContactRepository extends Repository<Contact, string> implements ContactRepository {
   constructor(db: DB) {
@@ -12,11 +13,6 @@ export class SqlContactRepository extends Repository<Contact, string> implements
 export class ContactManager extends Manager<Contact, string, ContactFilter> implements ContactService {
   constructor(search: Search<Contact, ContactFilter>, repository: ContactRepository) {
     super(search, repository)
-  }
-}
-export class ContactController extends Controller<Contact, string, ContactFilter> {
-  constructor(log: Log, service: ContactService) {
-    super(log, service)
   }
 }
 
