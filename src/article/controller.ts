@@ -20,7 +20,6 @@ export class ArticleController {
     if (!filter.sort) {
       filter.sort = "-publishedAt"
     }
-    filter.authorId = res.locals.userId
     const { limit, page, fields } = filter
     try {
       const result = await this.service.search(filter, limit, page, fields)

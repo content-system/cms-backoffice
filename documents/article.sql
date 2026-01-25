@@ -11,10 +11,6 @@ create table articles (
   author_id varchar(40),
   status char(1),
 
-  submitted_by varchar(40),
-  submitted_at timestamptz,
-  approved_by varchar(40),
-  approved_at timestamptz,
   created_by varchar(40),
   created_at timestamptz,
   updated_by varchar(40),

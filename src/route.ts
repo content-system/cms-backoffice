@@ -18,7 +18,6 @@ export function route(app: Application, ctx: ApplicationContext, secure?: boolea
   const writeRole = ctx.authorize("role", write)
   get(app, "/privileges", readRole, ctx.privilege.all, secure)
   put(app, "/roles/:id/assign", writeRole, ctx.role.assign, secure)
-  get(app, "/roles", readRole, ctx.role.search, secure)
   post(app, "/roles/search", readRole, ctx.role.search, secure)
   get(app, "/roles/search", readRole, ctx.role.search, secure)
   get(app, "/roles/:id", readRole, ctx.role.load, secure)
@@ -29,6 +28,7 @@ export function route(app: Application, ctx: ApplicationContext, secure?: boolea
 
   const readUser = ctx.authorize("user", read)
   const writeUser = ctx.authorize("user", write)
+  get(app, "/roles", readUser, ctx.role.all, secure)
   get(app, "/users", readUser, ctx.user.all, secure)
   post(app, "/users/search", readUser, ctx.user.search, secure)
   get(app, "/users/search", readUser, ctx.user.search, secure)

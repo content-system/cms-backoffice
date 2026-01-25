@@ -44,7 +44,7 @@ export const auditLogModel: Attributes = {
   action: {
     operator: "=",
   },
-  timestamp: {
+  time: {
     type: "datetime",
   },
   status: {

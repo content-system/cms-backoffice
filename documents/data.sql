@@ -99,6 +99,16 @@ create table histories (
   data jsonb not null
 );
 
+create table notifications (
+  id varchar(40) primary key,
+  sender varchar(40) not null,
+  receiver varchar(40) not null,
+  message varchar(1000) not null,
+  url varchar(200),
+  time timestamptz not null,
+  status char(1)
+);
+
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('admin','Admin','A','/admin','admin','contacts',2,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('setup','Setup','A','/setup','setup','settings',3,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('report','Report','A','/report','report','pie_chart',4,7,'');

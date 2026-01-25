@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { create, format, fromRequest, handleError, respondError, update } from "express-ext"
+import { create, fromRequest, handleError, respondError, update } from "express-ext"
 import { Log } from "onecore"
 import { validate } from "xvalidators"
 import { getResource } from "../resources"
@@ -16,10 +16,6 @@ export class CategoryController {
   }
   async search(req: Request, res: Response) {
     const filter = fromRequest<CategoryFilter>(req, ["status"])
-    format(filter, ["publishedAt"])
-    if (!filter.sort) {
-      filter.sort = "-publishedAt"
-    }
     const { limit, page, fields } = filter
     try {
       const result = await this.service.search(filter, limit, page, fields)
