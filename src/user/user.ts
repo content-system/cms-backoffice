@@ -7,6 +7,7 @@ export interface User {
   phone?: string
   dateOfBirth?: Date
   roles?: string[]
+  status: string
 
   createdAt?: Date
   createdBy?: string
@@ -25,38 +26,39 @@ export interface UserFilter extends Filter {
 }
 
 export interface UserRepository {
-  all(): Promise<User[]>
   getUsersOfRole(roleId: string): Promise<User[]>
+  all(): Promise<User[]>
   search(filter: UserFilter, limit: number, page?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
   load(id: string): Promise<User | null>
   create(user: User): Promise<number>
   update(user: User): Promise<number>
   patch(user: Partial<User>): Promise<number>
   delete(id: string): Promise<number>
+  assign(id: string, roles: string[]): Promise<number>
 }
 export interface UserService {
-  all(): Promise<User[]>
   getUsersOfRole(roleId: string): Promise<User[]>
+  all(): Promise<User[]>
   search(filter: UserFilter, limit: number, page?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
   load(id: string): Promise<User | null>
   create(user: User): Promise<Result<User>>
   update(user: User): Promise<Result<User>>
   patch(user: Partial<User>): Promise<Result<User>>
   delete(id: string): Promise<number>
+  assign(id: string, roles: string[]): Promise<number>
 }
 
 export const userModel: Attributes = {
   userId: {
     column: "user_id",
     key: true,
-    match: "equal",
     length: 40,
+    operator: "="
   },
   username: {
     required: true,
     length: 255,
     q: true,
-    match: "prefix",
   },
   email: {
     format: "email",
@@ -70,8 +72,8 @@ export const userModel: Attributes = {
     q: true,
   },
   status: {
-    match: "equal",
     length: 1,
+    operator: "="
   },
   gender: {
     length: 1,

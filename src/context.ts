@@ -78,18 +78,18 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const privilegesLoader = new PrivilegesReader(db.query, conf.sql.allPrivileges)
   const privilege = new PrivilegeController(logger.error, privilegesLoader.privileges)
 
-  const role = useRoleController(logger.error, db, mapper)
-  const user = useUserController(logger.error, db, mapper)
+  const role = useRoleController(db, logger.error, mapper)
+  const user = useUserController(db, logger.error, mapper)
 
   const builder = new SearchBuilder<AuditLog, AuditLogFilter>(db.query, "audit_logs", auditLogModel, db.driver)
   const getAuditLog = useGet<AuditLog, string>(db.query, "audit_logs", auditLogModel, db.param)
   const auditLog = useSearchController(logger.error, builder.search, getAuditLog, ["status"], ["timestamp"])
 
-  const content = useContentController(logger.error, db)
-  const category = useCategoryController(logger.error, db)
-  const article = useArticleController(logger.error, db)
-  const job = useJobController(logger.error, db)
-  const contact = useContactController(logger.error, db)
+  const content = useContentController(db, logger.error)
+  const category = useCategoryController(db, logger.error)
+  const article = useArticleController(db, logger.error)
+  const job = useJobController(db, logger.error)
+  const contact = useContactController(db, logger.error)
 
   return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, content, category, article, job, contact }
 }

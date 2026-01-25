@@ -1,4 +1,4 @@
-import { Attributes, DateRange, Filter, Result, SearchService } from "onecore"
+import { Attributes, DateRange, Filter, Result, SearchRepository, SearchService } from "onecore"
 
 export interface Contact {
   id: string
@@ -24,7 +24,7 @@ export interface ContactFilter extends Filter {
   submittedAt?: DateRange
 }
 
-export interface ContactRepository {
+export interface ContactRepository extends SearchRepository<Contact, ContactFilter> {
   load(id: string): Promise<Contact | null>
   create(contact: Contact): Promise<number>
   update(contact: Contact): Promise<number>
@@ -32,7 +32,6 @@ export interface ContactRepository {
   delete(id: string): Promise<number>
 }
 export interface ContactService extends SearchService<Contact, ContactFilter> {
-  // search(filter: ContactFilter, limit: number, page?: number, fields?: string[], ctx?: any): Promise<SearchResult<Contact>>
   load(id: string): Promise<Contact | null>
   create(contact: Contact): Promise<Result<Contact>>
   update(contact: Contact): Promise<Result<Contact>>

@@ -21,7 +21,7 @@ export interface RoleFilter extends Filter {
 
 export interface RoleRepository {
   all(): Promise<Role[]>
-  search(filter: RoleFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<Role>>
+  search(filter: RoleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Role>>
   load(id: string): Promise<Role | null>
   create(role: Role): Promise<number>
   update(role: Role): Promise<number>
@@ -31,7 +31,7 @@ export interface RoleRepository {
 }
 export interface RoleService {
   all(): Promise<Role[]>
-  search(filter: RoleFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<Role>>
+  search(filter: RoleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Role>>
   load(id: string): Promise<Role | null>
   create(role: Role): Promise<Result<Role>>
   update(role: Role): Promise<Result<Role>>
@@ -52,11 +52,11 @@ export const roleModel: Attributes = {
     required: true,
     length: 255,
     q: true,
-    match: "prefix",
+    operator: "like",
   },
   status: {
-    match: "equal",
     length: 1,
+    operator: "="
   },
   remark: {
     length: 255,

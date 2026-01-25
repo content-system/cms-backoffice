@@ -1,4 +1,4 @@
-import { Attributes, Filter, Result, SearchService, TimeRange } from "onecore"
+import { Attributes, Filter, Result, SearchResult, TimeRange } from "onecore"
 
 export interface Content {
   id: string
@@ -26,14 +26,15 @@ export interface ContentFilter extends Filter {
 }
 
 export interface ContentRepository {
+  search(filter: ContentFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Content>>
   load(id: string, lang: string): Promise<Content | null>
   create(obj: Content): Promise<number>
   update(obj: Content): Promise<number>
   patch(obj: Partial<Content>): Promise<number>
   delete(id: string, lang: string): Promise<number>
 }
-export interface ContentService extends SearchService<Content, ContentFilter> {
-  // search(filter: ContentFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Content>>
+export interface ContentService {
+  search(filter: ContentFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Content>>
   load(id: string, lang: string): Promise<Content | null>
   create(obj: Content): Promise<Result<Content>>
   update(obj: Content): Promise<Result<Content>>
@@ -58,7 +59,7 @@ export const contentModel: Attributes = {
     q: true,
   },
   body: {
-    length: 9000,
+    length: 9800,
     required: true,
   },
   publishedAt: {

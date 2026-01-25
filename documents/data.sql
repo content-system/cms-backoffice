@@ -88,6 +88,17 @@ create table audit_logs (
   status varchar(255),
   remark varchar(255)
 );
+
+create table histories (
+  history_id varchar(40) primary key,
+  entity varchar(40) not null,
+  id varchar(40) not null,
+  action varchar(40) not null,
+  author varchar(40) not null,
+  time timestamptz not null,
+  data jsonb not null
+);
+
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('admin','Admin','A','/admin','admin','contacts',2,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('setup','Setup','A','/setup','setup','settings',3,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('report','Report','A','/report','report','pie_chart',4,7,'');

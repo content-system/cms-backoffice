@@ -1,4 +1,4 @@
-import { Attributes, Filter, Result, SearchService } from "onecore"
+import { Attributes, Filter, Result, SearchResult } from "onecore"
 
 export interface Category {
   id: string
@@ -29,14 +29,15 @@ export interface CategoryFilter extends Filter {
 }
 
 export interface CategoryRepository {
+  search(filter: CategoryFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Category>>
   load(id: string): Promise<Category | null>
   create(category: Category): Promise<number>
   update(category: Category): Promise<number>
   patch(category: Partial<Category>): Promise<number>
   delete(id: string): Promise<number>
 }
-export interface CategoryService extends SearchService<Category, CategoryFilter> {
-  // search(filter: CategoryFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Category>>
+export interface CategoryService {
+  search(filter: CategoryFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Category>>
   load(id: string): Promise<Category | null>
   create(category: Category): Promise<Result<Category>>
   update(category: Category): Promise<Result<Category>>

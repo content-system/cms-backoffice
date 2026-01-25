@@ -1,179 +1,36 @@
 create table articles (
   id varchar(80) primary key,
+  slug varchar(255) unique,
   title varchar(255) not null,
   description varchar(1200) not null,
-  content varchar(9500),
+  content text,
   published_at timestamptz,
   tags character varying[],
   thumbnail varchar(400),
   high_thumbnail varchar(400),
+  author_id varchar(40),
   status char(1),
+
+  submitted_by varchar(40),
+  submitted_at timestamptz,
+  approved_by varchar(40),
+  approved_at timestamptz,
   created_by varchar(40),
   created_at timestamptz,
   updated_by varchar(40),
   updated_at timestamptz
 );
 
-insert into articles (id,title,description,content,published_at,tags,thumbnail,high_thumbnail,status) values
-	 ('20240722001','FPT to Bolster Growth among Francophone Community, Emphasizing Workforce Development','FPT Corporation recently hosted the FPT Francophone Day, a dynamic networking and culture exchange platform for the French-speaking community in Vietnam. The event also marked the inauguration of FPT Francophone Association, highlighting the IT firm’s commitment to fostering its French-proficient professionals and nurturing opportunities for business and culture exchange.','<p>
-  Global technology corporation FPT recently hosted the FPT Francophone Day, a dynamic networking and culture exchange platform for the
-  French-speaking community in Vietnam. At the event, FPT introduced the FPT Francophone Association, a move to foster its French-proficient
-  professionals and nurture opportunities for business and culture exchange.
-</p>
-<p>
-  The event was attended by the French Ambassador to Vietnam, H.E. Olivier Brochet, and representatives from the Embassy of Haiti in Vietnam, Business
-  France, Campus France, French Institute in Vietnam (IFV), Vietnam - France Friendship and Cooperation Association (AACVF). Also in attendance were
-  over 300 attendees from the Francophone community in Vietnam, French organizations and businesses, French Alumni Vietnam Association (UAVF), and
-  French major students from universities in Hanoi.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_2.webp"></img>
-  <figcaption>
-    FPT Francophone Association was inaugurated in the presence of the French Ambassador to Vietnam and executive representatives of FPT (L to R: FPT
-    Software SEVP Nguyen Khai Hoan, FPT Healthcare Director Hoang Ngoc Thach, French Ambassador to Vietnam H.E. Olivier Brochet, FPT Vice Chairman of
-    the BOD Bui Quang Ngoc, Vietnam - France Friendship and Cooperation Association Vice President Nguyen Thiep, and FPT France COO Nguyen Viet Duc)
-  </figcaption>
-</figure>
-<p>
-  According to Dr. Bui Quang Ngoc, FPT Vice Chairman of the Board of Directors, the establishment of FPT Francophone Day and FPT Francophone
-  Association will serve as a platform to connect the French-speaking community within and outside the corporation, building a network of highly
-  proficient professionals. He also emphasized FPT’s commitment to bridging French and Vietnamese economies and cultures, driven by technologies,
-  innovation, and people development.
-</p>
-<p>
-  “The French market has been integral to our business expansion in Europe. With the surge in demand for digital solutions in France and
-  French-speaking territories, FPT Software aims to fivefold our onsite workforce and expand our presence to all major cities here. Our next milestone
-  for this market will be one of the Top 50 IT companies in France,” said Mdm. Chu Thi Thanh Ha, FPT Software Chairwoman.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_4.webp"></img>
-</figure>
-<p>
-  FPT Francophone Day also featured a panel discussion titled "From France to FPT: Journey & Experience." With the participation of FPT leaders and
-  tech experts, the panel has sparked engaging conversations and provided attendees with valuable perspectives on the evolving landscape of business
-  and technology in both France and Vietnam. It also emphasized the importance of cultural adaptability and the role of technology in bridging
-  cultural gaps and fostering collaboration.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_3.webp"></img>
-  <figcaption>Panel discussion "From France to FPT: Journey & Experience"</figcaption>
-</figure>
-<p>
-  Entered France in 2008, FPT now has over 100 local experts working in major French cities and 600 offshore professionals in Vietnam dedicated to
-  serving clients across industries, focusing on AI, Big Data, BI, SAP, DevSecOps, Cloud, and AUTOSAR services. Its robust competencies are recognized
-  through strategic partnerships with French giants like Airbus, Geopost, Quadient, Canal+, Sagemcom, OPMobility, Valeo, and more.
-</p>
-<p>
-  As part of the company''s global expansion, FPT has been actively involved in M&A deals to amplify its offshore delivery capabilities and local
-  footprint, notably the recent acquisition of an 80% stake in the French IT consulting firm AOSIS. Last year, its French subsidiary also entered
-  France''s Top 100 ICT Companies.
-</p>','2024-07-22 17:06:23.844+07','{}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','A'),
-	 ('20240826001','FPT Opens New Office in Shanghai, China','FPT China recently celebrated the opening of a new office in Shanghai, in response to the growing customer base and increasing demand for digital services and solutions. The tech firm is set to transform the Shanghai office into a leading hub for talent and technology with accelerated AI integration across its services to deliver unmatched innovation to customers worldwide.','<p>
-  SHANGHAI, China—Global technology corporation FPT recently celebrated its new office in Shanghai, the largest economic center of China. The new
-  office will serve as a pivotal hub for innovation and human resources, in response to the growing customer base and increasing demand for digital
-  services and solutions.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp"></img>
-</figure>
-<p>
-  Located in one of Shanghai’s most dynamic business districts, this new office allows FPT to further solidify its delivery and consulting capacities
-  for global clients across industries in the Chinese market. The area is also home to several industry giants in the fields of aerospace, automotive,
-  health tech, and artificial intelligence, boasting a well-developed transport infrastructure and supportive business policies for multinational
-  enterprises.
-</p>
-<p>
-  Generating approximately 10% of China''s GDP, Shanghai hosts a thriving workforce of approximately 500,000 IT engineers, fueled by its advancing tech
-  ecosystem and a steady influx of skilled graduates. By tapping into this high-quality and extensive talent pool, FPT aims to grow its Shanghai hub
-  workforce to 300 employees, contributing to its broader goal of 3,000 employees across China within the next five years.
-</p>
-<p>
-  According to Pham Thanh Tuan, Chief Executive Officer of FPT China, the new office will position FPT for greater growth and success, especially by
-  accelerating the recruitment of high-quality technology engineers in high-growth areas like project management and strategic consulting. The company
-  is set to transform the Shanghai office into a leading hub for talent and technology. Together with its network across China and the country''s top
-  universities, FPT will further accelerate AI integration in all solutions and service to deliver unmatched innovation to customers.
-</p>
-<p>
-  Since entering China in 2017, FPT has established a solid foothold with offices and delivery centers in strategic locations, including Shanghai,
-  Nanning, Suzhou, and Dalian. The IT firm is currently a strategic partner with leading Chinese firms in the automotive and semiconductor industries
-  and actively collaborates with universities to develop a strong local talent pool.
-</p>
-<p>FPT’s new office is located at Zhonggeng Global Creative Center, Lane 166, Minhong Road, Minhang District, Shanghai 201102, China.</p>','2024-08-26 16:49:52.453+07','{Shanghai,"FPT China","new office"}','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','A'),
-	 ('20240819001','FPT Software and Meerana Technologies Partner to Drive Digital Transformation in UAE','This partnership aims to expand FPT Software’s footprint in the region and address the market needs across various sectors, including Utilities, BFSI, Logistics, Transportation, and more.','<p>
-  Global IT services provider FPT Software recently announced a strategic partnership with Meerana Technologies, an emerging provider of smart IT
-  solutions. This collaboration not only strengthens FPT Software’s presence in the United Arab Emirates but also aligns with FPT Software’s vision of
-  accelerating digital transformation for its clients worldwide.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png"></img>
-  <figcaption>
-    The MoU Signing Ceremony was attended by His Excellency Mohammad Ali Rashed Lootah, President and CEO of Dubai Chambers, His Excellency Nguyen
-    Thanh Diep, Ambassador of the Socialist Republic of Vietnam to the UAE, Rimah Ghaddar, FPT Middle East CEO and Matar Almehairi, Meerana
-    Technologies CEO.
-  </figcaption>
-</figure>
-<p>
-  The two firms will collaborate to harness FPT Software’s expertise in Artificial Intelligence, Semiconductors, and other advanced technologies,
-  integrating them into Meerana Technologies’s existing products and solutions. By combining Meerana Technologies'' strong presence in UAE with FPT
-  Software’s diverse service offerings, this partnership aims to expand FPT Software’s footprint in the region and address the market needs across
-  various sectors, including Utilities, BFSI, Logistics, Transportation, and more.
-</p>
-<p>
-  Additionally, as part of this agreement, Meerana Technologies will leverage FPT Software’s global presence and extensive training initiatives, such
-  as FPT Global Internship Program, AI Residency Program, and other international exchange programs, to develop local Emirati IT talents. This
-  collaboration enables Emiratis to acquire digital skills through FPT Software’s specialized training programs, aligning with the United Arab
-  Emirates’s “Dubai Universal Blueprint for Artificial Intelligence” goal.
-</p>
-<p>
-  “The strategic MoU between FPT Software and Meerana Technologies delivers exceptional value to the dynamic UAE market. By harnessing the power of
-  Artificial Intelligence, Cloud, Hyper-Automation, Automation, IoT, and Low-code technologies, we are at the forefront of digital transformation,
-  creating innovative solutions and use cases tailored to the evolving needs of the UAE clients.” Rimah Ghaddar, Chief Executive Officer of FPT Middle
-  East, a subsidiary of FPT Software, pledged.
-</p>
-<p>
-  ‘‘One of the key benefits of the agreement is that it allows the UAE locals access to more than 3000 high-level AI expert talents, including some of
-  the best engineers, employed by FPT Software. This furnishes us with a unique opportunity to reap the benefits of AI whilst building a diverse
-  network of experts and specialists in the field of artificial intelligence, raising the profile of Dubai as a pioneering regional and international
-  hub for advanced technologies and innovation and a knowledge-based economy.”, said Matar Almehairi, Meerana Technologies Chief Executive Officer.
-</p>','2024-08-19 16:54:56.268+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','A'),
-	 ('20240717001','FPT Software Adopts Green Tuesday Initiative to Accelerate Sustainable Movement','FPT Software officially became a partner of the Green Tuesday Initiative, aiming to cut down food-related footprint on the organizational scale. As the first Vietnamese enterprise to join the program, this move further highlights the IT firm''s steadfast progress and commitment to green transformation and sustainable development.','<p>
-  Global technology company FPT Software recently announced its participation in the Green Tuesday Initiative to reduce food-related footprint on the
-  organizational scale. As the first Vietnamese enterprise to join this program, this move further highlights the IT firm''s steadfast progress and
-  commitment to green transformation and sustainable development.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp"></img>
-  <figcaption>
-    Nguyen Khai Hoan, FPT Software Senior Executive Vice President (R), Richa Mehta, Director of Programs, Asia-Pacific at Green Tuesday Initiative
-    (L), and delegates of both sides at the Memorandum of Understanding Signing Ceremony in Hanoi, Vietnam.
-  </figcaption>
-</figure>
-<p>
-  As part of the initiative, FPT Software targets to cut down on serving meat production in its campus cafeterias across Vietnam with more
-  climate-friendly and plant-based alternatives once a week. To realize this goal, the Green Tuesday program will support participating organizations
-  with training on low carbon footprint and climate-friendly diet, as well as auditing and conducting bi-yearly impact reports. Additionally, both
-  sides will collaborate to raise awareness for FPT Software''s employees through a series of onsite promotional activities.
-</p>
-<p>
-  “Sustainability is now taking the center stage of the global concern and of our customers. As we foster green and sustainable development to create
-  long-lasting values for our employees, clients, and the community, FPT Software always strives to become a forerunner in the sustainable movement,
-  bolstered by cutting-edge technologies and innovations. The implementation of ‘Green Tuesday’ is another step to help us achieve this goal,” said
-  Nguyen Khai Hoan, FPT Software Senior Executive Vice President.
-</p>
-<p>
-  Adopting this initiative marks another important milestone of FPT Software toward green transition. The company has actively participated in global
-  sustainable initiatives, such as the United Nations Global Compact Initiative, Eco Vadis Assessment, and Vietnam Low Emission Energy Program II
-  (V-LEEP II), to deliver green technology solutions to its customers. FPT Software is also the first tech firm in Vietnam to conduct a fully
-  three-scope management carbon accounting project, aiming to reduce greenhouse gas emissions and become carbon neutral. These movements strongly
-  align with FPT Corporation’s recent Environmental Policy and ESG commitment to achieving Net Zero emissions by 2040.
-</p>
-<p>
-  The Green Tuesday Initiative is a campaign by Vegan Outreach that offers consultation to help corporations and educational institutions tackle
-  climate change by providing more plant-based food at their dining premises. Launched in 2018, the campaign has helped prevent over 3.3 million lbs
-  of animal products from being served at more than 50 institutions in India. Starting in 2023, the Green Tuesday Initiative extended its operation to
-  Vietnam, one of the world’s top five most vulnerable countries to climate change.
-</p>','2024-07-17 17:08:14.069+07','{"Meerana Technologies",Meerana,UAE}','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','A'),
-	 ('20240930001','FPT Software Wins Job Creation Award at ESGBusiness Awards 2024','This recognition highlights FPT Software''s commitment to nurturing top talent and fostering diverse and inclusive workplaces across the global IT industry.','<figure>
+create table saved_articles (
+  user_id varchar(40),
+  id varchar(80),
+  saved_at timestamptz,
+  primary key (user_id, id)
+);
+
+
+insert into articles (id,slug,title,description,content,published_at,tags,thumbnail,high_thumbnail,author_id,status,created_at) values
+	 ('s9zKgiZEr7','fpt-software-wins-job-creation-award-at-esgbusiness-awards-2-s9zKgiZEr7','FPT Software Wins Job Creation Award at ESGBusiness Awards 2024','This recognition highlights FPT Software''s commitment to nurturing top talent and fostering diverse and inclusive workplaces across the global IT industry.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/1.webp"></img>
 </figure>
 <p>
@@ -238,43 +95,129 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
   Cloud, Hyperautomation, IoT, Low-code, and so on. It has partnered with over 1,100 clients worldwide, nearly 100 of which are Fortune Global 500
   companies in Aviation, Automotive, Banking, Financial Services and Insurance, Healthcare, Logistics, Manufacturing, Utilities, and more. For more
   information, please visit https://fptsoftware.com
-</p>','2024-09-30 16:45:00.266+07',NULL,'https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','A'),
-	 ('20240917001','FPT Expands Global Workforce to 80,000 amid Its 36th Anniversary','FPT Corporation recently announced a significant milestone, passing 80,000 employees across 30 countries. The milestone coincides with the company’s 36th anniversary and underscores its remarkable growth and global expansion.','<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/80000.png"></img>
+</p>','2024-09-30 16:45:00+07','{ESGBusiness,"ESGBusiness Awards 2024","BRONZE STEVIE"}','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','00005','P','2024-09-30 16:45:00.266+07'),
+	 ('DhkrIruG','fpt-to-bolster-growth-among-francophone-community-emphasizin-h-DhkrIruG','FPT to Bolster Growth among Francophone Community, Emphasizing Workforce Development','FPT Corporation recently hosted the FPT Francophone Day, a dynamic networking and culture exchange platform for the French-speaking community in Vietnam. The event also marked the inauguration of FPT Francophone Association, highlighting the IT firm’s commitment to fostering its French-proficient professionals and nurturing opportunities for business and culture exchange.','<p>
+  Global technology corporation FPT recently hosted the FPT Francophone Day, a dynamic networking and culture exchange platform for the
+  French-speaking community in Vietnam. At the event, FPT introduced the FPT Francophone Association, a move to foster its French-proficient
+  professionals and nurture opportunities for business and culture exchange.
+</p>
+<p>
+  The event was attended by the French Ambassador to Vietnam, H.E. Olivier Brochet, and representatives from the Embassy of Haiti in Vietnam, Business
+  France, Campus France, French Institute in Vietnam (IFV), Vietnam - France Friendship and Cooperation Association (AACVF). Also in attendance were
+  over 300 attendees from the Francophone community in Vietnam, French organizations and businesses, French Alumni Vietnam Association (UAVF), and
+  French major students from universities in Hanoi.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_2.webp"></img>
+  <figcaption>
+    FPT Francophone Association was inaugurated in the presence of the French Ambassador to Vietnam and executive representatives of FPT (L to R: FPT
+    Software SEVP Nguyen Khai Hoan, FPT Healthcare Director Hoang Ngoc Thach, French Ambassador to Vietnam H.E. Olivier Brochet, FPT Vice Chairman of
+    the BOD Bui Quang Ngoc, Vietnam - France Friendship and Cooperation Association Vice President Nguyen Thiep, and FPT France COO Nguyen Viet Duc)
+  </figcaption>
 </figure>
 <p>
-  FPT Corporation recently announced a significant milestone, passing 80,000 employees across 30 countries. The milestone coincides with the company’s
-  36th anniversary and underscores its remarkable growth and global expansion.
+  According to Dr. Bui Quang Ngoc, FPT Vice Chairman of the Board of Directors, the establishment of FPT Francophone Day and FPT Francophone
+  Association will serve as a platform to connect the French-speaking community within and outside the corporation, building a network of highly
+  proficient professionals. He also emphasized FPT’s commitment to bridging French and Vietnamese economies and cultures, driven by technologies,
+  innovation, and people development.
 </p>
 <p>
-  FPT Corporation’s global workforce boasts an average age of 28 and represents 78 nationalities. Among them, over 6,300 experts are stationed
-  internationally, beyond the headquarters in Vietnam, to serve the company’s diverse global client base.
+  “The French market has been integral to our business expansion in Europe. With the surge in demand for digital solutions in France and
+  French-speaking territories, FPT Software aims to fivefold our onsite workforce and expand our presence to all major cities here. Our next milestone
+  for this market will be one of the Top 50 IT companies in France,” said Mdm. Chu Thi Thanh Ha, FPT Software Chairwoman.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_4.webp"></img>
+</figure>
+<p>
+  FPT Francophone Day also featured a panel discussion titled "From France to FPT: Journey & Experience." With the participation of FPT leaders and
+  tech experts, the panel has sparked engaging conversations and provided attendees with valuable perspectives on the evolving landscape of business
+  and technology in both France and Vietnam. It also emphasized the importance of cultural adaptability and the role of technology in bridging
+  cultural gaps and fostering collaboration.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_3.webp"></img>
+  <figcaption>Panel discussion "From France to FPT: Journey & Experience"</figcaption>
+</figure>
+<p>
+  Entered France in 2008, FPT now has over 100 local experts working in major French cities and 600 offshore professionals in Vietnam dedicated to
+  serving clients across industries, focusing on AI, Big Data, BI, SAP, DevSecOps, Cloud, and AUTOSAR services. Its robust competencies are recognized
+  through strategic partnerships with French giants like Airbus, Geopost, Quadient, Canal+, Sagemcom, OPMobility, Valeo, and more.
 </p>
 <p>
-  Mr. Nguyen Van Khoa, CEO of FPT Corporation, stated, “FPT always places people at the center of all activities and strategic development. We are
-  proud of our diverse workforce, which includes individuals of various nationalities and ethnic backgrounds. The uniqueness of each FPT employee is
-  not only respected but also serves as an inspiration that drives our continuous innovation and growth.”
+  As part of the company''s global expansion, FPT has been actively involved in M&A deals to amplify its offshore delivery capabilities and local
+  footprint, notably the recent acquisition of an 80% stake in the French IT consulting firm AOSIS. Last year, its French subsidiary also entered
+  France''s Top 100 ICT Companies.
+</p>','2024-07-22 17:06:00+07','{"Francophone Community","Bolster Growth",Francophone}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','00005','P','2024-07-22 17:06:23.844+07'),
+	 ('wsXtnt1ZvP','fpt-software-and-meerana-technologies-partner-to-drive-digit-wsXtnt1ZvP','FPT Software and Meerana Technologies Partner to Drive Digital Transformation in UAE','This partnership aims to expand FPT Software’s footprint in the region and address the market needs across various sectors, including Utilities, BFSI, Logistics, Transportation, and more.','<p>
+  Global IT services provider FPT Software recently announced a strategic partnership with Meerana Technologies, an emerging provider of smart IT
+  solutions. This collaboration not only strengthens FPT Software’s presence in the United Arab Emirates but also aligns with FPT Software’s vision of
+  accelerating digital transformation for its clients worldwide.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png"></img>
+  <figcaption>
+    The MoU Signing Ceremony was attended by His Excellency Mohammad Ali Rashed Lootah, President and CEO of Dubai Chambers, His Excellency Nguyen
+    Thanh Diep, Ambassador of the Socialist Republic of Vietnam to the UAE, Rimah Ghaddar, FPT Middle East CEO and Matar Almehairi, Meerana
+    Technologies CEO.
+  </figcaption>
+</figure>
+<p>
+  The two firms will collaborate to harness FPT Software’s expertise in Artificial Intelligence, Semiconductors, and other advanced technologies,
+  integrating them into Meerana Technologies’s existing products and solutions. By combining Meerana Technologies'' strong presence in UAE with FPT
+  Software’s diverse service offerings, this partnership aims to expand FPT Software’s footprint in the region and address the market needs across
+  various sectors, including Utilities, BFSI, Logistics, Transportation, and more.
 </p>
 <p>
-  “We place a strong emphasis on investing in our people through specialized training programs, competitive benefits, and ample opportunities for
-  career advancement. These values have enabled FPT to attract and retain top talent, fostering a strong and cohesive team dedicated to achieving new
-  heights. At FPT, we strive to build a culture of happiness and success together with our employees,” he added.
+  Additionally, as part of this agreement, Meerana Technologies will leverage FPT Software’s global presence and extensive training initiatives, such
+  as FPT Global Internship Program, AI Residency Program, and other international exchange programs, to develop local Emirati IT talents. This
+  collaboration enables Emiratis to acquire digital skills through FPT Software’s specialized training programs, aligning with the United Arab
+  Emirates’s “Dubai Universal Blueprint for Artificial Intelligence” goal.
 </p>
 <p>
-  The milestone of 80,000 employees aligns with FPT’s ambitious goal of expanding its workforce to one million by 2035. This growth is set to
-  accelerate the company’s global digital transformation efforts, leveraging extensive knowledge and insights across diverse industries and regions.
+  “The strategic MoU between FPT Software and Meerana Technologies delivers exceptional value to the dynamic UAE market. By harnessing the power of
+  Artificial Intelligence, Cloud, Hyper-Automation, Automation, IoT, and Low-code technologies, we are at the forefront of digital transformation,
+  creating innovative solutions and use cases tailored to the evolving needs of the UAE clients.” Rimah Ghaddar, Chief Executive Officer of FPT Middle
+  East, a subsidiary of FPT Software, pledged.
 </p>
 <p>
-  After the first eight months of 2024, FPT achieved revenue of VND 39,664 billion and pre-tax profit of VND 7,077 billion, representing increases of
-  20.8% and nearly 20% compared to the same period last year.
+  ‘‘One of the key benefits of the agreement is that it allows the UAE locals access to more than 3000 high-level AI expert talents, including some of
+  the best engineers, employed by FPT Software. This furnishes us with a unique opportunity to reap the benefits of AI whilst building a diverse
+  network of experts and specialists in the field of artificial intelligence, raising the profile of Dubai as a pioneering regional and international
+  hub for advanced technologies and innovation and a knowledge-based economy.”, said Matar Almehairi, Meerana Technologies Chief Executive Officer.
+</p>','2024-08-19 16:54:00+07','{Meerana,"Meerana Technologies","Digital Transformation"}','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','00005','P','2024-08-19 16:54:56.268+07'),
+	 ('4Q4LN3vm2U','fpt-opens-new-office-in-shanghai-china-4Q4LN3vm2U','FPT Opens New Office in Shanghai, China','FPT China recently celebrated the opening of a new office in Shanghai, in response to the growing customer base and increasing demand for digital services and solutions. The tech firm is set to transform the Shanghai office into a leading hub for talent and technology with accelerated AI integration across its services to deliver unmatched innovation to customers worldwide.','<p>
+  SHANGHAI, China—Global technology corporation FPT recently celebrated its new office in Shanghai, the largest economic center of China. The new
+  office will serve as a pivotal hub for innovation and human resources, in response to the growing customer base and increasing demand for digital
+  services and solutions.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp"></img>
+</figure>
+<p>
+  Located in one of Shanghai’s most dynamic business districts, this new office allows FPT to further solidify its delivery and consulting capacities
+  for global clients across industries in the Chinese market. The area is also home to several industry giants in the fields of aerospace, automotive,
+  health tech, and artificial intelligence, boasting a well-developed transport infrastructure and supportive business policies for multinational
+  enterprises.
 </p>
 <p>
-  FPT’s core sectors include Technology, Telecommunications, and Education. Particularly in the technology sector, FPT strategically focuses on global
-  trends such as AI, semiconductors, automotive software, digital transformation, and green transformation. Additionally, the Corporation boasts a
-  "Made by FPT" ecosystem with over 200 products, services, and solutions, providing a vast platform for technology enthusiasts to showcase their
-  talents and expertise.
-</p>','2024-09-17 16:46:34.763+07','{}','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','A'),
-	 ('20240823001','Feature Interview: Low-Code Development Platform Adoption and How FPT Software Is Leading the Charge in South Korea','This in-depth interview discusses the rapid adoption of low-code platforms globally, with a focus on key markets such as South Korea.','<figure>
+  Generating approximately 10% of China''s GDP, Shanghai hosts a thriving workforce of approximately 500,000 IT engineers, fueled by its advancing tech
+  ecosystem and a steady influx of skilled graduates. By tapping into this high-quality and extensive talent pool, FPT aims to grow its Shanghai hub
+  workforce to 300 employees, contributing to its broader goal of 3,000 employees across China within the next five years.
+</p>
+<p>
+  According to Pham Thanh Tuan, Chief Executive Officer of FPT China, the new office will position FPT for greater growth and success, especially by
+  accelerating the recruitment of high-quality technology engineers in high-growth areas like project management and strategic consulting. The company
+  is set to transform the Shanghai office into a leading hub for talent and technology. Together with its network across China and the country''s top
+  universities, FPT will further accelerate AI integration in all solutions and service to deliver unmatched innovation to customers.
+</p>
+<p>
+  Since entering China in 2017, FPT has established a solid foothold with offices and delivery centers in strategic locations, including Shanghai,
+  Nanning, Suzhou, and Dalian. The IT firm is currently a strategic partner with leading Chinese firms in the automotive and semiconductor industries
+  and actively collaborates with universities to develop a strong local talent pool.
+</p>
+<p>FPT’s new office is located at Zhonggeng Global Creative Center, Lane 166, Minhong Road, Minhang District, Shanghai 201102, China.</p>','2024-08-26 16:49:00+07','{Shanghai,"FPT China","new office"}','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','00005','P','2024-08-26 16:49:52.453+07'),
+	 ('t4bqlIi5SB','feature-interview-low-code-development-platform-adoption-and-t4bqlIi5SB','Feature Interview: Low-Code Development Platform Adoption and How FPT Software Is Leading the Charge in South Korea','This in-depth interview discusses the rapid adoption of low-code platforms globally, with a focus on key markets such as South Korea.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp"></img>
 </figure>
 <p>
@@ -376,8 +319,45 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
   compliance and security ensures that businesses can effectively leverage low-code technologies to drive growth and efficiency. With our deep
   understanding of the local market and strong global experience, FPT Software is well-positioned to support South Korean businesses in their low-code
   journey.
-</p>','2024-08-23 16:51:46.338+07','{}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','A'),
-	 ('20240709001','FPT Software and VinCSS Join Hands to Accelerate Cybersecurity in Automotive Industry','FPT Software and VinCSS recently signed a Memorandum of Understanding (MoU) targeting the automotive sector. The partnership enables both companies to enhance their solutions by leveraging each other’s resources, expertise, and network.','<figure>
+</p>','2024-08-23 16:51:00+07','{Lowcode,low-code}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','00005','P','2024-08-23 16:51:46.338+07'),
+	 ('siwVPd50BH','fpt-software-adopts-green-tuesday-initiative-to-accelerate-s-siwVPd50BH','FPT Software Adopts Green Tuesday Initiative to Accelerate Sustainable Movement','FPT Software officially became a partner of the Green Tuesday Initiative, aiming to cut down food-related footprint on the organizational scale. As the first Vietnamese enterprise to join the program, this move further highlights the IT firm''s steadfast progress and commitment to green transformation and sustainable development.','<p>
+  Global technology company FPT Software recently announced its participation in the Green Tuesday Initiative to reduce food-related footprint on the
+  organizational scale. As the first Vietnamese enterprise to join this program, this move further highlights the IT firm''s steadfast progress and
+  commitment to green transformation and sustainable development.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp"></img>
+  <figcaption>
+    Nguyen Khai Hoan, FPT Software Senior Executive Vice President (R), Richa Mehta, Director of Programs, Asia-Pacific at Green Tuesday Initiative
+    (L), and delegates of both sides at the Memorandum of Understanding Signing Ceremony in Hanoi, Vietnam.
+  </figcaption>
+</figure>
+<p>
+  As part of the initiative, FPT Software targets to cut down on serving meat production in its campus cafeterias across Vietnam with more
+  climate-friendly and plant-based alternatives once a week. To realize this goal, the Green Tuesday program will support participating organizations
+  with training on low carbon footprint and climate-friendly diet, as well as auditing and conducting bi-yearly impact reports. Additionally, both
+  sides will collaborate to raise awareness for FPT Software''s employees through a series of onsite promotional activities.
+</p>
+<p>
+  “Sustainability is now taking the center stage of the global concern and of our customers. As we foster green and sustainable development to create
+  long-lasting values for our employees, clients, and the community, FPT Software always strives to become a forerunner in the sustainable movement,
+  bolstered by cutting-edge technologies and innovations. The implementation of ‘Green Tuesday’ is another step to help us achieve this goal,” said
+  Nguyen Khai Hoan, FPT Software Senior Executive Vice President.
+</p>
+<p>
+  Adopting this initiative marks another important milestone of FPT Software toward green transition. The company has actively participated in global
+  sustainable initiatives, such as the United Nations Global Compact Initiative, Eco Vadis Assessment, and Vietnam Low Emission Energy Program II
+  (V-LEEP II), to deliver green technology solutions to its customers. FPT Software is also the first tech firm in Vietnam to conduct a fully
+  three-scope management carbon accounting project, aiming to reduce greenhouse gas emissions and become carbon neutral. These movements strongly
+  align with FPT Corporation’s recent Environmental Policy and ESG commitment to achieving Net Zero emissions by 2040.
+</p>
+<p>
+  The Green Tuesday Initiative is a campaign by Vegan Outreach that offers consultation to help corporations and educational institutions tackle
+  climate change by providing more plant-based food at their dining premises. Launched in 2018, the campaign has helped prevent over 3.3 million lbs
+  of animal products from being served at more than 50 institutions in India. Starting in 2023, the Green Tuesday Initiative extended its operation to
+  Vietnam, one of the world’s top five most vulnerable countries to climate change.
+</p>','2024-07-17 17:08:00+07','{"Green Tuesday"}','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','00005','P','2024-07-17 17:08:14.069+07'),
+	 ('oHlfZi1CIu','fpt-software-and-vincss-join-hands-to-accelerate-cybersecuri-oHlfZi1CIu','FPT Software and VinCSS Join Hands to Accelerate Cybersecurity in Automotive Industry','FPT Software and VinCSS recently signed a Memorandum of Understanding (MoU) targeting the automotive sector. The partnership enables both companies to enhance their solutions by leveraging each other’s resources, expertise, and network.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png"></img>
 </figure>
 <p>
@@ -415,8 +395,75 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
   The automotive technology subsidiary boasts a global team of 4,000 software engineers and experts, serving notable clients such as Hyundai, Honda,
   Volvo, and Vietnam''s electric vehicle manufacturer VinFast. Earlier this year, the company inaugurated a new office in Pune, India, as part of its
   strategy to become a billion-dollar, world-class provider of automotive services and products by 2030.
-</p>','2024-07-09 17:11:14.232+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','A'),
-	 ('20240708001','FPT Japan Joins Leading IT Companies in Forming the Vietnamese Association of Digital Transformation in Japan','The Vietnamese Association of Digital Transformation in Japan (VADX Japan) was officially launched in Tokyo, Japan, with FPT Japan serving as the Association''s Chair Company and Do Van Khac, Senior Executive Vice President of FPT Software and CEO of FPT Japan, serving as the company’s representative. This initiative represents FPT Japan’s ongoing commitment to enhancing cooperation and development in digital technology between Vietnam and Japan.','<p>
+</p>','2024-07-09 17:11:00+07','{VinCSS}','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','00005','P','2024-07-09 17:11:14.232+07'),
+	 ('WDHYp-Zitn','fpt-software-welcomes-first-batch-of-global-interns-to-vietn-WDHYp-Zitn','FPT Software Welcomes First Batch of Global Interns to Vietnam for the Global Internship Program 2024','Returning for the second edition, the program has seen a fourfold increase in international student participation compared to last year, with students representing a wider variety of countries','<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp"></img>
+</figure>
+<p>
+  On July 1, 2024, FPT Software welcomed the first cohort of international students to its Global Internship program, designed to provide students
+  with opportunities to accelerate their technology careers through professional experiences at a leading global IT company. Returning for the second
+  edition, the program has seen a fourfold increase in international student participation compared to last year, with students representing a wider
+  variety of countries.
+</p>
+<p>
+  On their first day, international students from France, South Korea, Singapore, Indonesia, and Thailand participated in various activities. They
+  explored FPT Software’s state-of-the-art campuses in Hanoi, taking part in several initiatives which aimed to enhance employee well-being, such as
+  ‘Happy Break’. These activities were designed to prepare them for their upcoming work and cultural experiences. They will soon be joining several
+  projects that address business challenges for clients across various industries.
+</p>
+<p>
+  Jeongbin Lee, an intern from South Korea shared, "I am impressed by the futuristic design of FPT HOLA Park and how modern and green the campuses
+  are. These factors truly inspire employees to work, and I am proud to be a part of it." Meanwhile, Fabien Pineau from France expressed his
+  excitement to leverage his technical skills while discovering the beauty of Vietnam''s nature and culture.
+</p>
+<p>
+  Nguyen Tuan Minh, FPT Software’s Chief Human Resources Officer, enthusiastically welcomed the new international interns, expressing high
+  expectations for another successful edition of the Global Internship program. With the company’s ambitious goal of fueling a global pipeline of 1
+  million digital transformation agents by 2035, he hopes that the diverse experiences offered by the program will help international interns gain
+  confidence in their career paths, enhance their technological knowledge, develop an appreciation for the people and culture of Vietnam and they will
+  become FPT Software''s enthusiastic ambassadors across different markets where it operates by the end of this internship.
+</p>
+<p>
+  Global interns will participate in training sessions at FPT Software Academy where they will be equipped with the necessary skills and knowledge,
+  providing a comprehensive view of learning and development opportunities at FPT Software. During the next eight-week internship, participating
+  interns will also gain direct mentorship and enhance industry networks with FPT Software’s technical experts, especially in the fields of AI, Cloud,
+  Data, and Cyber Security.
+</p>
+<p>For more information about FPT Software’s Global Internship Program, visit FPT Software Global Internship.</p>','2024-07-04 17:19:00+07','{"Global Internship"}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','00005','P','2024-07-04 17:19:23.269+07'),
+	 ('N6_qO411N6','fpt-software-wins-2nd-runner-up-at-sap-hack2build-contest-N6_qO411N6','FPT Software Wins 2nd Runner-Up at SAP Hack2Build Contest','FPT Software Wins 2nd Runner-Up at SAP Hack2Build Contest','<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp"></img>
+</figure>
+<p>
+  FPT Software has achieved the 2nd Runner Up at the SAP Hack2Build contest with its AI-enabled and innovative B2B retail solution, mySalesPro.
+  Notably, FPT Software was the only Vietnam-headquartered company competing alongside top global firms such as EY, Deloitte, IBM, and PWC.
+</p>
+<p>
+  Hack2Build, known as "Beyond a Hackathon", is an initiative that combines the creativity and speed of prototyping by partners over just seven days.
+  The Hack2Build event titled "Build Clean Core Extensions with SAP Business AI for RISE with SAP" saw the participation of 18 teams from nine
+  countries, all presenting their groundbreaking solutions. Participants were assessed based on five main criteria: SAP technology, Architecture &
+  Design, Business, Presentation, Inspiration & Innovation.
+</p>
+<p>
+  FPT Software’s mySalesPro is a mobile assistant solution designed for B2B sales teams, offering quick access to product and service information,
+  promotion details, and multimedia showcases. It simplifies the creation of sales rebates and contracts and provides customer management capabilities
+  on both computer tablets and mobile phones.
+</p>
+<p>
+  Especially, mySalesPro enables AI-driven generation of sales rebate programs and FAQs. The application leverages the SAP Business Technology
+  Platform (SAP BTP) integrated with SAP S/4HANA Private Cloud Edition and the SAP Cloud Application Programming Model (CAP) on SAP HANA Cloud. The
+  frontend architecture is based on SAP Fiori, utilizing SAP Mobile Services for the mobile app, which is built using the cross-platform SAP MDK SDK.
+</p>
+<p>
+  Celebrating the win, Ngo Minh Tri, SAP Program Lead and Managing Director of Enterprise Business Services Division at FPT Software, said, “This
+  accomplishment reinforces our position as a leader in leveraging SAP technologies to create impactful business solutions. By utilizing SAP S/4HANA
+  Cloud services, SAP Business Technology Platform (BTP) and SAP Business AI, we provide our global clients with an intelligent, sustainable
+  enterprise core that offers modular connectivity across all lines of business.”
+</p>
+<p>
+  With nearly 1,100 certifications and a dedicated team of SAP consultants supporting six languages, FPT Software leverages the latest SAP solutions,
+  including SAP BTP, RISE with SAP, and GROW, to deliver unparalleled value to its global clients.
+</p>','2024-07-01 17:21:00+07','{"2nd Runner Up","SAP Hack2Build"}','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','00005','P','2024-07-01 17:21:19.512+07'),
+	 ('cyn8y3nP9m','fpt-japan-joins-leading-it-companies-in-forming-the-vietname-cyn8y3nP9m','FPT Japan Joins Leading IT Companies in Forming the Vietnamese Association of Digital Transformation in Japan','The Vietnamese Association of Digital Transformation in Japan (VADX Japan) was officially launched in Tokyo, Japan, with FPT Japan serving as the Association''s Chair Company and Do Van Khac, Senior Executive Vice President of FPT Software and CEO of FPT Japan, serving as the company’s representative. This initiative represents FPT Japan’s ongoing commitment to enhancing cooperation and development in digital technology between Vietnam and Japan.','<p>
   The Vietnam Association of Digital Transformation in Japan (VADX Japan) was officially launched in Tokyo, Japan, with FPT Japan serving as the
   Association''s Chair Company and Do Van Khac, Senior Executive Vice President of FPT Software and CEO of FPT Japan, serving as the company’s
   representative. The Association''s Co-Chair Companies and General Secretary include representatives from RikkeiSoft Japan, VTI, and Mirabo. This
@@ -463,110 +510,44 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
   solutions such as AI, machine learning, and cloud computing. The IT firm is recognized for excellent employee benefits and workplace happiness,
   including Best Workplaces in Asia, Best Places To Work in Japan, and Best Places To Work for Women in Japan. Recently, FPT Japan has also
   collaborated with the Japan Business Federation (Keidanren) to promote the development of the Vietnamese IT business community in Japan.
-</p>','2024-07-08 17:14:08.978+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','A'),
-	 ('20240701001','FPT Software Wins 2nd Runner-Up at SAP Hack2Build Contest','FPT Software Wins 2nd Runner-Up at SAP Hack2Build Contest','<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp"></img>
+</p>','2024-07-08 17:14:00+07','{VADX,"Vietnamese Association of Digital Transformation in Japan"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','00005','P','2024-07-08 17:14:08.978+07');
+insert into articles (id,slug,title,description,content,published_at,tags,thumbnail,high_thumbnail,author_id,status,created_at) values
+	 ('2sX9m9LZm9','fpt-expands-global-workforce-to-80000-amid-its-36th-annivers-2sX9m9LZm9','FPT Expands Global Workforce to 80,000 amid Its 36th Anniversary','FPT Corporation recently announced a significant milestone, passing 80,000 employees across 30 countries. The milestone coincides with the company’s 36th anniversary and underscores its remarkable growth and global expansion.','<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/80000.png"></img>
 </figure>
 <p>
-  FPT Software has achieved the 2nd Runner Up at the SAP Hack2Build contest with its AI-enabled and innovative B2B retail solution, mySalesPro.
-  Notably, FPT Software was the only Vietnam-headquartered company competing alongside top global firms such as EY, Deloitte, IBM, and PWC.
+  FPT Corporation recently announced a significant milestone, passing 80,000 employees across 30 countries. The milestone coincides with the company’s
+  36th anniversary and underscores its remarkable growth and global expansion.
 </p>
 <p>
-  Hack2Build, known as "Beyond a Hackathon", is an initiative that combines the creativity and speed of prototyping by partners over just seven days.
-  The Hack2Build event titled "Build Clean Core Extensions with SAP Business AI for RISE with SAP" saw the participation of 18 teams from nine
-  countries, all presenting their groundbreaking solutions. Participants were assessed based on five main criteria: SAP technology, Architecture &
-  Design, Business, Presentation, Inspiration & Innovation.
+  FPT Corporation’s global workforce boasts an average age of 28 and represents 78 nationalities. Among them, over 6,300 experts are stationed
+  internationally, beyond the headquarters in Vietnam, to serve the company’s diverse global client base.
 </p>
 <p>
-  FPT Software’s mySalesPro is a mobile assistant solution designed for B2B sales teams, offering quick access to product and service information,
-  promotion details, and multimedia showcases. It simplifies the creation of sales rebates and contracts and provides customer management capabilities
-  on both computer tablets and mobile phones.
+  Mr. Nguyen Van Khoa, CEO of FPT Corporation, stated, “FPT always places people at the center of all activities and strategic development. We are
+  proud of our diverse workforce, which includes individuals of various nationalities and ethnic backgrounds. The uniqueness of each FPT employee is
+  not only respected but also serves as an inspiration that drives our continuous innovation and growth.”
 </p>
 <p>
-  Especially, mySalesPro enables AI-driven generation of sales rebate programs and FAQs. The application leverages the SAP Business Technology
-  Platform (SAP BTP) integrated with SAP S/4HANA Private Cloud Edition and the SAP Cloud Application Programming Model (CAP) on SAP HANA Cloud. The
-  frontend architecture is based on SAP Fiori, utilizing SAP Mobile Services for the mobile app, which is built using the cross-platform SAP MDK SDK.
+  “We place a strong emphasis on investing in our people through specialized training programs, competitive benefits, and ample opportunities for
+  career advancement. These values have enabled FPT to attract and retain top talent, fostering a strong and cohesive team dedicated to achieving new
+  heights. At FPT, we strive to build a culture of happiness and success together with our employees,” he added.
 </p>
 <p>
-  Celebrating the win, Ngo Minh Tri, SAP Program Lead and Managing Director of Enterprise Business Services Division at FPT Software, said, “This
-  accomplishment reinforces our position as a leader in leveraging SAP technologies to create impactful business solutions. By utilizing SAP S/4HANA
-  Cloud services, SAP Business Technology Platform (BTP) and SAP Business AI, we provide our global clients with an intelligent, sustainable
-  enterprise core that offers modular connectivity across all lines of business.”
+  The milestone of 80,000 employees aligns with FPT’s ambitious goal of expanding its workforce to one million by 2035. This growth is set to
+  accelerate the company’s global digital transformation efforts, leveraging extensive knowledge and insights across diverse industries and regions.
 </p>
 <p>
-  With nearly 1,100 certifications and a dedicated team of SAP consultants supporting six languages, FPT Software leverages the latest SAP solutions,
-  including SAP BTP, RISE with SAP, and GROW, to deliver unparalleled value to its global clients.
-</p>','2024-07-01 17:21:19.512+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','A');
-insert into articles (id,title,description,content,published_at,tags,thumbnail,high_thumbnail,status) VALUES
-	 ('20240704001','FPT Software Welcomes First Batch of Global Interns to Vietnam for the Global Internship Program 2024','Returning for the second edition, the program has seen a fourfold increase in international student participation compared to last year, with students representing a wider variety of countries','<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp"></img>
-</figure>
-<p>
-  On July 1, 2024, FPT Software welcomed the first cohort of international students to its Global Internship program, designed to provide students
-  with opportunities to accelerate their technology careers through professional experiences at a leading global IT company. Returning for the second
-  edition, the program has seen a fourfold increase in international student participation compared to last year, with students representing a wider
-  variety of countries.
+  After the first eight months of 2024, FPT achieved revenue of VND 39,664 billion and pre-tax profit of VND 7,077 billion, representing increases of
+  20.8% and nearly 20% compared to the same period last year.
 </p>
 <p>
-  On their first day, international students from France, South Korea, Singapore, Indonesia, and Thailand participated in various activities. They
-  explored FPT Software’s state-of-the-art campuses in Hanoi, taking part in several initiatives which aimed to enhance employee well-being, such as
-  ‘Happy Break’. These activities were designed to prepare them for their upcoming work and cultural experiences. They will soon be joining several
-  projects that address business challenges for clients across various industries.
-</p>
-<p>
-  Jeongbin Lee, an intern from South Korea shared, "I am impressed by the futuristic design of FPT HOLA Park and how modern and green the campuses
-  are. These factors truly inspire employees to work, and I am proud to be a part of it." Meanwhile, Fabien Pineau from France expressed his
-  excitement to leverage his technical skills while discovering the beauty of Vietnam''s nature and culture.
-</p>
-<p>
-  Nguyen Tuan Minh, FPT Software’s Chief Human Resources Officer, enthusiastically welcomed the new international interns, expressing high
-  expectations for another successful edition of the Global Internship program. With the company’s ambitious goal of fueling a global pipeline of 1
-  million digital transformation agents by 2035, he hopes that the diverse experiences offered by the program will help international interns gain
-  confidence in their career paths, enhance their technological knowledge, develop an appreciation for the people and culture of Vietnam and they will
-  become FPT Software''s enthusiastic ambassadors across different markets where it operates by the end of this internship.
-</p>
-<p>
-  Global interns will participate in training sessions at FPT Software Academy where they will be equipped with the necessary skills and knowledge,
-  providing a comprehensive view of learning and development opportunities at FPT Software. During the next eight-week internship, participating
-  interns will also gain direct mentorship and enhance industry networks with FPT Software’s technical experts, especially in the fields of AI, Cloud,
-  Data, and Cyber Security.
-</p>
-<p>For more information about FPT Software’s Global Internship Program, visit FPT Software Global Internship.</p>','2024-07-04 17:19:23.269+07','{}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','A'),
-	 ('20240605001','Vietnam Tech Revolution Story to Be Featured on Discovery Channel, With FPT in the Spotlight','FPT Corporation (FPT) collaborates with Warner Bros. Discovery in an upcoming documentary titled “Silicon Delta - The Story of Vietnam’s Tech Revolution.” The documentary highlights Vietnam as a leading digital economy of Southeast Asia, with FPT at the forefront of the country’s transformation into a global destination for business and innovation','<p>
-  FPT Corporation (FPT) collaborates with Warner Bros. Discovery in an upcoming documentary titled “Silicon Delta - The Story of Vietnam’s Tech
-  Revolution.” The documentary highlights Vietnam as a leading digital economy of Southeast Asia, with FPT at the forefront of the country’s
-  transformation into a global destination for business and innovation.
-</p>
-<p>
-  The film features senior leaders from FPT and its subsidiary, including FPT Chairman Truong Gia Binh, FPT Software Chairwoman Chu Thi Thanh Ha, FPT
-  Software CEO Pham Minh Tuan, FPT Software SEVP Nguyen Khai Hoan, and FPT Software Chief AI Officer Phong Nguyen; as well as other experts. They
-  reflect on the stories of FPT’s establishment in the late 1980s with the goal of surviving poverty and the ambitious dream of bringing Vietnamese
-  intelligence to the global stage. “From the sixties to the eighties, there’s constant hunger. I just need some company to help us survive. That’s
-  why FPT was founded”, said FPT Chairman Truong Gia Binh.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp"></img>
-  <figcaption>Dr. Truong Gia Binh, FPT Corporation Chairman</figcaption>
-</figure>
-<p>
-  The 30-minute documentary also provides an in-depth look into the corporation’s development journey, which runs parallel to the nation’s transition
-  from a war-torn country into a prime destination for tech innovation. One of the highlights is FPT''s pivotal decision of "Go global or die", which
-  FPT leaders emphasize as the only way for the corporation to survive and a game-changer for the fate of the nation, demonstrating the daring spirit
-  rooted in the DNA of each FPT member. “We have one sentence in Vietnam - Stay hungry, just do it - So that’s what we did”, said FPT Software
-  Chairwoman Chu Thi Thanh Ha.
-</p>
-<figure>
-  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00233.webp"></img>
-  <figcaption>Ms. Chu Thi Thanh Ha, FPT Software Chairwoman</figcaption>
-</figure>
-<p>
-  Today, FPT remains committed to its mission of accompanying Vietnam into a future defined by five key areas: Artificial Intelligence, Automotive,
-  Semiconductor, Digital Transformation, and Green Transformation. As the pioneer in the country’s technology landscape, FPT also upholds the
-  commitment to the education of future generations with initiatives like Hope School, which provides support and education to children orphaned by
-  Covid-19.
-</p>
-<p>The documentary will premiere on Discovery Channel in the Asia Pacific, Japan, Germany, and other regions later this September.</p>','2024-06-05 17:23:07.571+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','A'),
-	 ('20240912001','FPT Software Earns First Hong Kong Business Technology Excellence Award for its Agent Digital Platform in Insurtech','Global leading IT company FPT Software has earned recognition at the Hong Kong Business Technology Excellence Awards in the Software - Insurtech category. This marks the first time the company has received this prestigious award, reinforcing its status as a trusted service provider in the insurance sector.','<figure>
+  FPT’s core sectors include Technology, Telecommunications, and Education. Particularly in the technology sector, FPT strategically focuses on global
+  trends such as AI, semiconductors, automotive software, digital transformation, and green transformation. Additionally, the Corporation boasts a
+  "Made by FPT" ecosystem with over 200 products, services, and solutions, providing a vast platform for technology enthusiasts to showcase their
+  talents and expertise.
+</p>','2024-09-17 16:46:00+07','{"80000 employees"}','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','00005','P','2024-09-17 16:46:34.763+07'),
+	 ('zasWaUFDBT','fpt-software-earns-first-hong-kong-business-technology-excel-zasWaUFDBT','FPT Software Earns First Hong Kong Business Technology Excellence Award for its Agent Digital Platform in Insurtech','Global leading IT company FPT Software has earned recognition at the Hong Kong Business Technology Excellence Awards in the Software - Insurtech category. This marks the first time the company has received this prestigious award, reinforcing its status as a trusted service provider in the insurance sector.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp"></img>
   <figcaption>
     David Kou (L) - FPT Greater Bay Indochina’s (a subsidiary of FPT Software) Director of Delivery and Solution at the Award Ceremony
@@ -603,8 +584,42 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
   customizable solutions, including customer self-service applications, payment processing services, automated underwriting, and lapse prediction.
   Earlier this year, FPT Software’s innovative insurance solution, Confidon, earned a Gold Stevie® at the 2024 Asia-Pacific Stevie® Awards for
   Innovation.
-</p>','2024-09-12 16:48:10.238+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','A'),
-	 ('20240530001','FPT Issues First-Ever Environmental Policy, Strengthening Sustainable Commitment','This policy provides a detailed plan for implementing specific steps to reduce greenhouse gas (GHG) emissions, aiming at becoming Vietnam''s pioneering company to achieve Net Zero emissions by 2040.','<figure>
+</p>','2024-09-12 16:48:00+07','{Insurtech,"Hong Kong Awards",ADP,"Agent Digital Platform"}','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','00005','P','2024-09-12 16:48:10.238+07'),
+	 ('557EiwdJTk','vietnam-tech-revolution-story-to-be-featured-on-discovery-ch-557EiwdJTk','Vietnam Tech Revolution Story to Be Featured on Discovery Channel, With FPT in the Spotlight','FPT Corporation (FPT) collaborates with Warner Bros. Discovery in an upcoming documentary titled “Silicon Delta - The Story of Vietnam’s Tech Revolution.” The documentary highlights Vietnam as a leading digital economy of Southeast Asia, with FPT at the forefront of the country’s transformation into a global destination for business and innovation','<p>
+  FPT Corporation (FPT) collaborates with Warner Bros. Discovery in an upcoming documentary titled “Silicon Delta - The Story of Vietnam’s Tech
+  Revolution.” The documentary highlights Vietnam as a leading digital economy of Southeast Asia, with FPT at the forefront of the country’s
+  transformation into a global destination for business and innovation.
+</p>
+<p>
+  The film features senior leaders from FPT and its subsidiary, including FPT Chairman Truong Gia Binh, FPT Software Chairwoman Chu Thi Thanh Ha, FPT
+  Software CEO Pham Minh Tuan, FPT Software SEVP Nguyen Khai Hoan, and FPT Software Chief AI Officer Phong Nguyen; as well as other experts. They
+  reflect on the stories of FPT’s establishment in the late 1980s with the goal of surviving poverty and the ambitious dream of bringing Vietnamese
+  intelligence to the global stage. “From the sixties to the eighties, there’s constant hunger. I just need some company to help us survive. That’s
+  why FPT was founded”, said FPT Chairman Truong Gia Binh.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp"></img>
+  <figcaption>Dr. Truong Gia Binh, FPT Corporation Chairman</figcaption>
+</figure>
+<p>
+  The 30-minute documentary also provides an in-depth look into the corporation’s development journey, which runs parallel to the nation’s transition
+  from a war-torn country into a prime destination for tech innovation. One of the highlights is FPT''s pivotal decision of "Go global or die", which
+  FPT leaders emphasize as the only way for the corporation to survive and a game-changer for the fate of the nation, demonstrating the daring spirit
+  rooted in the DNA of each FPT member. “We have one sentence in Vietnam - Stay hungry, just do it - So that’s what we did”, said FPT Software
+  Chairwoman Chu Thi Thanh Ha.
+</p>
+<figure>
+  <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00233.webp"></img>
+  <figcaption>Ms. Chu Thi Thanh Ha, FPT Software Chairwoman</figcaption>
+</figure>
+<p>
+  Today, FPT remains committed to its mission of accompanying Vietnam into a future defined by five key areas: Artificial Intelligence, Automotive,
+  Semiconductor, Digital Transformation, and Green Transformation. As the pioneer in the country’s technology landscape, FPT also upholds the
+  commitment to the education of future generations with initiatives like Hope School, which provides support and education to children orphaned by
+  Covid-19.
+</p>
+<p>The documentary will premiere on Discovery Channel in the Asia Pacific, Japan, Germany, and other regions later this September.</p>','2024-06-05 17:23:00+07','{"Warner Bros","Silicon Delta"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','00005','P','2024-06-05 17:23:07.571+07'),
+	 ('96BJQpAY7r','fpt-issues-first-ever-environmental-policy-strengthening-sus-96BJQpAY7r','FPT Issues First-Ever Environmental Policy, Strengthening Sustainable Commitment','This policy provides a detailed plan for implementing specific steps to reduce greenhouse gas (GHG) emissions, aiming at becoming Vietnam''s pioneering company to achieve Net Zero emissions by 2040.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp"></img>
 </figure>
 <p>
@@ -635,4 +650,6 @@ insert into articles (id,title,description,content,published_at,tags,thumbnail,h
 <p>
   With sustainability at the heart of its operation, the Environmental Policy reflects FPT''s consistent strategy of aligning company growth with
   social responsibility, while also delivering a greater impact for its customers, accompanying them in their green transformation journey.
-</p>','2024-05-30 17:25:05.967+07','{}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','A');
+</p>','2024-05-30 17:25:00+07','{"greenhouse gas",GHG,"Net Zero emissions"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','00005','P','2024-05-30 17:25:05.967+07');
+
+update articles set author_id = '00005', created_by = '00005', update_by = '00005', status = 'P';

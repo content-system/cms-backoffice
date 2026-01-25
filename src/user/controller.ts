@@ -4,37 +4,35 @@ import { Log } from "onecore"
 import { User, UserFilter, UserService } from "./user"
 
 export class UserController extends Controller<User, string, UserFilter> {
-  constructor(log: Log, private userService: UserService) {
-    super(log, userService)
+  constructor(public service: UserService, log: Log) {
+    super(log, service)
     this.array = ["status"]
     this.all = this.all.bind(this)
     this.getUsersOfRole = this.getUsersOfRole.bind(this)
   }
-  all(req: Request, res: Response) {
+  async all(req: Request, res: Response) {
     const v = req.query["roleId"]
-    if (v && v.toString().length > 0) {
-      this.userService
-        .getUsersOfRole(v.toString())
-        .then((users) => res.status(200).json(users))
-        .catch((err) => handleError(err, res, this.log))
-    } else {
-      if (this.userService.all) {
-        this.userService
-          .all()
-          .then((users) => res.status(200).json(users))
-          .catch((err) => handleError(err, res, this.log))
+    try {
+      if (v && v.toString().length > 0) {
+        const users = await this.service.getUsersOfRole(v.toString())
+        res.status(200).json(users).end()
       } else {
-        res.status(400).end("roleId is required")
+        const users = await this.service.all()
+        res.status(200).json(users).end()
       }
+    } catch (err) {
+      handleError(err, res, this.log)
     }
   }
-  getUsersOfRole(req: Request, res: Response) {
+  async getUsersOfRole(req: Request, res: Response) {
     const id = queryParam(req, res, "roleId")
     if (id) {
-      this.userService
-        .getUsersOfRole(id)
-        .then((users) => res.status(200).json(users))
-        .catch((err) => handleError(err, res, this.log))
+      try {
+        const users = await this.service.getUsersOfRole(id)
+        res.status(200).json(users).end()
+      } catch (err) {
+        handleError(err, res, this.log)
+      }
     }
   }
 }
