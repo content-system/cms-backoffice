@@ -17,10 +17,10 @@ export class UserController {
     this.getUsersOfRole = this.getUsersOfRole.bind(this)
   }
   async all(req: Request, res: Response) {
-    const roleId = req.query["roleId"]
+    const roleId = req.query.roleId as string
     try {
-      if (roleId && roleId.toString().length > 0) {
-        const users = await this.service.getUsersOfRole(roleId.toString())
+      if (roleId && roleId.length > 0) {
+        const users = await this.service.getUsersOfRole(roleId)
         res.status(200).json(users).end()
       } else {
         const users = await this.service.all()
@@ -92,11 +92,8 @@ export class UserController {
     }
   }
   async patch(req: Request, res: Response) {
-    console.log("Enter patch user")
     const id = req.params.id as string
-    console.log("Enter patch user " + id)
     const userId = res.locals.account.id
-    console.log("Enter patch userId " + userId)
     const user: User = req.body
     user.userId = id
     user.updatedBy = userId

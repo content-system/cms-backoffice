@@ -119,7 +119,7 @@ export class RoleController {
     const id = req.params.id
     const users: string[] = req.body
     if (!Array.isArray(users)) {
-      res.status(400).end(`'Body must be an array`)
+      res.status(400).end(`Body must be an array`)
     } else {
       try {
         const result = await this.service.assign(id, users)
