@@ -3,7 +3,7 @@ node_modules
 dist
 es6
 build
-package-lock.json
+# package-lock.json
 debug.log
 .docker
 .cache
