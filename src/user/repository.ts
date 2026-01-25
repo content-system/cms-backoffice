@@ -70,7 +70,7 @@ export class SqlUserRepository extends SearchRepository<User, UserFilter> implem
     const stmts: Statement[] = []
     const stmt = buildToInsert(user, "users", userModel, this.param)
     if (!stmt) {
-      return Promise.resolve(-1)
+      return Promise.resolve(0)
     }
     stmts.push(stmt)
     insertUserRoles(stmts, user.userId, user.roles, this.param)

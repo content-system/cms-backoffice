@@ -1,11 +1,46 @@
-import { Application } from "express"
+import { Application, NextFunction, Request, Response } from "express"
 import { check } from "express-ext"
+import { verify } from "jsonwebtoken"
 import multer from "multer"
 import { del, get, patch, post, put, read, write } from "security-express"
 import { articleModel } from "./article"
 import { contactModel } from "./contact"
 import { ApplicationContext } from "./context"
 import { jobModel } from "./job"
+
+const prefix = "Bearer "
+export class TokenVerifier {
+  constructor(private secret: string, private account: string, private userId: string, private id: string) {
+    this.verify = this.verify.bind(this)
+  }
+  verify(req: Request, res: Response, next: NextFunction) {
+    const data = req.headers["authorization"]
+    if (data && data.startsWith(prefix)) {
+      const token = data.substring(prefix.length)
+      verify(token, this.secret, (err, decoded) => {
+        if (err) {
+          next()
+        } else {
+          res.locals[this.account] = decoded
+          res.locals[this.userId] = (decoded as any)["id"]
+          next()
+        }
+      })
+    } else {
+      next()
+    }
+  }
+}
+
+function authorized(req: Request, res: Response, next: NextFunction) {
+  const account = res.locals.account
+  if (!account) {
+    console.log(req.url)
+    res.status(401).end("Require Authentication")
+  } else {
+    next()
+  }
+}
 
 export function route(app: Application, ctx: ApplicationContext, secure?: boolean): void {
   const parser = multer()
@@ -28,21 +63,21 @@ export function route(app: Application, ctx: ApplicationContext, secure?: boolea
 
   const readUser = ctx.authorize("user", read)
   const writeUser = ctx.authorize("user", write)
-  get(app, "/roles", readUser, ctx.role.all, secure)
-  get(app, "/users", readUser, ctx.user.all, secure)
-  post(app, "/users/search", readUser, ctx.user.search, secure)
-  get(app, "/users/search", readUser, ctx.user.search, secure)
-  get(app, "/users/:id", readUser, ctx.user.load, secure)
-  post(app, "/users", writeUser, ctx.user.create, secure)
-  put(app, "/users/:id", writeUser, ctx.user.update, secure)
-  patch(app, "/users/:id", writeUser, ctx.user.patch, secure)
-  del(app, "/users/:id", writeUser, ctx.user.delete, secure)
+  app.get("/roles", readUser, ctx.role.all)
+  app.get("/users", readUser, ctx.user.getUsersOfRole)
+  app.post("/users/search", readUser, ctx.user.search)
+  app.get("/users/search", readUser, ctx.user.search)
+  app.get("/users/:id", readUser, ctx.user.load)
+  app.post("/users", writeUser, ctx.user.create)
+  app.put("/users/:id", writeUser, ctx.user.update)
+  app.patch("/users/:id", writeUser, ctx.user.patch)
+  app.delete("/users/:id", writeUser, ctx.user.delete)
 
   const readAuditLog = ctx.authorize("audit_log", read)
-  get(app, "/audit-logs", readAuditLog, ctx.auditLog.search, secure)
-  get(app, "/audit-logs/search", readAuditLog, ctx.auditLog.search, secure)
-  post(app, "/audit-logs/search", readAuditLog, ctx.auditLog.search, secure)
-  get(app, "/audit-logs/:id", readAuditLog, ctx.auditLog.load, secure)
+  app.get("/audit-logs", readAuditLog, ctx.auditLog.search)
+  app.post("/audit-logs/search", readAuditLog, ctx.auditLog.search)
+  app.get("/audit-logs/search", readAuditLog, ctx.auditLog.search)
+  app.get("/audit-logs/:id", readAuditLog, ctx.auditLog.load)
 
   const readCategory = ctx.authorize("category", read)
   const writeCategory = ctx.authorize("category", write)
