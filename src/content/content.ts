@@ -10,10 +10,10 @@ export interface Content {
   status?: string
   version?: number
 
+  createdBy: string
   createdAt?: Date
-  createdBy?: string
+  updatedBy: string
   updatedAt?: Date
-  updatedBy?: string
 }
 export interface ContentFilter extends Filter {
   id?: string

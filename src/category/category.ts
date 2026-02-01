@@ -12,10 +12,10 @@ export interface Category {
   status: string
   version?: number
 
+  createdBy: string
   createdAt?: Date
-  createdBy?: string
+  updatedBy: string
   updatedAt?: Date
-  updatedBy?: string
 }
 export interface CategoryFilter extends Filter {
   id?: string

@@ -60,27 +60,24 @@ export class SqlRoleRepository extends SearchRepository<Role, RoleFilter> implem
   all(): Promise<Role[]> {
     return this.query("select * from roles order by role_id asc", undefined, this.map)
   }
-  load(id: string): Promise<Role | null> {
-    return this.db.query<Role>(`select * from roles where role_id = ${this.db.param(1)}`, [id], this.map).then((roles) => {
-      if (!roles || roles.length === 0) {
-        return null
-      }
-      const role = roles[0]
-      const query = `select module_id, permissions from role_modules where role_id = ${this.db.param(1)}`
-      return this.db.query<Module>(query, [id], this.roleModuleMap).then((modules) => {
-        if (modules && modules.length > 0) {
-          role.privileges = modules.map((i) => (i.permissions ? i.moduleId + " " + i.permissions.toString(16) : i.moduleId)) as any
-        }
-        return role
-      })
-    })
+  async load(id: string): Promise<Role | null> {
+    let query = `select * from roles where role_id = ${this.db.param(1)}`
+    const roles = await this.db.query<Role>(query, [id], this.map)
+    if (!roles || roles.length === 0) {
+      return null
+    }
+    const role = roles[0]
+    query = `select module_id, permissions from role_modules where role_id = ${this.db.param(1)}`
+    const modules = await this.db.query<Module>(query, [id], this.roleModuleMap)
+    if (modules && modules.length > 0) {
+      role.privileges = modules.map((i) => (i.permissions ? i.moduleId + " " + i.permissions.toString(16) : i.moduleId)) as any
+    }
+    return role
   }
   create(role: Role): Promise<number> {
     const stmts: Statement[] = []
     const stmt = buildToInsert(role, "roles", roleModel, this.db.param)
-    if (!stmt) {
-      return Promise.resolve(0)
-    }
+    stmts.push(stmt)
     insertRoleModules(stmts, role.roleId, role.privileges, this.db.param)
     return this.db.execBatch(stmts, true)
   }
@@ -88,11 +85,11 @@ export class SqlRoleRepository extends SearchRepository<Role, RoleFilter> implem
     const stmts: Statement[] = []
     const stmt = buildToUpdate(role, "roles", roleModel, this.db.param)
     let firstSuccess = false
-    if (stmt) {
+    if (stmt.query) {
       firstSuccess = true
       stmts.push(stmt)
     }
-    if (role.privileges != undefined) {
+    if (role.privileges) {
       const query = `delete from role_modules where role_id = ${this.db.param(1)}`
       stmts.push({ query, params: [role.roleId] })
       insertRoleModules(stmts, role.roleId, role.privileges, this.db.param)
@@ -116,7 +113,7 @@ export class SqlRoleRepository extends SearchRepository<Role, RoleFilter> implem
         return { roleId, userId: u }
       })
       const stmt = buildToInsertBatch<UserRole>(userRoles, "user_roles", userRoleModel, this.db.param)
-      if (stmt) {
+      if (stmt.query) {
         stmts.push(stmt)
       }
     }

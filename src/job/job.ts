@@ -1,11 +1,19 @@
-import { Attributes, Filter, Result, SearchResult, TimeRange } from "onecore"
+import { Attributes, Filter, SearchResult, TimeRange } from "onecore"
+
+export class Status {
+  static readonly Draft = 'D'
+  static readonly Submitted = 'S'
+  static readonly Approved = 'A'
+}
 
 export interface Job {
   id: string
+  slug: string
   title: string
   description: string
   publishedAt?: Date
   expiredAt?: Date
+  company?: string
   position?: string
   quantity?: number
   location?: string
@@ -13,16 +21,16 @@ export interface Job {
   skills?: string[]
   minSalary?: number
   maxSalary?: number
-  companyId?: string
   status: string
 
+  createdBy: string
   createdAt?: Date
-  createdBy?: string
+  updatedBy: string
   updatedAt?: Date
-  updatedBy?: string
 }
 export interface JobFilter extends Filter {
   id?: string
+  slug?: string
   title?: string
   description?: string
   requirements?: string
@@ -33,7 +41,7 @@ export interface JobFilter extends Filter {
   location?: string
   quantity?: number
   applicantCount?: number
-  companyId?: string
+  company?: string
   status?: string
 }
 
@@ -48,9 +56,9 @@ export interface JobRepository {
 export interface JobService {
   search(filter: JobFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Job>>
   load(id: string): Promise<Job | null>
-  create(job: Job): Promise<Result<Job>>
-  update(job: Job): Promise<Result<Job>>
-  patch(job: Partial<Job>): Promise<Result<Job>>
+  create(job: Job): Promise<number>
+  update(job: Job): Promise<number>
+  patch(job: Partial<Job>): Promise<number>
   delete(id: string): Promise<number>
 }
 
@@ -59,6 +67,9 @@ export const jobModel: Attributes = {
     length: 40,
     required: true,
     key: true,
+  },
+  slug: {
+    length: 150,
   },
   title: {
     length: 300,
@@ -74,6 +85,9 @@ export const jobModel: Attributes = {
   expiredAt: {
     column: "expired_at",
     type: "datetime",
+  },
+  company: {
+    length: 40,
   },
   position: {
     length: 100,

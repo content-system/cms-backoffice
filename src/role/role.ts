@@ -1,4 +1,4 @@
-import { Attributes, Filter, Result, SearchResult } from "onecore"
+import { Attributes, Filter, SearchResult } from "onecore"
 
 export interface Role {
   roleId: string
@@ -7,10 +7,10 @@ export interface Role {
   remark?: string
   privileges?: string[]
 
+  createdBy: string
   createdAt?: Date
-  createdBy?: string
+  updatedBy: string
   updatedAt?: Date
-  updatedBy?: string
 }
 export interface RoleFilter extends Filter {
   roleId?: string
@@ -33,9 +33,9 @@ export interface RoleService {
   all(): Promise<Role[]>
   search(filter: RoleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Role>>
   load(id: string): Promise<Role | null>
-  create(role: Role): Promise<Result<Role>>
-  update(role: Role): Promise<Result<Role>>
-  patch(role: Partial<Role>): Promise<Result<Role>>
+  create(role: Role): Promise<number>
+  update(role: Role): Promise<number>
+  patch(role: Partial<Role>): Promise<number>
   delete(id: string): Promise<number>
   assign(id: string, users: string[]): Promise<number>
 }

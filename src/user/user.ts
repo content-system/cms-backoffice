@@ -1,4 +1,4 @@
-import { Attributes, Filter, Result, SearchResult } from "onecore"
+import { Attributes, Filter, SearchResult } from "onecore"
 
 export interface User {
   userId: string
@@ -9,10 +9,10 @@ export interface User {
   roles?: string[]
   status: string
 
+  createdBy: string
   createdAt?: Date
-  createdBy?: string
+  updatedBy: string
   updatedAt?: Date
-  updatedBy?: string
 }
 export interface UserFilter extends Filter {
   id?: string
@@ -41,9 +41,9 @@ export interface UserService {
   all(): Promise<User[]>
   search(filter: UserFilter, limit: number, page?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
   load(id: string): Promise<User | null>
-  create(user: User): Promise<Result<User>>
-  update(user: User): Promise<Result<User>>
-  patch(user: Partial<User>): Promise<Result<User>>
+  create(user: User): Promise<number>
+  update(user: User): Promise<number>
+  patch(user: Partial<User>): Promise<number>
   delete(id: string): Promise<number>
   assign(id: string, roles: string[]): Promise<number>
 }

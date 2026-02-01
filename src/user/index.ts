@@ -4,6 +4,7 @@ import { TemplateMap, useQuery } from "query-mappers"
 import { UserController } from "./controller"
 import { SqlUserRepository } from "./repository"
 import { User, UserFilter, userModel, UserRepository, UserService } from "./user"
+
 export * from "./controller"
 
 export class UserUseCase extends UseCase<User, string, UserFilter> implements UserService {
@@ -21,7 +22,7 @@ export class UserUseCase extends UseCase<User, string, UserFilter> implements Us
   }
 }
 
-export function useUserController(db: DB, log: Log,  mapper?: TemplateMap): UserController {
+export function useUserController(db: DB, log: Log, mapper?: TemplateMap): UserController {
   const query = useQuery("user", mapper, userModel, true)
   const repo = new SqlUserRepository(db, query)
   const service = new UserUseCase(repo)

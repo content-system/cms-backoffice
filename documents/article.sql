@@ -3,14 +3,13 @@ create table articles (
   slug varchar(255) unique,
   title varchar(255) not null,
   description varchar(1200) not null,
-  content text,
+  content varchar(9500),
   published_at timestamptz,
   tags character varying[],
   thumbnail varchar(400),
   high_thumbnail varchar(400),
   author_id varchar(40),
   status char(1),
-
   created_by varchar(40),
   created_at timestamptz,
   updated_by varchar(40),
@@ -23,7 +22,6 @@ create table saved_articles (
   saved_at timestamptz,
   primary key (user_id, id)
 );
-
 
 insert into articles (id,slug,title,description,content,published_at,tags,thumbnail,high_thumbnail,author_id,status,created_at) values
 	 ('s9zKgiZEr7','fpt-software-wins-job-creation-award-at-esgbusiness-awards-2-s9zKgiZEr7','FPT Software Wins Job Creation Award at ESGBusiness Awards 2024','This recognition highlights FPT Software''s commitment to nurturing top talent and fostering diverse and inclusive workplaces across the global IT industry.','<figure>
@@ -648,4 +646,4 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   social responsibility, while also delivering a greater impact for its customers, accompanying them in their green transformation journey.
 </p>','2024-05-30 17:25:00+07','{"greenhouse gas",GHG,"Net Zero emissions"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','00005','P','2024-05-30 17:25:05.967+07');
 
-update articles set author_id = '00005', created_by = '00005', update_by = '00005', status = 'P';
+update articles set author_id = '00005', created_by = '00005', updated_by = '00005', status = 'P';
