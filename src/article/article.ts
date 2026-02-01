@@ -13,6 +13,11 @@ export interface Article {
   authorId?: string
   status?: string
 
+  submittedBy?: string
+  submittedAt?: Date
+  approvedBy?: string
+  approvedAt?: Date
+
   createdBy: string
   createdAt?: Date
   updatedBy: string
@@ -31,13 +36,18 @@ export interface ArticleFilter extends Filter {
   isSaved?: boolean
 }
 
-export interface ArticleRepository {
+export interface DraftArticleRepository {
   search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>>
   load(id: string): Promise<Article | null>
   create(article: Article): Promise<number>
   update(article: Article): Promise<number>
   patch(article: Partial<Article>): Promise<number>
   delete(id: string): Promise<number>
+}
+export interface ArticleRepository {
+  exist(id: string): Promise<boolean>
+  load(id: string): Promise<Article | null>
+  save(article: Article): Promise<number>
 }
 export interface ArticleService {
   search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>>
@@ -52,6 +62,8 @@ export class Status {
   static readonly Draft = 'D'
   static readonly Submitted = 'S'
   static readonly Approved = 'A'
+  static readonly Rejected = 'R'
+  static readonly RequestToEdit = 'E'
 }
 
 export const articleModel: Attributes = {

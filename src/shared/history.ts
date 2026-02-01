@@ -10,6 +10,7 @@ export class Action {
   static readonly Create = 'create'
   static readonly Update = 'update'
   static readonly Approve = 'approve'
+  static readonly Reject = 'reject'
   static readonly Delete = 'delete'
 }
 export interface HistoryRepository<T> {

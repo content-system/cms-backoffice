@@ -10,11 +10,18 @@ create table draft_articles (
   high_thumbnail varchar(400),
   author_id varchar(40),
   status char(1),
+
+  submitted_by varchar(40),
+  submitted_at timestamptz,
+  approved_by varchar(40),
+  approved_at timestamptz,
+
   created_by varchar(40),
   created_at timestamptz,
   updated_by varchar(40),
   updated_at timestamptz
 );
+
 create table articles (
   id varchar(80) primary key,
   slug varchar(255) unique,
@@ -27,6 +34,12 @@ create table articles (
   high_thumbnail varchar(400),
   author_id varchar(40),
   status char(1),
+
+  submitted_by varchar(40),
+  submitted_at timestamptz,
+  approved_by varchar(40),
+  approved_at timestamptz,
+
   created_by varchar(40),
   created_at timestamptz,
   updated_by varchar(40),
