@@ -1,3 +1,20 @@
+create table draft_articles (
+  id varchar(80) primary key,
+  slug varchar(255) unique,
+  title varchar(255) not null,
+  description varchar(1200) not null,
+  content varchar(9500),
+  published_at timestamptz,
+  tags character varying[],
+  thumbnail varchar(400),
+  high_thumbnail varchar(400),
+  author_id varchar(40),
+  status char(1),
+  created_by varchar(40),
+  created_at timestamptz,
+  updated_by varchar(40),
+  updated_at timestamptz
+);
 create table articles (
   id varchar(80) primary key,
   slug varchar(255) unique,
@@ -89,7 +106,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   Cloud, Hyperautomation, IoT, Low-code, and so on. It has partnered with over 1,100 clients worldwide, nearly 100 of which are Fortune Global 500
   companies in Aviation, Automotive, Banking, Financial Services and Insurance, Healthcare, Logistics, Manufacturing, Utilities, and more. For more
   information, please visit https://fptsoftware.com
-</p>','2024-09-30 16:45:00+07','{ESGBusiness,"ESGBusiness Awards 2024","BRONZE STEVIE"}','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','00005','P','2024-09-30 16:45:00.266+07'),
+</p>','2024-09-30 16:45:00+07','{ESGBusiness,"ESGBusiness Awards 2024","BRONZE STEVIE"}','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/1.png','dXlkg4NA9J','P','2024-09-30 16:45:00.266+07'),
 	 ('DhkrIruG','fpt-to-bolster-growth-among-francophone-community-emphasizin-h-DhkrIruG','FPT to Bolster Growth among Francophone Community, Emphasizing Workforce Development','FPT Corporation recently hosted the FPT Francophone Day, a dynamic networking and culture exchange platform for the French-speaking community in Vietnam. The event also marked the inauguration of FPT Francophone Association, highlighting the IT firm’s commitment to fostering its French-proficient professionals and nurturing opportunities for business and culture exchange.','<p>
   Global technology corporation FPT recently hosted the FPT Francophone Day, a dynamic networking and culture exchange platform for the
   French-speaking community in Vietnam. At the event, FPT introduced the FPT Francophone Association, a move to foster its French-proficient
@@ -142,7 +159,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   As part of the company''s global expansion, FPT has been actively involved in M&A deals to amplify its offshore delivery capabilities and local
   footprint, notably the recent acquisition of an 80% stake in the French IT consulting firm AOSIS. Last year, its French subsidiary also entered
   France''s Top 100 ICT Companies.
-</p>','2024-07-22 17:06:00+07','{"Francophone Community","Bolster Growth",Francophone}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','00005','P','2024-07-22 17:06:23.844+07'),
+</p>','2024-07-22 17:06:00+07','{"Francophone Community","Bolster Growth",Francophone}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/francophone-day-2024_1.webp','dXlkg4NA9J','P','2024-07-22 17:06:23.844+07'),
 	 ('wsXtnt1ZvP','fpt-software-and-meerana-technologies-partner-to-drive-digit-wsXtnt1ZvP','FPT Software and Meerana Technologies Partner to Drive Digital Transformation in UAE','This partnership aims to expand FPT Software’s footprint in the region and address the market needs across various sectors, including Utilities, BFSI, Logistics, Transportation, and more.','<p>
   Global IT services provider FPT Software recently announced a strategic partnership with Meerana Technologies, an emerging provider of smart IT
   solutions. This collaboration not only strengthens FPT Software’s presence in the United Arab Emirates but also aligns with FPT Software’s vision of
@@ -179,7 +196,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   the best engineers, employed by FPT Software. This furnishes us with a unique opportunity to reap the benefits of AI whilst building a diverse
   network of experts and specialists in the field of artificial intelligence, raising the profile of Dubai as a pioneering regional and international
   hub for advanced technologies and innovation and a knowledge-based economy.”, said Matar Almehairi, Meerana Technologies Chief Executive Officer.
-</p>','2024-08-19 16:54:00+07','{Meerana,"Meerana Technologies","Digital Transformation"}','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','00005','P','2024-08-19 16:54:56.268+07'),
+</p>','2024-08-19 16:54:00+07','{Meerana,"Meerana Technologies","Digital Transformation"}','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/fme-1.png','dXlkg4NA9J','P','2024-08-19 16:54:56.268+07'),
 	 ('4Q4LN3vm2U','fpt-opens-new-office-in-shanghai-china-4Q4LN3vm2U','FPT Opens New Office in Shanghai, China','FPT China recently celebrated the opening of a new office in Shanghai, in response to the growing customer base and increasing demand for digital services and solutions. The tech firm is set to transform the Shanghai office into a leading hub for talent and technology with accelerated AI integration across its services to deliver unmatched innovation to customers worldwide.','<p>
   SHANGHAI, China—Global technology corporation FPT recently celebrated its new office in Shanghai, the largest economic center of China. The new
   office will serve as a pivotal hub for innovation and human resources, in response to the growing customer base and increasing demand for digital
@@ -210,7 +227,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   Nanning, Suzhou, and Dalian. The IT firm is currently a strategic partner with leading Chinese firms in the automotive and semiconductor industries
   and actively collaborates with universities to develop a strong local talent pool.
 </p>
-<p>FPT’s new office is located at Zhonggeng Global Creative Center, Lane 166, Minhong Road, Minhang District, Shanghai 201102, China.</p>','2024-08-26 16:49:00+07','{Shanghai,"FPT China","new office"}','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','00005','P','2024-08-26 16:49:52.453+07'),
+<p>FPT’s new office is located at Zhonggeng Global Creative Center, Lane 166, Minhong Road, Minhang District, Shanghai 201102, China.</p>','2024-08-26 16:49:00+07','{Shanghai,"FPT China","new office"}','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','https://fptsoftware.com/-/media/project/fpt-software/global/fpt_shanghai.webp','dXlkg4NA9J','P','2024-08-26 16:49:52.453+07'),
 	 ('t4bqlIi5SB','feature-interview-low-code-development-platform-adoption-and-t4bqlIi5SB','Feature Interview: Low-Code Development Platform Adoption and How FPT Software Is Leading the Charge in South Korea','This in-depth interview discusses the rapid adoption of low-code platforms globally, with a focus on key markets such as South Korea.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp"></img>
 </figure>
@@ -313,7 +330,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   compliance and security ensures that businesses can effectively leverage low-code technologies to drive growth and efficiency. With our deep
   understanding of the local market and strong global experience, FPT Software is well-positioned to support South Korean businesses in their low-code
   journey.
-</p>','2024-08-23 16:51:00+07','{Lowcode,low-code}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','00005','P','2024-08-23 16:51:46.338+07'),
+</p>','2024-08-23 16:51:00+07','{Lowcode,low-code}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/455863996_3699023507019198_7345037110881035098_n.webp','dXlkg4NA9J','P','2024-08-23 16:51:46.338+07'),
 	 ('siwVPd50BH','fpt-software-adopts-green-tuesday-initiative-to-accelerate-s-siwVPd50BH','FPT Software Adopts Green Tuesday Initiative to Accelerate Sustainable Movement','FPT Software officially became a partner of the Green Tuesday Initiative, aiming to cut down food-related footprint on the organizational scale. As the first Vietnamese enterprise to join the program, this move further highlights the IT firm''s steadfast progress and commitment to green transformation and sustainable development.','<p>
   Global technology company FPT Software recently announced its participation in the Green Tuesday Initiative to reduce food-related footprint on the
   organizational scale. As the first Vietnamese enterprise to join this program, this move further highlights the IT firm''s steadfast progress and
@@ -350,7 +367,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   climate change by providing more plant-based food at their dining premises. Launched in 2018, the campaign has helped prevent over 3.3 million lbs
   of animal products from being served at more than 50 institutions in India. Starting in 2023, the Green Tuesday Initiative extended its operation to
   Vietnam, one of the world’s top five most vulnerable countries to climate change.
-</p>','2024-07-17 17:08:00+07','{"Green Tuesday"}','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','00005','P','2024-07-17 17:08:14.069+07'),
+</p>','2024-07-17 17:08:00+07','{"Green Tuesday"}','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/green-tuesday-initiative.webp','dXlkg4NA9J','P','2024-07-17 17:08:14.069+07'),
 	 ('oHlfZi1CIu','fpt-software-and-vincss-join-hands-to-accelerate-cybersecuri-oHlfZi1CIu','FPT Software and VinCSS Join Hands to Accelerate Cybersecurity in Automotive Industry','FPT Software and VinCSS recently signed a Memorandum of Understanding (MoU) targeting the automotive sector. The partnership enables both companies to enhance their solutions by leveraging each other’s resources, expertise, and network.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png"></img>
 </figure>
@@ -389,7 +406,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   The automotive technology subsidiary boasts a global team of 4,000 software engineers and experts, serving notable clients such as Hyundai, Honda,
   Volvo, and Vietnam''s electric vehicle manufacturer VinFast. Earlier this year, the company inaugurated a new office in Pune, India, as part of its
   strategy to become a billion-dollar, world-class provider of automotive services and products by 2030.
-</p>','2024-07-09 17:11:00+07','{VinCSS}','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','00005','P','2024-07-09 17:11:14.232+07'),
+</p>','2024-07-09 17:11:00+07','{VinCSS}','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','https://fptsoftware.com/-/media/project/fpt-software/fso/post_fso-x-vincss.png','dXlkg4NA9J','P','2024-07-09 17:11:14.232+07'),
 	 ('WDHYp-Zitn','fpt-software-welcomes-first-batch-of-global-interns-to-vietn-WDHYp-Zitn','FPT Software Welcomes First Batch of Global Interns to Vietnam for the Global Internship Program 2024','Returning for the second edition, the program has seen a fourfold increase in international student participation compared to last year, with students representing a wider variety of countries','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp"></img>
 </figure>
@@ -423,7 +440,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   interns will also gain direct mentorship and enhance industry networks with FPT Software’s technical experts, especially in the fields of AI, Cloud,
   Data, and Cyber Security.
 </p>
-<p>For more information about FPT Software’s Global Internship Program, visit FPT Software Global Internship.</p>','2024-07-04 17:19:00+07','{"Global Internship"}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','00005','P','2024-07-04 17:19:23.269+07'),
+<p>For more information about FPT Software’s Global Internship Program, visit FPT Software Global Internship.</p>','2024-07-04 17:19:00+07','{"Global Internship"}','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','https://fptsoftware.com/-/media/project/fpt-software/global/common/fptsoftware_building_d/fpt-global-internship-frame-(8).webp','dXlkg4NA9J','P','2024-07-04 17:19:23.269+07'),
 	 ('N6_qO411N6','fpt-software-wins-2nd-runner-up-at-sap-hack2build-contest-N6_qO411N6','FPT Software Wins 2nd Runner-Up at SAP Hack2Build Contest','FPT Software Wins 2nd Runner-Up at SAP Hack2Build Contest','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp"></img>
 </figure>
@@ -456,7 +473,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
 <p>
   With nearly 1,100 certifications and a dedicated team of SAP consultants supporting six languages, FPT Software leverages the latest SAP solutions,
   including SAP BTP, RISE with SAP, and GROW, to deliver unparalleled value to its global clients.
-</p>','2024-07-01 17:21:00+07','{"2nd Runner Up","SAP Hack2Build"}','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','00005','P','2024-07-01 17:21:19.512+07'),
+</p>','2024-07-01 17:21:00+07','{"2nd Runner Up","SAP Hack2Build"}','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/448926222_763543399021830_4527054500824727171_n.webp','dXlkg4NA9J','P','2024-07-01 17:21:19.512+07'),
 	 ('cyn8y3nP9m','fpt-japan-joins-leading-it-companies-in-forming-the-vietname-cyn8y3nP9m','FPT Japan Joins Leading IT Companies in Forming the Vietnamese Association of Digital Transformation in Japan','The Vietnamese Association of Digital Transformation in Japan (VADX Japan) was officially launched in Tokyo, Japan, with FPT Japan serving as the Association''s Chair Company and Do Van Khac, Senior Executive Vice President of FPT Software and CEO of FPT Japan, serving as the company’s representative. This initiative represents FPT Japan’s ongoing commitment to enhancing cooperation and development in digital technology between Vietnam and Japan.','<p>
   The Vietnam Association of Digital Transformation in Japan (VADX Japan) was officially launched in Tokyo, Japan, with FPT Japan serving as the
   Association''s Chair Company and Do Van Khac, Senior Executive Vice President of FPT Software and CEO of FPT Japan, serving as the company’s
@@ -504,7 +521,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   solutions such as AI, machine learning, and cloud computing. The IT firm is recognized for excellent employee benefits and workplace happiness,
   including Best Workplaces in Asia, Best Places To Work in Japan, and Best Places To Work for Women in Japan. Recently, FPT Japan has also
   collaborated with the Japan Business Federation (Keidanren) to promote the development of the Vietnamese IT business community in Japan.
-</p>','2024-07-08 17:14:00+07','{VADX,"Vietnamese Association of Digital Transformation in Japan"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','00005','P','2024-07-08 17:14:08.978+07');
+</p>','2024-07-08 17:14:00+07','{VADX,"Vietnamese Association of Digital Transformation in Japan"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/newsroom/news080724.webp','dXlkg4NA9J','P','2024-07-08 17:14:08.978+07');
 insert into articles (id,slug,title,description,content,published_at,tags,thumbnail,high_thumbnail,author_id,status,created_at) values
 	 ('2sX9m9LZm9','fpt-expands-global-workforce-to-80000-amid-its-36th-annivers-2sX9m9LZm9','FPT Expands Global Workforce to 80,000 amid Its 36th Anniversary','FPT Corporation recently announced a significant milestone, passing 80,000 employees across 30 countries. The milestone coincides with the company’s 36th anniversary and underscores its remarkable growth and global expansion.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/global/80000.png"></img>
@@ -540,7 +557,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   trends such as AI, semiconductors, automotive software, digital transformation, and green transformation. Additionally, the Corporation boasts a
   "Made by FPT" ecosystem with over 200 products, services, and solutions, providing a vast platform for technology enthusiasts to showcase their
   talents and expertise.
-</p>','2024-09-17 16:46:00+07','{"80000 employees"}','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','00005','P','2024-09-17 16:46:34.763+07'),
+</p>','2024-09-17 16:46:00+07','{"80000 employees"}','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','https://fptsoftware.com/-/media/project/fpt-software/global/80000.png','dXlkg4NA9J','P','2024-09-17 16:46:34.763+07'),
 	 ('zasWaUFDBT','fpt-software-earns-first-hong-kong-business-technology-excel-zasWaUFDBT','FPT Software Earns First Hong Kong Business Technology Excellence Award for its Agent Digital Platform in Insurtech','Global leading IT company FPT Software has earned recognition at the Hong Kong Business Technology Excellence Awards in the Software - Insurtech category. This marks the first time the company has received this prestigious award, reinforcing its status as a trusted service provider in the insurance sector.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp"></img>
   <figcaption>
@@ -578,7 +595,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   customizable solutions, including customer self-service applications, payment processing services, automated underwriting, and lapse prediction.
   Earlier this year, FPT Software’s innovative insurance solution, Confidon, earned a Gold Stevie® at the 2024 Asia-Pacific Stevie® Awards for
   Innovation.
-</p>','2024-09-12 16:48:00+07','{Insurtech,"Hong Kong Awards",ADP,"Agent Digital Platform"}','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','00005','P','2024-09-12 16:48:10.238+07'),
+</p>','2024-09-12 16:48:00+07','{Insurtech,"Hong Kong Awards",ADP,"Agent Digital Platform"}','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/675a1663.webp','dXlkg4NA9J','P','2024-09-12 16:48:10.238+07'),
 	 ('557EiwdJTk','vietnam-tech-revolution-story-to-be-featured-on-discovery-ch-557EiwdJTk','Vietnam Tech Revolution Story to Be Featured on Discovery Channel, With FPT in the Spotlight','FPT Corporation (FPT) collaborates with Warner Bros. Discovery in an upcoming documentary titled “Silicon Delta - The Story of Vietnam’s Tech Revolution.” The documentary highlights Vietnam as a leading digital economy of Southeast Asia, with FPT at the forefront of the country’s transformation into a global destination for business and innovation','<p>
   FPT Corporation (FPT) collaborates with Warner Bros. Discovery in an upcoming documentary titled “Silicon Delta - The Story of Vietnam’s Tech
   Revolution.” The documentary highlights Vietnam as a leading digital economy of Southeast Asia, with FPT at the forefront of the country’s
@@ -612,7 +629,7 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
   commitment to the education of future generations with initiatives like Hope School, which provides support and education to children orphaned by
   Covid-19.
 </p>
-<p>The documentary will premiere on Discovery Channel in the Asia Pacific, Japan, Germany, and other regions later this September.</p>','2024-06-05 17:23:00+07','{"Warner Bros","Silicon Delta"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','00005','P','2024-06-05 17:23:07.571+07'),
+<p>The documentary will premiere on Discovery Channel in the Asia Pacific, Japan, Germany, and other regions later this September.</p>','2024-06-05 17:23:00+07','{"Warner Bros","Silicon Delta"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/dsc00136.webp','dXlkg4NA9J','P','2024-06-05 17:23:07.571+07'),
 	 ('96BJQpAY7r','fpt-issues-first-ever-environmental-policy-strengthening-sus-96BJQpAY7r','FPT Issues First-Ever Environmental Policy, Strengthening Sustainable Commitment','This policy provides a detailed plan for implementing specific steps to reduce greenhouse gas (GHG) emissions, aiming at becoming Vietnam''s pioneering company to achieve Net Zero emissions by 2040.','<figure>
   <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp"></img>
 </figure>
@@ -644,6 +661,11 @@ insert into articles (id,slug,title,description,content,published_at,tags,thumbn
 <p>
   With sustainability at the heart of its operation, the Environmental Policy reflects FPT''s consistent strategy of aligning company growth with
   social responsibility, while also delivering a greater impact for its customers, accompanying them in their green transformation journey.
-</p>','2024-05-30 17:25:00+07','{"greenhouse gas",GHG,"Net Zero emissions"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','00005','P','2024-05-30 17:25:05.967+07');
+</p>','2024-05-30 17:25:00+07','{"greenhouse gas",GHG,"Net Zero emissions"}','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','https://fptsoftware.com/-/media/project/fpt-software/fso/newsroom/news---press-release/fpt-issues-first-ever-environmental-policy.webp','dXlkg4NA9J','P','2024-05-30 17:25:05.967+07');
 
-update articles set author_id = '00005', created_by = '00005', updated_by = '00005', status = 'P';
+update articles set author_id = 'dXlkg4NA9J', created_by = 'dXlkg4NA9J', updated_by = 'dXlkg4NA9J', status = 'P';
+
+insert into draft_articles (id,slug,title,description,content,published_at,tags,thumbnail,high_thumbnail,author_id,status,created_at)
+select id,slug,title,description,content,published_at,tags,thumbnail,high_thumbnail,author_id,status,created_at from articles;
+
+update draft_articles set author_id = 'dXlkg4NA9J', created_by = 'dXlkg4NA9J', updated_by = 'dXlkg4NA9J', status = 'P';

@@ -76,15 +76,16 @@ export class SqlUserRepository extends SearchRepository<User, UserFilter> implem
   update(user: User): Promise<number> {
     const stmts: Statement[] = []
     const stmt = buildToUpdate(user, "users", userModel, this.param)
-    console.log(stmt.query)
-    if (!stmt.query) {
-      return Promise.resolve(-1)
+    let firstSuccess = false
+    if (stmt.query) {
+      stmts.push(stmt)
+      firstSuccess = true
     }
     if (user.roles) {
       stmts.push({ query: `delete from user_roles where user_id = ${this.param(1)}`, params: [user.userId] })
       insertUserRoles(stmts, user.userId, user.roles, this.param)
     }
-    return this.db.execBatch(stmts, true)
+    return this.db.execBatch(stmts, firstSuccess)
   }
   patch(user: User): Promise<number> {
     return this.update(user)

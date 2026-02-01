@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid"
 import { Log, UseCase } from "onecore"
 import { DB } from "query-core"
 import { TemplateMap, useQuery } from "query-mappers"
@@ -10,9 +11,14 @@ export * from "./controller"
 export class UserUseCase extends UseCase<User, string, UserFilter> implements UserService {
   constructor(protected repository: UserRepository) {
     super(repository)
+    this.create = this.create.bind(this);
   }
   all(): Promise<User[]> {
     return this.repository.all()
+  }
+  create(user: User): Promise<number> {
+    user.userId = nanoid(10)
+    return this.repository.create(user)
   }
   getUsersOfRole(roleId: string): Promise<User[]> {
     return this.repository.getUsersOfRole(roleId)
