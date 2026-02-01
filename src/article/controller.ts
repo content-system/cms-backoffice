@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import { create, format, fromRequest, handleError, respondError, update } from "express-ext"
-import { Log } from "onecore"
+import { format, fromRequest, handleError, respondError } from "express-ext"
+import { isSuccessful, Log } from "onecore"
 import { validate } from "xvalidators"
 import { getResource } from "../resources"
 import { Article, ArticleFilter, articleModel, ArticleService } from "./article"
@@ -37,7 +37,7 @@ export class ArticleController {
       handleError(err, res, this.log)
     }
   }
-  create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const userId = res.locals.account.id
     const article: Article = req.body
     article.createdBy = userId
@@ -50,9 +50,15 @@ export class ArticleController {
     if (errors.length > 0) {
       return respondError(res, errors)
     }
-    create<Article>(res, article, this.service.create, this.log)
+    try {
+      const result = await this.service.create(article)
+      const status = isSuccessful(result) ? 201 : 409
+      res.status(status).json(article).end()
+    } catch (err) {
+      handleError(err, res, this.log)
+    }
   }
-  update(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const id = req.params.id as string
     const userId = res.locals.account.id
     const article: Article = req.body
@@ -65,9 +71,15 @@ export class ArticleController {
     if (errors.length > 0) {
       return respondError(res, errors)
     }
-    update<Article>(res, article, this.service.update, this.log)
+    try {
+      const result = await this.service.update(article)
+      const status = isSuccessful(result) ? 201 : 409
+      res.status(status).json(article).end()
+    } catch (err) {
+      handleError(err, res, this.log)
+    }
   }
-  patch(req: Request, res: Response) {
+  async patch(req: Request, res: Response) {
     const id = req.params.id as string
     const userId = res.locals.account.id
     const article: Article = req.body
@@ -80,7 +92,13 @@ export class ArticleController {
     if (errors.length > 0) {
       return respondError(res, errors)
     }
-    update<Article>(res, article, this.service.patch, this.log)
+    try {
+      const result = await this.service.patch(article)
+      const status = isSuccessful(result) ? 201 : 409
+      res.status(status).json(article).end()
+    } catch (err) {
+      handleError(err, res, this.log)
+    }
   }
   async delete(req: Request, res: Response) {
     const id = req.params.id as string

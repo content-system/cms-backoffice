@@ -86,8 +86,8 @@ export class SqlRoleRepository extends SearchRepository<Role, RoleFilter> implem
     const stmt = buildToUpdate(role, "roles", roleModel, this.db.param)
     let firstSuccess = false
     if (stmt.query) {
-      firstSuccess = true
       stmts.push(stmt)
+      firstSuccess = true
     }
     if (role.privileges) {
       const query = `delete from role_modules where role_id = ${this.db.param(1)}`
