@@ -20,7 +20,7 @@ export class ApproversAdapter implements ApproversPort {
         join users u on u.user_id = ur.user_id
       where
         r.module_id = ${this.db.param(1)}
-        and (r.permissions & 8) = 8
+        and (r.permissions & 9) = 9
         and u.status = 'A'`
     return this.db.query<ID>(query, [this.entity]).then((v) => {
       const s: string[] = []

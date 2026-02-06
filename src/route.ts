@@ -8,6 +8,8 @@ import { contactModel } from "./contact"
 import { ApplicationContext } from "./context"
 import { jobModel } from "./job"
 
+export const approve = 8
+
 const prefix = "Bearer "
 export class TokenVerifier {
   constructor(private secret: string, private account: string, private userId: string, private id: string) {
@@ -29,16 +31,6 @@ export class TokenVerifier {
     } else {
       next()
     }
-  }
-}
-
-function authorized(req: Request, res: Response, next: NextFunction) {
-  const account = res.locals.account
-  if (!account) {
-    console.log(req.url)
-    res.status(401).end("Require Authentication")
-  } else {
-    next()
   }
 }
 
@@ -101,13 +93,18 @@ export function route(app: Application, ctx: ApplicationContext, secure?: boolea
 
   const readArticle = ctx.authorize("article", read)
   const writeArticle = ctx.authorize("article", write)
+  const approveArticle = ctx.authorize("article", approve)
   const checkArticle = check(articleModel)
-  app.post("/articles/search", readArticle, ctx.article.search)
+  app.get("/articles", readArticle, ctx.article.search)
   app.get("/articles/search", readArticle, ctx.article.search)
+  app.post("/articles/search", readArticle, ctx.article.search)
+  app.get("/articles/:id/draft", readArticle, ctx.article.loadDraft)
   app.get("/articles/:id", readArticle, ctx.article.load)
   app.post("/articles", writeArticle, checkArticle, ctx.article.create)
   app.put("/articles/:id", writeArticle, checkArticle, ctx.article.update)
   app.patch("/articles/:id", writeArticle, checkArticle, ctx.article.patch)
+  app.patch("/articles/:id/approve", approveArticle, ctx.article.approve)
+  app.patch("/articles/:id/reject", approveArticle, ctx.article.reject)
   app.delete("/articles/:id", writeArticle, ctx.article.delete)
 
   const readJob = ctx.authorize("job", read)

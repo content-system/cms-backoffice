@@ -3,7 +3,7 @@ import { buildSort, Statement } from "query-core"
 import { ArticleFilter, articleModel } from "./article"
 
 export function buildQuery(filter: ArticleFilter): Statement {
-  let query = `select * from articles `
+  let query = `select * from draft_articles `
   const where = []
   const params = []
   let i = 1

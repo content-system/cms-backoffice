@@ -18,7 +18,7 @@ const cfg = merge(config, process.env, env, process.env.ENV)
 const app = express()
 const logger = createLogger(cfg.log)
 const middleware = new MiddlewareLogger(logger.info, cfg.middleware)
-app.use(allow(cfg.allow), json(), middleware.log)
+app.use(allow(cfg.allow), json())
 
 const verifier = new TokenVerifier(cfg.auth.token.secret, "account", "userId", "id")
 app.use(verifier.verify)

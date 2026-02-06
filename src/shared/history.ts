@@ -1,17 +1,12 @@
 import { nanoid } from "nanoid";
 import { DB } from "onecore";
 
-export class Status {
-  static readonly draft = 'D'
-  static readonly submitted = 'S'
-  static readonly approved = 'A'
-}
 export class Action {
-  static readonly Create = 'create'
-  static readonly Update = 'update'
-  static readonly Approve = 'approve'
-  static readonly Reject = 'reject'
-  static readonly Delete = 'delete'
+  static readonly Create = "create"
+  static readonly Update = "update"
+  static readonly Approve = "approve"
+  static readonly Reject = "reject"
+  static readonly Delete = "delete"
 }
 export interface HistoryRepository<T> {
   create(id: string, author: string, action: string, data: T, ctx?: any): Promise<number>
@@ -23,9 +18,10 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
   async create(id: string, author: string, action: string, data: T, ctx?: any): Promise<number> {
     const historyId = nanoid(10)
     const l = this.ignoreFields.length
+    const cloneObj: any = { ...data }
     if (l > 0) {
       for (let i = 0; i < l; i++) {
-        delete (data as any)[this.ignoreFields[i]]
+        delete cloneObj[this.ignoreFields[i]]
       }
     }
     const sql = `
@@ -47,6 +43,6 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
         ${this.db.param(7)}
       )
     `
-    return this.db.exec(sql, [historyId, this.type, id, author, new Date(), action, data])
+    return this.db.exec(sql, [historyId, this.type, id, author, new Date(), action, cloneObj])
   }
 }

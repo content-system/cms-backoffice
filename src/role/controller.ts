@@ -99,7 +99,7 @@ export class RoleController {
       return respondError(res, errors)
     }
     try {
-      const result = await this.service.update(role)
+      const result = await this.service.patch(role)
       const status = isSuccessful(result) ? 200 : 410
       res.status(status).json(role).end()
     } catch (err) {

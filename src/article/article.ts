@@ -13,7 +13,7 @@ export interface Article {
   authorId?: string
   status?: string
 
-  submittedBy?: string
+  submittedBy: string
   submittedAt?: Date
   approvedBy?: string
   approvedAt?: Date
@@ -51,19 +51,14 @@ export interface ArticleRepository {
 }
 export interface ArticleService {
   search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>>
+  loadDraft(id: string): Promise<Article | null>
   load(id: string): Promise<Article | null>
   create(article: Article): Promise<number>
   update(article: Article): Promise<number>
   patch(article: Partial<Article>): Promise<number>
+  approve(id: string, approvedBy: string): Promise<number>
+  reject(id: string, rejectedBy: string): Promise<number>
   delete(id: string): Promise<number>
-}
-
-export class Status {
-  static readonly Draft = 'D'
-  static readonly Submitted = 'S'
-  static readonly Approved = 'A'
-  static readonly Rejected = 'R'
-  static readonly RequestToEdit = 'E'
 }
 
 export const articleModel: Attributes = {
@@ -109,6 +104,21 @@ export const articleModel: Attributes = {
   },
   status: {
     length: 1,
+  },
+
+  submittedBy: {
+    column: "submitted_by",
+  },
+  submittedAt: {
+    column: "submitted_at",
+    type: "datetime",
+  },
+  approvedBy: {
+    column: "approved_by",
+  },
+  approvedAt: {
+    column: "approved_at",
+    type: "datetime",
   },
 
   createdBy: {
