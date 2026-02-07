@@ -12,8 +12,23 @@ export interface HistoryRepository<T> {
   create(id: string, author: string, action: string, data: T, ctx?: any): Promise<number>
 }
 export class HistoryAdapter<T> implements HistoryRepository<T> {
-  constructor(protected db: DB, protected type: string, protected table: string, protected historyId: string, protected entity: string, protected id: string, protected author: string, protected time: string, protected action: string, protected data: string, protected ignoreFields: string[]) {
-
+  protected ignoreFields: string[]
+  protected historyId: string
+  protected entity: string
+  protected id: string
+  protected author: string
+  protected time: string
+  protected action: string
+  protected data: string
+  constructor(protected db: DB, protected type: string, protected table: string, ignoreFields?: string[], historyId?: string, entity?: string, id?: string, author?: string, time?: string, action?: string, data?: string) {
+    this.ignoreFields = ignoreFields || []
+    this.historyId = historyId || "history_id"
+    this.entity = entity || "entity"
+    this.id = id || "id"
+    this.author = author || "author"
+    this.time = time || "time"
+    this.action = action || "action"
+    this.data = data || "data"
   }
   async create(id: string, author: string, action: string, data: T, ctx?: any): Promise<number> {
     const historyId = nanoid(10)

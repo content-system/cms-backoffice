@@ -18,10 +18,24 @@ export interface NotificationPort {
   pushNotifications(notifications: Notification[]): Promise<number>
 }
 export class NotificationAdapter {
-  constructor(protected db: DB, protected table: string, protected id: string, protected sender: string, protected receiver: string, protected message: string, protected time: string, protected status: string, protected url: string, unread?: string) {
-    this.unread = unread && unread.length > 0 ? unread : "U"
-  }
   protected unread: string
+  protected time: string
+  protected url: string
+  protected id: string
+  protected sender: string
+  protected receiver: string
+  protected message: string
+  protected status: string
+  constructor(protected db: DB, protected table: string, unread?: string, time?: string, url?: string, id?: string, sender?: string, receiver?: string, message?: string, status?: string) {
+    this.unread = unread && unread.length > 0 ? unread : "U"
+    this.time = time && time.length > 0 ? time : "time"
+    this.url = url && url.length > 0 ? url : "url"
+    this.id = id && id.length > 0 ? id : "id"
+    this.sender = sender && sender.length > 0 ? sender : "sender"
+    this.receiver = receiver && receiver.length > 0 ? receiver : "receiver"
+    this.message = message && message.length > 0 ? message : "message"
+    this.status = status && status.length > 0 ? status : "status"
+  }
 
   push(noti: Notification): Promise<number> {
     noti.id = nanoid(10)

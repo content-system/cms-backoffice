@@ -177,9 +177,9 @@ export class ArticleUseCase implements ArticleService {
 export function useArticleController(db: DB, log: Log): ArticleController {
   const draftRepository = new SqlDraftArticleRepository(db)
   const repository = new SqlArticleRepository(db)
-  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", "history_id", "entity", "id", "author", "time", "action", "data", ["id", "createdBy", "createdAt", "updatedBy", "updatedAt"])
+  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", ["id", "createdBy", "createdAt", "updatedBy", "updatedAt"], "history_id", "entity", "id", "author", "time", "action", "data")
   const approversPort = new ApproversAdapter("article", db)
-  const notificationPort = new NotificationAdapter(db, "notifications", "id", "sender", "receiver", "message", "time", "status", "url")
+  const notificationPort = new NotificationAdapter(db, "notifications", "U", "time", "url", "id", "sender", "receiver", "message", "status")
   const service = new ArticleUseCase(draftRepository, repository, historyRepository, approversPort, notificationPort, log)
   return new ArticleController(service)
 }
