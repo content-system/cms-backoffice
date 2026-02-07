@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid"
-import { Log, SearchResult } from "onecore"
+import { SearchResult } from "onecore"
 import { DB, Repository } from "query-core"
 import { slugify } from "../common/slug"
 import { JobController } from "./controller"
@@ -60,8 +60,8 @@ export class JobUseCase implements JobService {
   }
 }
 
-export function useJobController(db: DB, log: Log): JobController {
+export function useJobController(db: DB): JobController {
   const repository = new SqlJobRepository(db)
   const service = new JobUseCase(repository)
-  return new JobController(service, log)
+  return new JobController(service)
 }

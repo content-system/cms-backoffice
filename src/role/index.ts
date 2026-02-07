@@ -1,4 +1,4 @@
-import { Log, UseCase } from "onecore"
+import { UseCase } from "onecore"
 import { DB } from "query-core"
 import { TemplateMap, useQuery } from "query-mappers"
 import { RoleController } from "./controller"
@@ -18,9 +18,9 @@ export class RoleUseCase extends UseCase<Role, string, RoleFilter> implements Ro
   }
 }
 
-export function useRoleController(db: DB, log: Log, mapper?: TemplateMap): RoleController {
+export function useRoleController(db: DB, mapper?: TemplateMap): RoleController {
   const query = useQuery("role", mapper, roleModel, true)
   const repository = new SqlRoleRepository(db, query)
   const service = new RoleUseCase(repository)
-  return new RoleController(service, log)
+  return new RoleController(service)
 }

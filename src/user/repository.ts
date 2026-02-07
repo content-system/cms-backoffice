@@ -22,8 +22,8 @@ export class SqlUserRepository extends SearchRepository<User, UserFilter> implem
   map: StringMap
   roleMap: StringMap
   attributes: Attributes
-  constructor(private db: DB, query?: Query) {
-    super(db.query, "users", userModel, db.driver, query)
+  constructor(protected db: DB, query?: Query) {
+    super(db, "users", userModel, query)
     this.attributes = userModel
     this.map = buildMap(userModel)
     this.roleMap = buildMap(userRoleModel)
@@ -51,13 +51,13 @@ export class SqlUserRepository extends SearchRepository<User, UserFilter> implem
     return this.db.query("select * from users order by user_id asc", undefined, this.map)
   }
   async load(id: string): Promise<User | null> {
-    let query = `select * from users where user_id = ${this.param(1)}`
+    let query = `select * from users where user_id = ${this.db.param(1)}`
     let users = await this.db.query<User>(query, [id], this.map)
     if (!users || users.length === 0) {
       return null
     }
     const user = users[0]
-    query = `select role_id from user_roles where user_id = ${this.param(1)}`
+    query = `select role_id from user_roles where user_id = ${this.db.param(1)}`
     const roles = await this.db.query<UserRole>(query, [id], this.roleMap)
     if (roles && roles.length > 0) {
       user.roles = roles.map((i) => i.roleId)
@@ -66,44 +66,44 @@ export class SqlUserRepository extends SearchRepository<User, UserFilter> implem
   }
   create(user: User): Promise<number> {
     const stmts: Statement[] = []
-    const stmt = buildToInsert(user, "users", userModel, this.param)
+    const stmt = buildToInsert(user, "users", userModel, this.db.param)
     stmts.push(stmt)
     if (user.roles) {
-      insertUserRoles(stmts, user.userId, user.roles, this.param)
+      insertUserRoles(stmts, user.userId, user.roles, this.db.param)
     }
-    return this.db.execBatch(stmts, true)
+    return this.db.executeBatch(stmts, true)
   }
   update(user: User): Promise<number> {
     const stmts: Statement[] = []
-    const stmt = buildToUpdate(user, "users", userModel, this.param)
+    const stmt = buildToUpdate(user, "users", userModel, this.db.param)
     let firstSuccess = false
     if (stmt.query) {
       stmts.push(stmt)
       firstSuccess = true
     }
     if (user.roles) {
-      stmts.push({ query: `delete from user_roles where user_id = ${this.param(1)}`, params: [user.userId] })
-      insertUserRoles(stmts, user.userId, user.roles, this.param)
+      stmts.push({ query: `delete from user_roles where user_id = ${this.db.param(1)}`, params: [user.userId] })
+      insertUserRoles(stmts, user.userId, user.roles, this.db.param)
     }
-    return this.db.execBatch(stmts, firstSuccess)
+    return this.db.executeBatch(stmts, firstSuccess)
   }
   patch(user: User): Promise<number> {
     return this.update(user)
   }
   delete(id: string): Promise<number> {
     const stmts: Statement[] = []
-    stmts.push({ query: `delete from user_roles where user_id = ${this.param(1)}`, params: [id] })
-    stmts.push({ query: `delete from users where user_id = ${this.param(1)}`, params: [id] })
-    return this.db.execBatch(stmts)
+    stmts.push({ query: `delete from user_roles where user_id = ${this.db.param(1)}`, params: [id] })
+    stmts.push({ query: `delete from users where user_id = ${this.db.param(1)}`, params: [id] })
+    return this.db.executeBatch(stmts)
   }
   assign(id: string, roles: string[]): Promise<number> {
     const stmts: Statement[] = []
-    const query = `delete from user_roles where user_id = ${this.param(1)}`
+    const query = `delete from user_roles where user_id = ${this.db.param(1)}`
     stmts.push({ query, params: [id] })
     if (roles && roles.length > 0) {
-      insertUserRoles(stmts, id, roles, this.param)
+      insertUserRoles(stmts, id, roles, this.db.param)
     }
-    return this.db.execBatch(stmts)
+    return this.db.executeBatch(stmts)
   }
 }
 

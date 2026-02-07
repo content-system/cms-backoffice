@@ -1,13 +1,12 @@
 import { Request, Response } from "express"
-import { format, fromRequest, handleError, respondError } from "express-ext"
-import { isSuccessful, Log } from "onecore"
+import { format, fromRequest, handleError, isSuccessful, respondError } from "express-ext"
 import { validate } from "xvalidators"
 import { getResource } from "../resources"
 import { Status } from "../shared/status"
 import { Article, ArticleFilter, articleModel, ArticleService } from "./article"
 
 export class ArticleController {
-  constructor(private service: ArticleService, private log: Log) {
+  constructor(private service: ArticleService) {
     this.search = this.search.bind(this)
     this.loadDraft = this.loadDraft.bind(this)
     this.load = this.load.bind(this)
@@ -29,7 +28,7 @@ export class ArticleController {
       const result = await this.service.search(filter, limit, page, fields)
       res.status(200).json(result)
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async loadDraft(req: Request, res: Response) {
@@ -38,7 +37,7 @@ export class ArticleController {
       const article = await this.service.loadDraft(id)
       res.status(article ? 200 : 404).json(article).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async load(req: Request, res: Response) {
@@ -47,16 +46,14 @@ export class ArticleController {
       const article = await this.service.load(id)
       res.status(article ? 200 : 404).json(article).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async create(req: Request, res: Response) {
     const userId = res.locals.account.id
     const article: Article = req.body
     article.createdBy = userId
-    article.createdAt = new Date()
     article.updatedBy = userId
-    article.updatedAt = new Date()
     if (article.status === Status.Submitted) {
       let language = res.locals.lang || "en"
       const resource = getResource(language)
@@ -70,7 +67,7 @@ export class ArticleController {
       const status = isSuccessful(result) ? 201 : 409
       res.status(status).json(article).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async update(req: Request, res: Response) {
@@ -79,7 +76,6 @@ export class ArticleController {
     const article: Article = req.body
     article.id = id
     article.updatedBy = userId
-    article.updatedAt = new Date()
     if (article.status === Status.Submitted) {
       let language = res.locals.lang || "en"
       const resource = getResource(language)
@@ -98,7 +94,7 @@ export class ArticleController {
         res.status(400).json(result).end()
       }
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async patch(req: Request, res: Response) {
@@ -107,7 +103,6 @@ export class ArticleController {
     const article: Article = req.body
     article.id = id
     article.updatedBy = userId
-    article.updatedAt = new Date()
     if (article.status === Status.Submitted) {
       let language = res.locals.lang || "en"
       const resource = getResource(language)
@@ -126,7 +121,7 @@ export class ArticleController {
         res.status(400).json(result).end()
       }
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
 
@@ -143,7 +138,7 @@ export class ArticleController {
         res.status(409).json(result).end()
       }
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async reject(req: Request, res: Response) {
@@ -159,7 +154,7 @@ export class ArticleController {
         res.status(409).json(result).end()
       }
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
 
@@ -169,7 +164,7 @@ export class ArticleController {
       const result = await this.service.delete(id)
       res.status(result > 0 ? 200 : 410).json(result).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
 }

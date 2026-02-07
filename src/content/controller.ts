@@ -1,12 +1,11 @@
 import { Request, Response } from "express"
-import { buildArray, fromRequest, getStatusCode, handleError } from "express-ext"
-import { isSuccessful, Log } from "onecore"
+import { buildArray, fromRequest, getStatusCode, handleError, isSuccessful } from "express-ext"
 import { validate } from "xvalidators"
 import { getResource } from "../resources"
 import { Content, ContentFilter, contentModel, ContentService } from "./content"
 
 export class ContentController {
-  constructor(private service: ContentService, private log: Log) {
+  constructor(private service: ContentService) {
     this.search = this.search.bind(this)
     this.load = this.load.bind(this)
     this.create = this.create.bind(this)
@@ -21,7 +20,7 @@ export class ContentController {
       const result = await this.service.search(filter, limit, page, fields)
       res.status(200).json(result)
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async load(req: Request, res: Response) {
@@ -31,7 +30,7 @@ export class ContentController {
       const content = await this.service.load(id, lang)
       res.status(content ? 200 : 404).json(content).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async create(req: Request, res: Response) {
@@ -51,7 +50,7 @@ export class ContentController {
         const status = isSuccessful(result) ? 201 : 409
         res.status(status).json(content).end()
       } catch (err) {
-        handleError(err, res, this.log)
+        handleError(err, res)
       }
     }
   }
@@ -70,7 +69,7 @@ export class ContentController {
         const status = isSuccessful(result) ? 200 : 410
         res.status(status).json(content).end()
       } catch (err) {
-        handleError(err, res, this.log)
+        handleError(err, res)
       }
     }
   }
@@ -89,7 +88,7 @@ export class ContentController {
         const status = isSuccessful(result) ? 200 : 410
         res.status(status).json(content).end()
       } catch (err) {
-        handleError(err, res, this.log)
+        handleError(err, res)
       }
     }
   }
@@ -100,7 +99,7 @@ export class ContentController {
       const result = await this.service.delete(id, lang)
       res.status(result > 0 ? 200 : 410).json(result).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
 }

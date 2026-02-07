@@ -44,7 +44,7 @@ export class NotificationAdapter {
         ${this.db.param(7)}
       )
     `
-    return this.db.exec(sql, [noti.id, noti.sender, noti.receiver, noti.message, new Date(), noti.url, this.unread])
+    return this.db.execute(sql, [noti.id, noti.sender, noti.receiver, noti.message, new Date(), noti.url, this.unread])
   }
   pushNotifications(notifications: Notification[]): Promise<number> {
     const query = `
@@ -73,6 +73,6 @@ export class NotificationAdapter {
       const statement: Statement = { query, params: [noti.id, noti.sender, noti.receiver, noti.message, now, noti.url, this.unread] }
       statements.push(statement)
     }
-    return this.db.execBatch(statements)
+    return this.db.executeBatch(statements)
   }
 }

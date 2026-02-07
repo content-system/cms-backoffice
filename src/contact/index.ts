@@ -1,4 +1,4 @@
-import { Log, UseCase } from "onecore"
+import { UseCase } from "onecore"
 import { DB, Repository } from "query-core"
 import { Contact, ContactFilter, contactModel, ContactRepository, ContactService } from "./contact"
 import { ContactController } from "./controller"
@@ -16,8 +16,8 @@ export class ContactUseCase extends UseCase<Contact, string, ContactFilter> impl
   }
 }
 
-export function useContactController(db: DB, log: Log): ContactController {
+export function useContactController(db: DB): ContactController {
   const repository = new SqlContactRepository(db)
   const service = new ContactUseCase(repository)
-  return new ContactController(service, log)
+  return new ContactController(service)
 }

@@ -22,12 +22,6 @@ export class ApproversAdapter implements ApproversPort {
         r.module_id = ${this.db.param(1)}
         and (r.permissions & 9) = 9
         and u.status = 'A'`
-    return this.db.query<ID>(query, [this.entity]).then((v) => {
-      const s: string[] = []
-      for (const id of v) {
-        s.push(id.id)
-      }
-      return s
-    })
+    return this.db.query<ID>(query, [this.entity]).then((v) => v.map(({ id }) => id))
   }
 }

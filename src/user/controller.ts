@@ -1,12 +1,11 @@
 import { Request, Response } from "express"
-import { fromRequest, handleError, queryParam, respondError } from "express-ext"
-import { isSuccessful, Log } from "onecore"
+import { fromRequest, handleError, isSuccessful, queryParam, respondError } from "express-ext"
 import { validate } from "xvalidators"
 import { getResource } from "../resources"
 import { User, UserFilter, userModel, UserService } from "./user"
 
 export class UserController {
-  constructor(protected service: UserService, protected log: Log) {
+  constructor(protected service: UserService) {
     this.all = this.all.bind(this)
     this.search = this.search.bind(this)
     this.load = this.load.bind(this)
@@ -27,7 +26,7 @@ export class UserController {
         res.status(200).json(users).end()
       }
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async search(req: Request, res: Response) {
@@ -37,7 +36,7 @@ export class UserController {
       const result = await this.service.search(filter, limit, page, fields)
       res.status(200).json(result)
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async load(req: Request, res: Response) {
@@ -46,16 +45,14 @@ export class UserController {
       const user = await this.service.load(id)
       res.status(user ? 200 : 404).json(user).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async create(req: Request, res: Response) {
     const userId = res.locals.account.id
     const user: User = req.body
     user.createdBy = userId
-    user.createdAt = new Date()
     user.updatedBy = userId
-    user.updatedAt = new Date()
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<User>(user, userModel, resource)
@@ -67,7 +64,7 @@ export class UserController {
       const status = isSuccessful(result) ? 201 : 409
       res.status(status).json(user).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async update(req: Request, res: Response) {
@@ -76,7 +73,6 @@ export class UserController {
     const user: User = req.body
     user.userId = id
     user.updatedBy = userId
-    user.updatedAt = new Date()
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<User>(user, userModel, resource)
@@ -88,7 +84,7 @@ export class UserController {
       const status = isSuccessful(result) ? 200 : 410
       res.status(status).json(user).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async patch(req: Request, res: Response) {
@@ -97,7 +93,6 @@ export class UserController {
     const user: User = req.body
     user.userId = id
     user.updatedBy = userId
-    user.updatedAt = new Date()
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<User>(user, userModel, resource, false, true)
@@ -109,7 +104,7 @@ export class UserController {
       const status = isSuccessful(result) ? 200 : 410
       res.status(status).json(user).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async delete(req: Request, res: Response) {
@@ -118,7 +113,7 @@ export class UserController {
       const result = await this.service.delete(id)
       res.status(result > 0 ? 200 : 410).json(result).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async getUsersOfRole(req: Request, res: Response) {
@@ -128,7 +123,7 @@ export class UserController {
         const users = await this.service.getUsersOfRole(roleId)
         res.status(200).json(users).end()
       } catch (err) {
-        handleError(err, res, this.log)
+        handleError(err, res)
       }
     }
   }

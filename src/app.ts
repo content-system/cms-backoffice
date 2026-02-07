@@ -6,7 +6,6 @@ import http from "http"
 import { createLogger } from "logger-core"
 import { Pool } from "pg"
 import { PoolManager } from "pg-extension"
-import { log } from "query-core"
 import { buildTemplates, trim } from "query-mappers"
 import { config, env } from "./config"
 import { useContext } from "./context"
@@ -25,7 +24,7 @@ app.use(verifier.verify)
 
 const templates = loadTemplates(cfg.template, buildTemplates, trim, ["./config/query.xml"])
 const pool = new Pool(cfg.db)
-const db = log(new PoolManager(pool), cfg.log.db, logger, "sql")
+const db = new PoolManager(pool)
 const ctx = useContext(db, logger, middleware, cfg, templates)
 route(app, ctx)
 http.createServer(app).listen(cfg.port, () => {

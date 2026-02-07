@@ -1,12 +1,11 @@
 import { Request, Response } from "express"
-import { fromRequest, handleError, respondError } from "express-ext"
-import { isSuccessful, Log } from "onecore"
+import { fromRequest, handleError, isSuccessful, respondError } from "express-ext"
 import { validate } from "xvalidators"
 import { getResource } from "../resources"
 import { Role, RoleFilter, roleModel, RoleService } from "./role"
 
 export class RoleController {
-  constructor(private service: RoleService, private log: Log) {
+  constructor(private service: RoleService) {
     this.all = this.all.bind(this)
     this.search = this.search.bind(this)
     this.load = this.load.bind(this)
@@ -21,7 +20,7 @@ export class RoleController {
       const roles = await this.service.all()
       res.status(200).json(roles).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async search(req: Request, res: Response) {
@@ -31,7 +30,7 @@ export class RoleController {
       const result = await this.service.search(filter, limit, page, fields)
       res.status(200).json(result)
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async load(req: Request, res: Response) {
@@ -40,16 +39,14 @@ export class RoleController {
       const role = await this.service.load(id)
       res.status(role ? 200 : 404).json(role).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async create(req: Request, res: Response) {
     const userId = res.locals.account.id
     const role: Role = req.body
     role.createdBy = userId
-    role.createdAt = new Date()
     role.updatedBy = userId
-    role.updatedAt = new Date()
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<Role>(role, roleModel, resource)
@@ -61,7 +58,7 @@ export class RoleController {
       const status = isSuccessful(result) ? 201 : 409
       res.status(status).json(role).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async update(req: Request, res: Response) {
@@ -70,7 +67,6 @@ export class RoleController {
     const role: Role = req.body
     role.roleId = id
     role.updatedBy = userId
-    role.updatedAt = new Date()
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<Role>(role, roleModel, resource)
@@ -82,7 +78,7 @@ export class RoleController {
       const status = isSuccessful(result) ? 200 : 410
       res.status(status).json(role).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async patch(req: Request, res: Response) {
@@ -91,7 +87,6 @@ export class RoleController {
     const role: Role = req.body
     role.roleId = id
     role.updatedBy = userId
-    role.updatedAt = new Date()
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<Role>(role, roleModel, resource, false, true)
@@ -103,7 +98,7 @@ export class RoleController {
       const status = isSuccessful(result) ? 200 : 410
       res.status(status).json(role).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async delete(req: Request, res: Response) {
@@ -112,7 +107,7 @@ export class RoleController {
       const result = await this.service.delete(id)
       res.status(result > 0 ? 200 : 410).json(result).end()
     } catch (err) {
-      handleError(err, res, this.log)
+      handleError(err, res)
     }
   }
   async assign(req: Request, res: Response) {
@@ -125,7 +120,7 @@ export class RoleController {
         const result = await this.service.assign(id, users)
         res.status(200).json(result).end()
       } catch (err) {
-        handleError(err, res, this.log)
+        handleError(err, res)
       }
     }
   }

@@ -1,4 +1,4 @@
-import { Log, SearchWriter, StringMap } from "onecore"
+import { SearchWriter, StringMap } from "onecore"
 import { buildMap, DB, SqlSearchWriter } from "query-core"
 import { Content, ContentFilter, contentModel, ContentRepository, ContentService } from "./content"
 import { ContentController } from "./controller"
@@ -12,12 +12,12 @@ export class SqlContentRepository extends SqlSearchWriter<Content, ContentFilter
   }
   map?: StringMap
   load(id: string, lang: string): Promise<Content | null> {
-    return this.query<Content>(`select * from contents where id = ${this.param(1)} and lang = ${this.param(2)}`, [id, lang], this.map).then((contents) => {
+    return this.db.query<Content>(`select * from contents where id = ${this.db.param(1)} and lang = ${this.db.param(2)}`, [id, lang], this.map).then((contents) => {
       return !contents || contents.length === 0 ? null : contents[0]
     })
   }
   delete(id: string, lang: string): Promise<number> {
-    return this.exec(`delete from contents where id = ${this.param(1)} and lang = ${this.param(2)}`, [id, lang])
+    return this.db.execute(`delete from contents where id = ${this.db.param(1)} and lang = ${this.db.param(2)}`, [id, lang])
   }
 }
 
@@ -33,8 +33,8 @@ export class ContentUseCase extends SearchWriter<Content, ContentFilter> impleme
   }
 }
 
-export function useContentController(db: DB, log: Log): ContentController {
+export function useContentController(db: DB): ContentController {
   const repository = new SqlContentRepository(db)
   const service = new ContentUseCase(repository)
-  return new ContentController(service, log)
+  return new ContentController(service)
 }

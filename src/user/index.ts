@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid"
-import { Log, UseCase } from "onecore"
+import { UseCase } from "onecore"
 import { DB } from "query-core"
 import { TemplateMap, useQuery } from "query-mappers"
 import { UserController } from "./controller"
@@ -28,9 +28,9 @@ export class UserUseCase extends UseCase<User, string, UserFilter> implements Us
   }
 }
 
-export function useUserController(db: DB, log: Log, mapper?: TemplateMap): UserController {
+export function useUserController(db: DB, mapper?: TemplateMap): UserController {
   const query = useQuery("user", mapper, userModel, true)
   const repo = new SqlUserRepository(db, query)
   const service = new UserUseCase(repo)
-  return new UserController(service, log)
+  return new UserController(service)
 }

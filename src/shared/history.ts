@@ -43,6 +43,6 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
         ${this.db.param(7)}
       )
     `
-    return this.db.exec(sql, [historyId, this.type, id, author, new Date(), action, cloneObj])
+    return this.db.execute(sql, [historyId, this.type, id, author, new Date(), action, cloneObj])
   }
 }

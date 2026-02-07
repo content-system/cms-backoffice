@@ -20,11 +20,11 @@ export class SqlDraftArticleRepository extends Repository<Article, string, Artic
 }
 export class SqlArticleRepository extends SqlViewRepository<Article, string> implements ArticleRepository {
   constructor(protected db: DB) {
-    super(db.query, "articles", articleModel, db.param)
+    super(db, "articles", articleModel)
   }
   save(article: Article): Promise<number> {
     const stmt = buildToSave(article, "articles", articleModel)
-    return this.db.exec(stmt.query, stmt.params)
+    return this.db.execute(stmt.query, stmt.params)
   }
 }
 export class ArticleUseCase implements ArticleService {
@@ -181,5 +181,5 @@ export function useArticleController(db: DB, log: Log): ArticleController {
   const approversPort = new ApproversAdapter("article", db)
   const notificationPort = new NotificationAdapter(db, "notifications", "id", "sender", "receiver", "message", "time", "status", "url")
   const service = new ArticleUseCase(draftRepository, repository, historyRepository, approversPort, notificationPort, log)
-  return new ArticleController(service, log)
+  return new ArticleController(service)
 }
