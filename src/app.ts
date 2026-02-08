@@ -1,7 +1,7 @@
 import { merge } from "config-plus"
 import dotenv from "dotenv"
 import express, { json } from "express"
-import { allow, loadTemplates, MiddlewareLogger } from "express-ext"
+import { allow, loadTemplates, MiddlewareLogger, resources } from "express-ext"
 import http from "http"
 import { createLogger } from "logger-core"
 import { Pool } from "pg"
@@ -16,6 +16,8 @@ const cfg = merge(config, process.env, env, process.env.ENV)
 
 const app = express()
 const logger = createLogger(cfg.log)
+resources.log = logger.error
+
 const middleware = new MiddlewareLogger(logger.info, cfg.middleware)
 app.use(allow(cfg.allow), json())
 

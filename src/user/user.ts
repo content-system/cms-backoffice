@@ -28,7 +28,7 @@ export interface UserFilter extends Filter {
 export interface UserRepository {
   getUsersOfRole(roleId: string): Promise<User[]>
   all(): Promise<User[]>
-  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
+  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<User>>
   load(id: string): Promise<User | null>
   create(user: User): Promise<number>
   update(user: User): Promise<number>
@@ -39,7 +39,7 @@ export interface UserRepository {
 export interface UserService {
   getUsersOfRole(roleId: string): Promise<User[]>
   all(): Promise<User[]>
-  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<User>>
+  search(filter: UserFilter, limit: number, page?: number | string, fields?: string[]): Promise<SearchResult<User>>
   load(id: string): Promise<User | null>
   create(user: User): Promise<number>
   update(user: User): Promise<number>
@@ -102,6 +102,7 @@ export const userModel: Attributes = {
     column: "created_at",
     type: "datetime",
     noupdate: true,
+    createdAt: true,
   },
   updatedBy: {
     column: "updated_by",
@@ -109,6 +110,7 @@ export const userModel: Attributes = {
   updatedAt: {
     column: "updated_at",
     type: "datetime",
+    updatedAt: true
   },
 
   roles: {

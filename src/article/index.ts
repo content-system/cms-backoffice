@@ -27,11 +27,12 @@ export class SqlArticleRepository extends SqlViewRepository<Article, string> imp
     return this.db.execute(stmt.query, stmt.params)
   }
 }
+
 export class ArticleUseCase implements ArticleService {
   constructor(
     protected draftRepository: DraftArticleRepository,
     protected repository: ArticleRepository,
-    protected historyPort: HistoryRepository<Article>,
+    protected historyRepository: HistoryRepository<Article>,
     protected approversPort: ApproversPort,
     protected notificationPort: NotificationPort,
     protected log: Log
@@ -63,7 +64,7 @@ export class ArticleUseCase implements ArticleService {
     return res
   }
 
-  async update(article: Article, ctx?: any): Promise<number> {
+  async update(article: Article): Promise<number> {
     const isExist = await this.repository.exist(article.id)
     if (!isExist) {
       article.slug = slugify(article.title, article.id)
@@ -126,7 +127,7 @@ export class ArticleUseCase implements ArticleService {
 
     await this.draftRepository.update(article)
     const res = await this.repository.save(article)
-    await this.historyPort.create(id, approvedBy, article)
+    await this.historyRepository.create(id, approvedBy, article)
 
     const msg = `This article was approved (id: '${id}').`
     this.notifySubmitter(id, approvedBy, article.submittedBy, msg)
@@ -150,7 +151,7 @@ export class ArticleUseCase implements ArticleService {
     article.approvedAt = new Date()
 
     const res = await this.draftRepository.update(article)
-    await this.historyPort.create(id, rejectedBy, article)
+    await this.historyRepository.create(id, rejectedBy, article)
 
     const msg = `This article was rejected (id: '${id}').`
     this.notifySubmitter(id, rejectedBy, article.submittedBy, msg)

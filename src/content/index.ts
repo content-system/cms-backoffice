@@ -2,7 +2,6 @@ import { SearchWriter, StringMap } from "onecore"
 import { buildMap, DB, SqlSearchWriter } from "query-core"
 import { Content, ContentFilter, contentModel, ContentRepository, ContentService } from "./content"
 import { ContentController } from "./controller"
-
 export * from "./controller"
 
 export class SqlContentRepository extends SqlSearchWriter<Content, ContentFilter> implements ContentRepository {
