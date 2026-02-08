@@ -4,11 +4,16 @@ export class Status {
   static readonly Rejected = "R"
   static readonly Approved = "A"
   static readonly Published = "P"
-  static readonly RequestToEdit = "E"
+  static readonly Expired = "E";
+  static readonly RequestToEdit = "T"
+  static readonly Active = "A";
+  static readonly Inactive = "I";
+  static readonly Deativated = "D";
+  static readonly Deleted = "D";
 }
 
 export function canUpdate(s?: string): boolean {
-  return s!== Status.Approved
+  return s!== Status.Approved && s!== Status.Expired
 }
 export function canApprove(s?: string): boolean{
   return s === Status.Submitted
