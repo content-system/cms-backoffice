@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { DB } from "onecore";
+import { DB, HistoryRepository } from "onecore";
 
 export class Action {
   static readonly Create = "create"
@@ -9,9 +9,7 @@ export class Action {
   static readonly Delete = "delete"
 }
 export const ignoreFields = ["id", "createdBy", "createdAt", "updatedBy", "updatedAt", "approvedAt"]
-export interface HistoryRepository<T> {
-  create(id: string, author: string, data: T, ctx?: any): Promise<number>
-}
+
 export class HistoryAdapter<T> implements HistoryRepository<T> {
   protected ignoreFields: string[]
   protected historyId: string

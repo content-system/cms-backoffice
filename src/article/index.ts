@@ -1,10 +1,10 @@
 import { nanoid } from "nanoid"
-import { ApproversPort, Log, Notification, NotificationPort, SearchResult } from "onecore"
+import { ApproversPort, HistoryRepository, Log, Notification, NotificationPort, SearchResult } from "onecore"
 import { buildToSave } from "pg-extension"
 import { DB, Repository, SqlViewRepository } from "query-core"
 import { slugify } from "../common/slug"
 import { ApproversAdapter } from "../shared/approvers"
-import { HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
+import { HistoryAdapter, ignoreFields } from "../shared/history"
 import { createNotification, NotificationAdapter } from "../shared/notification"
 import { canUpdate, Status } from "../shared/status"
 import { Article, ArticleFilter, articleModel, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
@@ -58,7 +58,7 @@ export class ArticleUseCase implements ArticleService {
     const res = await this.draftRepository.create(article)
 
     if (article.status === Status.Submitted) {
-      this.notifyApprovers(article.id, article.updatedBy)
+      this.notifyApprovers(article.id, article.submittedBy)
     }
     return res
   }
@@ -84,7 +84,7 @@ export class ArticleUseCase implements ArticleService {
     const res = await this.draftRepository.update(article)
 
     if (article.status === Status.Submitted) {
-      this.notifyApprovers(article.id, article.updatedBy)
+      this.notifyApprovers(article.id, article.submittedBy)
     }
     return res
   }
