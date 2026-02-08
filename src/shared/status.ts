@@ -8,8 +8,11 @@ export class Status {
 }
 
 export function canUpdate(s?: string): boolean {
-  return s!== Status.Submitted && s!== Status.Approved && s!== Status.Published
+  return s!== Status.Approved
 }
 export function canApprove(s?: string): boolean{
   return s === Status.Submitted
+}
+export function canReject(s?: string): boolean{
+  return s === Status.Submitted || s === Status.Approved
 }

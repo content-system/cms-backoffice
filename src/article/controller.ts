@@ -10,6 +10,7 @@ export class ArticleController {
     this.search = this.search.bind(this)
     this.loadDraft = this.loadDraft.bind(this)
     this.load = this.load.bind(this)
+    this.getHistories = this.getHistories.bind(this)
     this.create = this.create.bind(this)
     this.update = this.update.bind(this)
     this.patch = this.patch.bind(this)
@@ -44,6 +45,15 @@ export class ArticleController {
     const id = req.params.id as string
     try {
       const article = await this.service.load(id)
+      res.status(article ? 200 : 404).json(article).end()
+    } catch (err) {
+      handleError(err, res)
+    }
+  }
+  async getHistories(req: Request, res: Response) {
+    const id = req.params.id as string
+    try {
+      const article = await this.service.getHistories(id)
       res.status(article ? 200 : 404).json(article).end()
     } catch (err) {
       handleError(err, res)

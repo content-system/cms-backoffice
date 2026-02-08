@@ -4,9 +4,9 @@ import { buildToSave } from "pg-extension"
 import { DB, Repository, SqlViewRepository } from "query-core"
 import { slugify } from "../common/slug"
 import { ApproversAdapter } from "../shared/approvers"
-import { HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
+import { History, HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
 import { createNotification, NotificationAdapter } from "../shared/notification"
-import { canUpdate, Status } from "../shared/status"
+import { canReject, canUpdate, Status } from "../shared/status"
 import { Article, ArticleFilter, articleModel, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
 import { ArticleController } from "./controller"
 import { buildQuery } from "./query"
@@ -48,6 +48,9 @@ export class ArticleUseCase implements ArticleService {
   }
   load(id: string): Promise<Article | null> {
     return this.repository.load(id)
+  }
+  getHistories(id: string): Promise<History<Article>[]> {
+    return this.historyRepository.getHistories(id)
   }
   async create(article: Article): Promise<number> {
     article.id = nanoid(10)
@@ -142,7 +145,7 @@ export class ArticleUseCase implements ArticleService {
       if (article.submittedBy === approvedBy) {
         return -2
       }
-      article.status = Status.Approved
+      article.status = Status.Published
       article.approvedBy = approvedBy
       article.approvedAt = new Date()
 
@@ -151,7 +154,7 @@ export class ArticleUseCase implements ArticleService {
       await this.historyRepository.create(id, approvedBy, article, tx)
 
       const msg = `This article was approved (id: '${id}').`
-      this.notifySubmitter(id, approvedBy, article.submittedBy, msg)
+      this.notify(id, approvedBy, article.submittedBy, msg)
 
       tx.commit()
       return res
@@ -167,7 +170,7 @@ export class ArticleUseCase implements ArticleService {
       if (!article) {
         return 0
       }
-      if (article.status !== Status.Submitted) {
+      if (!canReject(article.status)) {
         return -1
       }
       if (article.submittedBy === rejectedBy) {
@@ -182,7 +185,7 @@ export class ArticleUseCase implements ArticleService {
       await this.historyRepository.create(id, rejectedBy, article, tx)
 
       const msg = `This article was rejected (id: '${id}').`
-      this.notifySubmitter(id, rejectedBy, article.submittedBy, msg)
+      this.notify(id, rejectedBy, article.submittedBy, msg)
 
       tx.commit()
       return res
@@ -191,9 +194,9 @@ export class ArticleUseCase implements ArticleService {
       throw tx
     }
   }
-  protected async notifySubmitter(id: string, userId: string, submitter: string, msg: string): Promise<number> {
+  protected async notify(id: string, senderId: string, notifyTo: string, msg: string): Promise<number> {
     const url = `/articles/${id}`
-    const noti = createNotification(userId, submitter, msg, url)
+    const noti = createNotification(senderId, notifyTo, msg, url)
     try {
       const res = await this.notificationPort.push(noti)
       return res
@@ -211,8 +214,8 @@ export class ArticleUseCase implements ArticleService {
 export function useArticleController(db: DB, log: Log): ArticleController {
   const draftRepository = new SqlDraftArticleRepository(db)
   const repository = new SqlArticleRepository(db)
-  const historyRepository = new HistoryAdapter<Article>("article", "histories", ignoreFields, "history_id", "entity", "id", "author", "time")
-  const approversPort = new ApproversAdapter("article", db)
+  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", ignoreFields, "history_id", "entity", "id", "author", "time")
+  const approversPort = new ApproversAdapter(db, "article")
   const notificationPort = new NotificationAdapter(db, "notifications", "U", "time", "url", "id", "sender", "receiver", "message", "status")
   const service = new ArticleUseCase(db, draftRepository, repository, historyRepository, approversPort, notificationPort, log)
   return new ArticleController(service)
