@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { format, fromRequest, handleError, isSuccessful, respondError } from "express-ext"
+import { format, fromRequest, handleError, isSuccessful, query, queryNumber, resources, respondError } from "express-ext"
 import { validate } from "xvalidators"
 import { getResource } from "../resources"
 import { Status } from "../shared/status"
@@ -52,9 +52,11 @@ export class ArticleController {
   }
   async getHistories(req: Request, res: Response) {
     const id = req.params.id as string
+    const limit = queryNumber(req, resources.limit, resources.defaultLimit)
+    const nextPageToken = query(req, "historyId")
     try {
-      const article = await this.service.getHistories(id)
-      res.status(article ? 200 : 404).json(article).end()
+      const histories = await this.service.getHistories(id, limit, nextPageToken)
+      res.status(200).json(histories).end()
     } catch (err) {
       handleError(err, res)
     }

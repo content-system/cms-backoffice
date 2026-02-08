@@ -100,7 +100,7 @@ export function route(app: Application, ctx: ApplicationContext, secure?: boolea
   app.post("/articles/search", readArticle, ctx.article.search)
   app.get("/articles/:id/draft", readArticle, ctx.article.loadDraft)
   app.get("/articles/:id", readArticle, ctx.article.load)
-  app.get("/articles/:id/history", ctx.article.getHistories)
+  app.get("/articles/:id/history", readArticle, ctx.article.getHistories)
   app.post("/articles", writeArticle, checkArticle, ctx.article.create)
   app.put("/articles/:id", writeArticle, checkArticle, ctx.article.update)
   app.patch("/articles/:id", writeArticle, checkArticle, ctx.article.patch)

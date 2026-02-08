@@ -49,8 +49,8 @@ export class ArticleUseCase implements ArticleService {
   load(id: string): Promise<Article | null> {
     return this.repository.load(id)
   }
-  getHistories(id: string): Promise<History<Article>[]> {
-    return this.historyRepository.getHistories(id)
+  getHistories(id: string, limit: number, nextPageToken?: string): Promise<History<Article>[]> {
+    return this.historyRepository.getHistories(id, limit, nextPageToken)
   }
   async create(article: Article): Promise<number> {
     article.id = nanoid(10)

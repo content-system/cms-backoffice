@@ -17,9 +17,12 @@ export interface History<T> {
   data: T
 }
 
+interface Position {
+  position: number
+}
 export interface HistoryRepository<T> {
   create(id: string, author: string, data: T, tx?: Transaction): Promise<number>
-  getHistories(id: string): Promise<History<T>[]>
+  getHistories(id: string, limit: number, nextPageToken?: string): Promise<History<T>[]>
 }
 
 export class HistoryAdapter<T> implements HistoryRepository<T> {
@@ -69,12 +72,27 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
     const db = tx ? tx : this.db
     return db.execute(sql, [historyId, this.type, id, author, new Date(), cloneObj])
   }
-  getHistories(id: string): Promise<History<T>[]> {
-      const sql = `
-        select ${this.historyId} as id, ${this.author} as author, ${this.time} as time, ${this.data} as data
-        from ${this.table}
-        where ${this.id} = ${this.db.param(1)} and ${this.entity} = ${this.db.param(2)}
-        order by ${this.time} desc`
-      return this.db.query<History<T>>(sql, [id, this.type])
+  async getHistories(id: string, limit: number, nextPageToken?: string): Promise<History<T>[]> {
+    if (limit <= 0) {
+      limit = 20
     }
+    let offset = 0
+    if (nextPageToken) {
+      const query = `
+        select position from 
+          (select ${this.historyId}, row_number() over(order by ${this.time} desc) as position 
+          from ${this.table} where ${this.id} = ${this.db.param(1)} and ${this.entity} = ${this.db.param(2)}) result 
+        where ${this.historyId} = ${this.db.param(3)}`
+      const pos = await this.db.query<Position>(query, [id, this.type, nextPageToken])
+      if (pos.length > 0) {
+        offset = pos[0].position
+      }
+    }
+    const sql = `
+      select ${this.historyId} as id, ${this.author} as author, ${this.time} as time, ${this.data} as data
+      from ${this.table}
+      where ${this.id} = ${this.db.param(1)} and ${this.entity} = ${this.db.param(2)}
+      order by ${this.time} desc limit ${limit} offset ${offset}`
+    return this.db.query<History<T>>(sql, [id, this.type])
+  }
 }
