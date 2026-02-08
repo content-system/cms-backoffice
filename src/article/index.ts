@@ -1,10 +1,10 @@
 import { nanoid } from "nanoid"
-import { ApproversPort, HistoryRepository, Log, Notification, NotificationPort, SearchResult } from "onecore"
+import { ApproversPort, Log, Notification, NotificationPort, SearchResult, Transaction } from "onecore"
 import { buildToSave } from "pg-extension"
 import { DB, Repository, SqlViewRepository } from "query-core"
 import { slugify } from "../common/slug"
 import { ApproversAdapter } from "../shared/approvers"
-import { HistoryAdapter, ignoreFields } from "../shared/history"
+import { HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
 import { createNotification, NotificationAdapter } from "../shared/notification"
 import { canUpdate, Status } from "../shared/status"
 import { Article, ArticleFilter, articleModel, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
@@ -22,14 +22,16 @@ export class SqlArticleRepository extends SqlViewRepository<Article, string> imp
   constructor(protected db: DB) {
     super(db, "articles", articleModel)
   }
-  save(article: Article): Promise<number> {
+  save(article: Article, tx?: Transaction): Promise<number> {
     const stmt = buildToSave(article, "articles", articleModel)
-    return this.db.execute(stmt.query, stmt.params)
+    const db = tx ? tx : this.db
+    return db.execute(stmt.query, stmt.params)
   }
 }
 
 export class ArticleUseCase implements ArticleService {
   constructor(
+    protected db: DB,
     protected draftRepository: DraftArticleRepository,
     protected repository: ArticleRepository,
     protected historyRepository: HistoryRepository<Article>,
@@ -56,38 +58,55 @@ export class ArticleUseCase implements ArticleService {
       article.submittedBy = article.updatedBy
       article.submittedAt = new Date()
     }
-    const res = await this.draftRepository.create(article)
 
-    if (article.status === Status.Submitted) {
-      this.notifyApprovers(article.id, article.submittedBy)
+    const tx = await this.db.beginTransaction()
+    try {
+      const res = await this.draftRepository.create(article, tx)
+
+      if (article.status === Status.Submitted) {
+        this.notifyApprovers(article.id, article.submittedBy)
+      }
+
+      tx.commit()
+      return res
+    } catch (err) {
+      tx.rollback()
+      throw tx
     }
-    return res
   }
 
   async update(article: Article): Promise<number> {
-    const isExist = await this.repository.exist(article.id)
-    if (!isExist) {
-      article.slug = slugify(article.title, article.id)
-    }
-    const existingArticle = await this.draftRepository.load(article.id)
-    if (!existingArticle) {
-      return 0
-    }
-    if (!canUpdate(existingArticle.status)) {
-      return -1
-    }
+    const tx = await this.db.beginTransaction()
+    try {
+      const isExist = await this.repository.exist(article.id, tx)
+      if (!isExist) {
+        article.slug = slugify(article.title, article.id)
+      }
+      const existingArticle = await this.draftRepository.load(article.id, tx)
+      if (!existingArticle) {
+        return 0
+      }
+      if (!canUpdate(existingArticle.status)) {
+        return -1
+      }
 
-    if (article.status === Status.Submitted) {
-      article.submittedBy = article.updatedBy
-      article.submittedAt = new Date()
-    }
+      if (article.status === Status.Submitted) {
+        article.submittedBy = article.updatedBy
+        article.submittedAt = new Date()
+      }
 
-    const res = await this.draftRepository.update(article)
+      const res = await this.draftRepository.update(article, tx)
 
-    if (article.status === Status.Submitted) {
-      this.notifyApprovers(article.id, article.submittedBy)
+      if (article.status === Status.Submitted) {
+        this.notifyApprovers(article.id, article.submittedBy)
+      }
+
+      tx.commit()
+      return res
+    } catch (err) {
+      tx.rollback()
+      throw tx
     }
-    return res
   }
   patch(article: Article): Promise<number> {
     return this.update(article)
@@ -111,52 +130,66 @@ export class ArticleUseCase implements ArticleService {
   }
 
   async approve(id: string, approvedBy: string): Promise<number> {
-    const article = await this.draftRepository.load(id)
-    if (!article) {
-      return 0
-    }
-    if (article.status !== Status.Submitted) {
-      return -1
-    }
-    if (article.submittedBy === approvedBy) {
-      return -2
-    }
-    article.status = Status.Approved
-    article.approvedBy = approvedBy
-    article.approvedAt = new Date()
+    const tx = await this.db.beginTransaction()
+    try {
+      const article = await this.draftRepository.load(id, tx)
+      if (!article) {
+        return 0
+      }
+      if (article.status !== Status.Submitted) {
+        return -1
+      }
+      if (article.submittedBy === approvedBy) {
+        return -2
+      }
+      article.status = Status.Approved
+      article.approvedBy = approvedBy
+      article.approvedAt = new Date()
 
-    await this.draftRepository.update(article)
-    const res = await this.repository.save(article)
-    await this.historyRepository.create(id, approvedBy, article)
+      await this.draftRepository.update(article, tx)
+      const res = await this.repository.save(article, tx)
+      await this.historyRepository.create(id, approvedBy, article, tx)
 
-    const msg = `This article was approved (id: '${id}').`
-    this.notifySubmitter(id, approvedBy, article.submittedBy, msg)
+      const msg = `This article was approved (id: '${id}').`
+      this.notifySubmitter(id, approvedBy, article.submittedBy, msg)
 
-    return res
+      tx.commit()
+      return res
+    } catch (err) {
+      tx.rollback()
+      throw tx
+    }
   }
   async reject(id: string, rejectedBy: string): Promise<number> {
-    const article = await this.draftRepository.load(id)
-    if (!article) {
-      return 0
+    const tx = await this.db.beginTransaction()
+    try {
+      const article = await this.draftRepository.load(id, tx)
+      if (!article) {
+        return 0
+      }
+      if (article.status !== Status.Submitted) {
+        return -1
+      }
+      if (article.submittedBy === rejectedBy) {
+        return -2
+      }
+
+      article.status = Status.Rejected
+      article.approvedBy = rejectedBy
+      article.approvedAt = new Date()
+
+      const res = await this.draftRepository.update(article, tx)
+      await this.historyRepository.create(id, rejectedBy, article, tx)
+
+      const msg = `This article was rejected (id: '${id}').`
+      this.notifySubmitter(id, rejectedBy, article.submittedBy, msg)
+
+      tx.commit()
+      return res
+    } catch (err) {
+      tx.rollback()
+      throw tx
     }
-    if (article.status !== Status.Submitted) {
-      return -1
-    }
-    if (article.submittedBy === rejectedBy) {
-      return -2
-    }
-
-    article.status = Status.Rejected
-    article.approvedBy = rejectedBy
-    article.approvedAt = new Date()
-
-    const res = await this.draftRepository.update(article)
-    await this.historyRepository.create(id, rejectedBy, article)
-
-    const msg = `This article was rejected (id: '${id}').`
-    this.notifySubmitter(id, rejectedBy, article.submittedBy, msg)
-
-    return res
   }
   protected async notifySubmitter(id: string, userId: string, submitter: string, msg: string): Promise<number> {
     const url = `/articles/${id}`
@@ -178,9 +211,9 @@ export class ArticleUseCase implements ArticleService {
 export function useArticleController(db: DB, log: Log): ArticleController {
   const draftRepository = new SqlDraftArticleRepository(db)
   const repository = new SqlArticleRepository(db)
-  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", ignoreFields, "history_id", "entity", "id", "author", "time")
+  const historyRepository = new HistoryAdapter<Article>("article", "histories", ignoreFields, "history_id", "entity", "id", "author", "time")
   const approversPort = new ApproversAdapter("article", db)
   const notificationPort = new NotificationAdapter(db, "notifications", "U", "time", "url", "id", "sender", "receiver", "message", "status")
-  const service = new ArticleUseCase(draftRepository, repository, historyRepository, approversPort, notificationPort, log)
+  const service = new ArticleUseCase(db, draftRepository, repository, historyRepository, approversPort, notificationPort, log)
   return new ArticleController(service)
 }

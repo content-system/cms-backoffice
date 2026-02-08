@@ -1,4 +1,4 @@
-import { Attributes, Filter, SearchResult, TimeRange } from "onecore"
+import { Attributes, Filter, SearchResult, TimeRange, Transaction } from "onecore"
 
 export interface Article {
   id: string
@@ -38,16 +38,16 @@ export interface ArticleFilter extends Filter {
 
 export interface DraftArticleRepository {
   search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>>
-  load(id: string): Promise<Article | null>
-  create(article: Article): Promise<number>
-  update(article: Article): Promise<number>
-  patch(article: Partial<Article>): Promise<number>
-  delete(id: string): Promise<number>
+  load(id: string, tx?: Transaction): Promise<Article | null>
+  create(article: Article, tx: Transaction): Promise<number>
+  update(article: Article, tx: Transaction): Promise<number>
+  patch(article: Partial<Article>, tx: Transaction): Promise<number>
+  delete(id: string, tx?: Transaction): Promise<number>
 }
 export interface ArticleRepository {
-  exist(id: string): Promise<boolean>
-  load(id: string): Promise<Article | null>
-  save(article: Article): Promise<number>
+  exist(id: string, tx?: Transaction): Promise<boolean>
+  load(id: string, tx?: Transaction): Promise<Article | null>
+  save(article: Article, tx: Transaction): Promise<number>
 }
 export interface ArticleService {
   search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>>
