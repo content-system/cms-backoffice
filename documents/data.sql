@@ -93,7 +93,6 @@ create table histories (
   history_id varchar(40) primary key,
   entity varchar(40) not null,
   id varchar(40) not null,
-  action varchar(40) not null,
   author varchar(40) not null,
   time timestamptz not null,
   data jsonb not null

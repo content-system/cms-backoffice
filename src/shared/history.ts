@@ -8,8 +8,9 @@ export class Action {
   static readonly Reject = "reject"
   static readonly Delete = "delete"
 }
+export const ignoreFields = ["id", "createdBy", "createdAt", "updatedBy", "updatedAt", "approvedAt"]
 export interface HistoryRepository<T> {
-  create(id: string, author: string, action: string, data: T, ctx?: any): Promise<number>
+  create(id: string, author: string, data: T, ctx?: any): Promise<number>
 }
 export class HistoryAdapter<T> implements HistoryRepository<T> {
   protected ignoreFields: string[]
@@ -18,19 +19,17 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
   protected id: string
   protected author: string
   protected time: string
-  protected action: string
   protected data: string
-  constructor(protected db: DB, protected type: string, protected table: string, ignoreFields?: string[], historyId?: string, entity?: string, id?: string, author?: string, time?: string, action?: string, data?: string) {
+  constructor(protected db: DB, protected type: string, protected table: string, ignoreFields?: string[], historyId?: string, entity?: string, id?: string, author?: string, time?: string, data?: string) {
     this.ignoreFields = ignoreFields || []
     this.historyId = historyId || "history_id"
     this.entity = entity || "entity"
     this.id = id || "id"
     this.author = author || "author"
     this.time = time || "time"
-    this.action = action || "action"
     this.data = data || "data"
   }
-  async create(id: string, author: string, action: string, data: T, ctx?: any): Promise<number> {
+  async create(id: string, author: string, data: T, ctx?: any): Promise<number> {
     const historyId = nanoid(10)
     const l = this.ignoreFields.length
     const cloneObj: any = { ...data }
@@ -46,7 +45,6 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
         ${this.id},
         ${this.author},
         ${this.time},
-        ${this.action},
         ${this.data}
       ) values (
         ${this.db.param(1)},
@@ -54,10 +52,8 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
         ${this.db.param(3)},
         ${this.db.param(4)},
         ${this.db.param(5)},
-        ${this.db.param(6)},
-        ${this.db.param(7)}
-      )
-    `
-    return this.db.execute(sql, [historyId, this.type, id, author, new Date(), action, cloneObj])
+        ${this.db.param(6)}
+      )`
+    return this.db.execute(sql, [historyId, this.type, id, author, new Date(), cloneObj])
   }
 }

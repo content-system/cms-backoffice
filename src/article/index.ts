@@ -4,7 +4,7 @@ import { buildToSave } from "pg-extension"
 import { DB, Repository, SqlViewRepository } from "query-core"
 import { slugify } from "../common/slug"
 import { ApproversAdapter } from "../shared/approvers"
-import { Action, HistoryAdapter, HistoryRepository } from "../shared/history"
+import { HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
 import { createNotification, NotificationAdapter } from "../shared/notification"
 import { canUpdate, Status } from "../shared/status"
 import { Article, ArticleFilter, articleModel, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
@@ -93,7 +93,7 @@ export class ArticleUseCase implements ArticleService {
   }
   protected async notifyApprovers(id: string, userId: string): Promise<number> {
     const approvers = await this.approversPort.getApprovers()
-    const msg = "Please review and approve an article"
+    const msg = `Please review and approve an article (id: '${id}').`
     const url = `/articles/${id}/approve`
     const notifications: Notification[] = []
     for (const approverId of approvers) {
@@ -126,9 +126,9 @@ export class ArticleUseCase implements ArticleService {
 
     await this.draftRepository.update(article)
     const res = await this.repository.save(article)
-    await this.historyPort.create(id, approvedBy, Action.Approve, article)
+    await this.historyPort.create(id, approvedBy, article)
 
-    const msg = "This article was approved."
+    const msg = `This article was approved (id: '${id}').`
     this.notifySubmitter(id, approvedBy, article.submittedBy, msg)
 
     return res
@@ -150,9 +150,9 @@ export class ArticleUseCase implements ArticleService {
     article.approvedAt = new Date()
 
     const res = await this.draftRepository.update(article)
-    await this.historyPort.create(id, rejectedBy, Action.Reject, article)
+    await this.historyPort.create(id, rejectedBy, article)
 
-    const msg = "This article was rejected."
+    const msg = `This article was rejected (id: '${id}').`
     this.notifySubmitter(id, rejectedBy, article.submittedBy, msg)
 
     return res
@@ -177,7 +177,7 @@ export class ArticleUseCase implements ArticleService {
 export function useArticleController(db: DB, log: Log): ArticleController {
   const draftRepository = new SqlDraftArticleRepository(db)
   const repository = new SqlArticleRepository(db)
-  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", ["id", "createdBy", "createdAt", "updatedBy", "updatedAt"], "history_id", "entity", "id", "author", "time", "action", "data")
+  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", ignoreFields, "history_id", "entity", "id", "author", "time")
   const approversPort = new ApproversAdapter("article", db)
   const notificationPort = new NotificationAdapter(db, "notifications", "U", "time", "url", "id", "sender", "receiver", "message", "status")
   const service = new ArticleUseCase(draftRepository, repository, historyRepository, approversPort, notificationPort, log)
