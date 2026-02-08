@@ -1,23 +1,12 @@
 import { nanoid } from "nanoid"
-import { DB, Statement } from "onecore"
-
-export interface Notification {
-  id?: string
-  sender: string
-  receiver: string
-  url?: string
-  message: string
-}
+import { DB, Notification, NotificationPort, Statement } from "onecore"
 
 export function createNotification(sender: string, receiver: string, message: string, url?: string): Notification {
   const notification: Notification = { sender, receiver, message, url }
   return notification
 }
-export interface NotificationPort {
-  push(notification: Notification): Promise<number>
-  pushNotifications(notifications: Notification[]): Promise<number>
-}
-export class NotificationAdapter {
+
+export class NotificationAdapter implements NotificationPort {
   protected unread: string
   protected time: string
   protected url: string

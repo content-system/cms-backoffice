@@ -1,8 +1,4 @@
-import { DB } from "onecore"
-
-export interface ApproversPort {
-  getApprovers(): Promise<string[]>
-}
+import { ApproversPort, DB } from "onecore"
 
 interface ID {
   id: string
