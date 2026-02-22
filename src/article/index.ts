@@ -65,12 +65,11 @@ export class ArticleUseCase implements ArticleService {
     const tx = await this.db.beginTransaction()
     try {
       const res = await this.draftRepository.create(article, tx)
+      const action = article.status === Status.Submitted ? Action.Submit : Action.Create
+      await this.historyRepository.create(article.id, article.updatedBy, action, article, tx)
 
       if (article.status === Status.Submitted) {
-        await this.historyRepository.create(article.id, article.updatedBy, Action.Submit, article, tx)
         this.notifyApprovers(article.id, article.submittedBy)
-      } else {
-        await this.historyRepository.create(article.id, article.updatedBy, Action.Create, article, tx)
       }
 
       tx.commit()

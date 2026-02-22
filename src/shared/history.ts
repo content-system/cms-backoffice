@@ -50,11 +50,14 @@ export class HistoryAdapter<T> implements HistoryRepository<T> {
   }
   create(id: string, author: string, action: string, data?: T | null, tx?: Transaction): Promise<number> {
     const historyId = nanoid(10)
-    const cloneObj: any = { ...data }
-    if (this.ignoreFields && this.ignoreFields.length > 0) {
-      const l = this.ignoreFields.length
-      for (let i = 0; i < l; i++) {
-        delete cloneObj[this.ignoreFields[i]]
+    let cloneObj: any = null
+    if (data) {
+      cloneObj = { ...data }
+      if (this.ignoreFields && this.ignoreFields.length > 0) {
+        const l = this.ignoreFields.length
+        for (let i = 0; i < l; i++) {
+          delete cloneObj[this.ignoreFields[i]]
+        }
       }
     }
     const sql = `
