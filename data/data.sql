@@ -95,7 +95,8 @@ create table histories (
   id varchar(40) not null,
   author varchar(40) not null,
   time timestamptz not null,
-  data jsonb not null
+  action char(1),
+  data jsonb
 );
 
 create table notifications (

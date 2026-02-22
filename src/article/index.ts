@@ -4,7 +4,7 @@ import { buildToSave } from "pg-extension"
 import { DB, Repository, SqlViewRepository } from "query-core"
 import { slugify } from "../common/slug"
 import { ApproversAdapter } from "../shared/approvers"
-import { History, HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
+import { Action, History, HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
 import { createNotification, NotificationAdapter } from "../shared/notification"
 import { canReject, canUpdate, Status } from "../shared/status"
 import { Article, ArticleFilter, articleModel, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
@@ -67,14 +67,17 @@ export class ArticleUseCase implements ArticleService {
       const res = await this.draftRepository.create(article, tx)
 
       if (article.status === Status.Submitted) {
+        await this.historyRepository.create(article.id, article.updatedBy, Action.Submit, article, tx)
         this.notifyApprovers(article.id, article.submittedBy)
+      } else {
+        await this.historyRepository.create(article.id, article.updatedBy, Action.Create, article, tx)
       }
 
       tx.commit()
       return res
     } catch (err) {
       tx.rollback()
-      throw tx
+      throw err
     }
   }
 
@@ -101,6 +104,7 @@ export class ArticleUseCase implements ArticleService {
       const res = await this.draftRepository.update(article, tx)
 
       if (article.status === Status.Submitted) {
+        await this.historyRepository.create(article.id, article.updatedBy, Action.Submit, article, tx)
         this.notifyApprovers(article.id, article.submittedBy)
       }
 
@@ -108,7 +112,7 @@ export class ArticleUseCase implements ArticleService {
       return res
     } catch (err) {
       tx.rollback()
-      throw tx
+      throw err
     }
   }
   patch(article: Article): Promise<number> {
@@ -151,7 +155,7 @@ export class ArticleUseCase implements ArticleService {
 
       await this.draftRepository.update(article, tx)
       const res = await this.repository.save(article, tx)
-      await this.historyRepository.create(id, approvedBy, article, tx)
+      await this.historyRepository.create(id, approvedBy, Action.Approve, null, tx)
 
       const msg = `This article was approved (id: '${id}').`
       this.notify(id, approvedBy, article.submittedBy, msg)
@@ -160,7 +164,7 @@ export class ArticleUseCase implements ArticleService {
       return res
     } catch (err) {
       tx.rollback()
-      throw tx
+      throw err
     }
   }
   async reject(id: string, rejectedBy: string): Promise<number> {
@@ -182,7 +186,7 @@ export class ArticleUseCase implements ArticleService {
       article.approvedAt = new Date()
 
       const res = await this.draftRepository.update(article, tx)
-      await this.historyRepository.create(id, rejectedBy, article, tx)
+      await this.historyRepository.create(id, rejectedBy, Action.Reject, null, tx)
 
       const msg = `This article was rejected (id: '${id}').`
       this.notify(id, rejectedBy, article.submittedBy, msg)
@@ -191,7 +195,7 @@ export class ArticleUseCase implements ArticleService {
       return res
     } catch (err) {
       tx.rollback()
-      throw tx
+      throw err
     }
   }
   protected async notify(id: string, senderId: string, notifyTo: string, msg: string): Promise<number> {
@@ -214,7 +218,7 @@ export class ArticleUseCase implements ArticleService {
 export function useArticleController(db: DB, log: Log): ArticleController {
   const draftRepository = new SqlDraftArticleRepository(db)
   const repository = new SqlArticleRepository(db)
-  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", ignoreFields, "history_id", "entity", "id", "author", "time")
+  const historyRepository = new HistoryAdapter<Article>(db, "article", "histories", ignoreFields, "history_id", "entity", "id", "author")
   const approversPort = new ApproversAdapter(db, "article")
   const notificationPort = new NotificationAdapter(db, "notifications", "U", "time", "url", "id", "sender", "receiver", "message", "status")
   const service = new ArticleUseCase(db, draftRepository, repository, historyRepository, approversPort, notificationPort, log)
