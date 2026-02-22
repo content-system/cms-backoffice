@@ -9,7 +9,7 @@ export class Action {
   static readonly Reject = "R"
   static readonly Delete = "D"
 }
-export const ignoreFields = ["id", "createdBy", "createdAt", "updatedBy", "updatedAt", "approvedAt"]
+export const ignoreFields = ["id", "createdBy", "createdAt", "updatedBy", "updatedAt", "submittedBy", "submittedAt", "approvedBy", "approvedAt"]
 
 export interface History<T> {
   id: string
