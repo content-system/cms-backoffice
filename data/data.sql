@@ -109,6 +109,88 @@ create table notifications (
   status char(1)
 );
 
+/*
+alter table user_roles add foreign key (user_id) references users (user_id);
+alter table user_roles add foreign key (role_id) references roles (role_id);
+
+alter table modules add foreign key (parent) references modules (module_id);
+
+alter table role_modules add foreign key (role_id) references roles (role_id);
+alter table role_modules add foreign key (module_id) references modules (module_id);
+
+drop table modules;
+drop table users;
+drop table roles;
+drop table user_roles;
+drop table role_modules;
+drop table audit_logs;
+*/
+
+create table categories (
+  id varchar(40) primary key,
+  name varchar(255) not null,
+  status char(1) not null,
+  path varchar(255),
+  resource_key varchar(255),
+  icon varchar(255),
+  sequence int not null,
+  type varchar(40),
+  parent varchar(40),
+  created_by varchar(40),
+  created_at timestamptz,
+  updated_by varchar(40),
+  updated_at timestamptz,
+  version integer
+);
+/*
+home
+services
+news => dynamic
+careers => dynamic
+contact => dynamic
+about
+ + milestones
+ + companies
+ + leadership
+*/
+
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('home','Home','A','/','home','home',1,'content','');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('services','Services','A','/services','services','settings',2,'content','');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('news','News','A','/news','news','credit_card',3,'','');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('careers','Careers','A','/careers','careers','work',4,'','');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('contact','Contact','A','/contact','contact','mail',5,'','');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('about','About','A','/about','about','assignment',6,'','');
+
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('milestones','Milestones','A','/milestones','milestones','public',1,'content','about');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('companies','Companies','A','/companies','companies','account_balance',2,'content','about');
+insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('leadership','Leadership','A','/leadership','leadership','person',3,'content','about');
+
+update categories set version = 1;
+
+insert into code_masters(master, code, name, sequence, status) values ('language','en','English',1,'A');
+insert into code_masters(master, code, name, sequence, status) values ('language','vi','Tiếng Việt',2,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy/M/d','yyyy/M/d',1,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy/MM/dd','yyyy/MM/dd',2,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy-M-d','yyyy-M-d',3,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy-MM-dd','yyyy-MM-dd',4,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy.MM.dd','yyyy.MM.dd',5,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','yy.MM.dd','yy.MM.dd',6,'I');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','d/M/yyyy','d/M/yyyy',7,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','d/MM/yyyy','d/MM/yyyy',8,'I');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','dd/MM/yyyy','dd/MM/yyyy',9,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','dd/MM yyyy','dd/MM yyyy',10,'I');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','dd/MM/yy','dd/MM/yy',11,'I');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','d-M-yyyy','d-M-yyyy',12,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','dd-MM-yyyy','dd-MM-yyyy',13,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','dd-MM-yy','dd-MM-yy',14,'I');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','d.M.yyyy','d.M.yyyy',15,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','d.MM.yyyy','d.MM.yyyy',16,'I');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','dd.MM.yyyy','dd.MM.yyyy',17,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','dd.MM.yy','dd.MM.yy',18,'I');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','M/d/yyyy','M/d/yyyy',19,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','MM/dd/yyyy','MM/dd/yyyy',20,'A');
+insert into code_masters(master, code, name, sequence, status) values ('date_format','MM.dd.yyyy','MM.dd.yyyy',21,'A');
+
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('admin','Admin','A','/admin','admin','contacts',2,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('setup','Setup','A','/setup','setup','settings',3,7,'');
 insert into modules (module_id,module_name,status,path,resource_key,icon,sequence,actions,parent) values ('report','Report','A','/report','report','pie_chart',4,7,'');
@@ -129,6 +211,79 @@ insert into roles (role_id, role_name, status, remark) values ('it_support','IT 
 insert into roles (role_id, role_name, status, remark) values ('operator','Operator Group','A','Operator Group');
 insert into roles (role_id, role_name, status, remark) values ('content_writer','Content Writer','A','Content Writer');
 insert into roles (role_id, role_name, status, remark) values ('content_approver','Content Approver','A','Content Approver');
+
+insert into role_modules(role_id, module_id, permissions) values ('admin', 'setup', 7);
+insert into role_modules(role_id, module_id, permissions) values ('admin', 'report', 7);
+insert into role_modules(role_id, module_id, permissions) values ('admin', 'admin', 7);
+insert into role_modules(role_id, module_id, permissions) values ('admin', 'user', 7);
+insert into role_modules(role_id, module_id, permissions) values ('admin', 'role', 7);
+insert into role_modules(role_id, module_id, permissions) values ('admin', 'audit_log', 1);
+
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'admin', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'user', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'role', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'audit_log', 1);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'setup', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'category', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'content', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'article', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'job', 7);
+insert into role_modules(role_id, module_id, permissions) values ('it_support', 'contact', 7);
+
+insert into role_modules(role_id, module_id, permissions) values ('call_center', 'admin', 1);
+insert into role_modules(role_id, module_id, permissions) values ('call_center', 'audit_log', 1);
+
+insert into role_modules(role_id, module_id, permissions) values ('content_writer', 'setup', 7);
+insert into role_modules(role_id, module_id, permissions) values ('content_writer', 'article', 7);
+insert into role_modules(role_id, module_id, permissions) values ('content_approver', 'setup', 7);
+insert into role_modules(role_id, module_id, permissions) values ('content_approver', 'article', 9);
+
+
+create table companies (
+  id character varying(40) not null primary key,
+  name character varying(300),
+  description character varying(2000),
+  slogan character varying(300),
+  image_url varchar(500),
+  cover_url varchar(500),
+  sequence integer
+);
+insert into companies (id,name,description,slogan,image_url,cover_url,sequence) values
+	 ('fpt-automotive','FPT Automotive','With two decades of experience in the Automotive industry, FPT Software''s automotive technology subsidiary, FPT Automotive was launched in 2023 with a mission to drive the advancement of software-defined vehicles and shape the new mobility era.
+
+Our team of automotive experts is equipped and experienced to accompany car manufacturers and suppliers in advancing the mobility ecosystem, having enabled the world''s leading automakers, OEMs, Tier-1 suppliers, and semiconductor companies to innovate, optimize and maintain a competitive edge in the automotive industry. This support is crucial for navigating challenges such as industry volatility, disrupted supply chains, and rapidly evolving market demands.','Moving into the fast lane of smart, software-defined mobility.','https://fptsoftware.com/-/media/project/fpt-software/fso/industries/automotive/automotive-lp_banner-3_mobile.png','https://fptsoftware.com/-/media/project/fpt-software/fso/industries/automotive/automotive-lp_banner-3.png',1);
+
+create table if not exists contacts (
+  id varchar(40) primary key,
+  name varchar(120),
+  country varchar(120),
+  company varchar(120),
+  job_title varchar(120),
+  email varchar(120),
+  phone varchar(45),
+  message varchar(1000),
+  submitted_at timestamptz,
+  contacted_by varchar(120),
+  contacted_at timestamptz
+);
+
+insert into contacts (id,"name",country,company,job_title,email,phone,message,submitted_at) values
+  ('E7UBXeHrp','Duc Nguyen','Vietnam','TMA','Manager','duc.n@tma.com.vn','0987654321','I want to hire 8 developers','2024-10-20 18:59:47.820962+07'),
+  ('xRjjveHrM','Hieu Vo','Vietnam','TMA','Developer','hieu.v@tma.com.vn','0987654321','I want to hire 6 developers','2024-10-20 19:01:04.940217+07'),
+  ('bPyY39I842','Minh Ha','Vietnam','OhStem','Product Owner','minh.h@ohstem.vn','0987654321','I need 4 developers',NULL),
+  ('mkiJ5_vXKo','Triet Nguyen','Vietnam','KMS','Test Enginner','triet.n@kms.com.vn','0987654321','I need 6 testers',NULL),
+  ('yoobcu9kvR','Trinh Minh Chieu','Vietnam','Shinhan','Manager','chieu.t@shinhan.com.vn','0987654321','I need 7 developers',NULL),
+  ('V5Ua8be1Wg','Quy Nguyen','New Zealand','TMA','Project Manager','quy.n@tma.com.vn','0987654321','I need 10 developers',NULL),
+  ('PxnNIy6LVf','Hiep Nguyen','Vietnam','KBTGVN','Software engineer','hiep.n@kbtgvn.tech','0987654321','I need 5 developers',NULL),
+  ('6EnNY-kISB','Nguyen Viet Anh','Vietnam','KBTGVN','Android Developer','anh.n@kbtgvn.tech','0987654321','I need 5 developers',NULL),
+  ('l74fvAHrp','Phu Huynh','Vietnam','FPT','Developer','phu.h@tma.com.vn','0987654321','I want to hire 5 developers','2024-10-20 19:02:12.209824+07'),
+  ('XTotvATrp','Tan Truong','Vietnam','FPT','Senior Developer','tan.t@fpt.com.vn','0987654321','I want to hire 4 developers','2024-10-20 19:02:39.317878+07'),
+  ('SrmtXAH9p','Bao Nguyen','Vietnam','Cho Tot','Senior Developer','bao.n@chotot.com.vn','0987654321','I want to hire 4 developers','2024-10-20 19:03:10.218696+07'),
+  ('hS1KKeH9M','Tin Hoang','Vietnam','TMA','Senior Developer','tin.h@tma.com.vn','0987654321','I want to hire 4 developers','2024-10-20 19:29:21.103008+07'),
+  ('0T44GbLvtH','Nguyen Viet Anh','Vietnam','KBTGVN','Android Developer','anh.n@kbtgvn.tech','0987654321','I need 5 developers','2024-11-24 18:08:30.814+07'),
+  ('OnaE1s9i95','Nguyen Huu Vinh','Vietnam','TMA','Developer','vinh.n@tma.com.vn','0987654321','I need 4 developers','2024-11-24 19:31:03.055+07'),
+  ('hPcqMTlCA6','Tuan Nguyen','Vietnam','TMA','Developer','tuan.n@tma.com.vn','0987654321','I need 2 developers','2024-11-24 19:36:32.057+07');
+
 
 insert into users (user_id,username,email,display_name,image_url,status,gender,phone,title,position) values ('aft2KNdQhi','gareth.bale','gareth.bale@gmail.com','Gareth Bale','https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Liver-RM_%282%29_%28cropped%29.jpg/440px-Liver-RM_%282%29_%28cropped%29.jpg','A','M','0987654321','Mr','M');
 insert into users (user_id,username,email,display_name,image_url,status,gender,phone,title,position) values ('al6TZ0p4iE','cristiano.ronaldo','cristiano.ronaldo@gmail.com','Cristiano Ronaldo','https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cristiano_Ronaldo_2018.jpg/400px-Cristiano_Ronaldo_2018.jpg','I','M','0987654321','Mr','E');
@@ -196,32 +351,6 @@ insert into user_roles(user_id, role_id) values ('gLEDc8dQIp','content_approver'
 insert into user_roles(user_id, role_id) values ('gPrLYi4xOy','content_approver');
 insert into user_roles(user_id, role_id) values ('gv99fpMeFy','content_approver');
 
-insert into role_modules(role_id, module_id, permissions) values ('admin', 'setup', 7);
-insert into role_modules(role_id, module_id, permissions) values ('admin', 'report', 7);
-insert into role_modules(role_id, module_id, permissions) values ('admin', 'admin', 7);
-insert into role_modules(role_id, module_id, permissions) values ('admin', 'user', 7);
-insert into role_modules(role_id, module_id, permissions) values ('admin', 'role', 7);
-insert into role_modules(role_id, module_id, permissions) values ('admin', 'audit_log', 1);
-
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'admin', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'user', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'role', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'audit_log', 1);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'setup', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'category', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'content', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'article', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'job', 7);
-insert into role_modules(role_id, module_id, permissions) values ('it_support', 'contact', 7);
-
-insert into role_modules(role_id, module_id, permissions) values ('call_center', 'admin', 1);
-insert into role_modules(role_id, module_id, permissions) values ('call_center', 'audit_log', 1);
-
-insert into role_modules(role_id, module_id, permissions) values ('content_writer', 'setup', 7);
-insert into role_modules(role_id, module_id, permissions) values ('content_writer', 'article', 7);
-insert into role_modules(role_id, module_id, permissions) values ('content_approver', 'setup', 7);
-insert into role_modules(role_id, module_id, permissions) values ('content_approver', 'article', 9);
-
 insert into audit_logs (id, resource, user_id, ip, "action", "time", status, remark) values('6xydt3Qap', 'authentication', 'bphT4IllDy', '188.239.138.226', 'authenticate', '2023-07-02 21:00:06.811', 'success', '');
 insert into audit_logs (id, resource, user_id, ip, "action", "time", status, remark) values('gRAIVh1tM', 'term', 'bphT4IllDy', '188.239.138.226', 'patch', '2023-07-03 12:09:51.659', 'success', '');
 insert into audit_logs (id, resource, user_id, ip, "action", "time", status, remark) values('d8sQRO1ap', 'entity', 'bphT4IllDy', '188.239.138.226', 'patch', '2023-07-03 13:04:20.950', 'success', '');
@@ -261,130 +390,3 @@ insert into audit_logs (id, resource, user_id, ip, "action", "time", status, rem
 insert into audit_logs (id, resource, user_id, ip, "action", "time", status, remark) values('UnAKJs1tM', 'user', 'bphT4IllDy', '188.239.138.226', 'patch', '2023-07-03 21:10:31.352', 'fail', 'Data Validation Failed');
 insert into audit_logs (id, resource, user_id, ip, "action", "time", status, remark) values('SiyKGs1ap', 'user', 'bphT4IllDy', '188.239.138.226', 'patch', '2023-07-03 21:10:38.634', 'fail', 'Data Validation Failed');
 insert into audit_logs (id, resource, user_id, ip, "action", "time", status, remark) values('yYReJsQaM', 'user', 'bphT4IllDy', '188.239.138.226', 'patch', '2023-07-03 21:11:10.110', 'success', '');
-
-insert into code_masters(master, code, name, sequence, status) values ('language','en','English',1,'A');
-insert into code_masters(master, code, name, sequence, status) values ('language','vi','Tiếng Việt',2,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy/M/d','yyyy/M/d',1,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy/MM/dd','yyyy/MM/dd',2,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy-M-d','yyyy-M-d',3,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy-MM-dd','yyyy-MM-dd',4,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','yyyy.MM.dd','yyyy.MM.dd',5,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','yy.MM.dd','yy.MM.dd',6,'I');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','d/M/yyyy','d/M/yyyy',7,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','d/MM/yyyy','d/MM/yyyy',8,'I');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','dd/MM/yyyy','dd/MM/yyyy',9,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','dd/MM yyyy','dd/MM yyyy',10,'I');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','dd/MM/yy','dd/MM/yy',11,'I');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','d-M-yyyy','d-M-yyyy',12,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','dd-MM-yyyy','dd-MM-yyyy',13,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','dd-MM-yy','dd-MM-yy',14,'I');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','d.M.yyyy','d.M.yyyy',15,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','d.MM.yyyy','d.MM.yyyy',16,'I');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','dd.MM.yyyy','dd.MM.yyyy',17,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','dd.MM.yy','dd.MM.yy',18,'I');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','M/d/yyyy','M/d/yyyy',19,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','MM/dd/yyyy','MM/dd/yyyy',20,'A');
-insert into code_masters(master, code, name, sequence, status) values ('date_format','MM.dd.yyyy','MM.dd.yyyy',21,'A');
-
-/*
-alter table user_roles add foreign key (user_id) references users (user_id);
-alter table user_roles add foreign key (role_id) references roles (role_id);
-
-alter table modules add foreign key (parent) references modules (module_id);
-
-alter table role_modules add foreign key (role_id) references roles (role_id);
-alter table role_modules add foreign key (module_id) references modules (module_id);
-
-drop table modules;
-drop table users;
-drop table roles;
-drop table user_roles;
-drop table role_modules;
-drop table audit_logs;
-*/
-
-create table categories (
-  id varchar(40) primary key,
-  name varchar(255) not null,
-  status char(1) not null,
-  path varchar(255),
-  resource_key varchar(255),
-  icon varchar(255),
-  sequence int not null,
-  type varchar(40),
-  parent varchar(40),
-  created_by varchar(40),
-  created_at timestamptz,
-  updated_by varchar(40),
-  updated_at timestamptz,
-  version integer
-);
-/*
-home
-services
-news => dynamic
-careers => dynamic
-contact => dynamic
-about
- + milestones
- + companies
- + leadership
-*/
-
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('home','Home','A','/','home','home',1,'content','');
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('services','Services','A','/services','services','settings',2,'content','');
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('news','News','A','/news','news','credit_card',3,'','');
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('careers','Careers','A','/careers','careers','work',4,'','');
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('contact','Contact','A','/contact','contact','mail',5,'','');
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('about','About','A','/about','about','assignment',6,'','');
-
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('milestones','Milestones','A','/milestones','milestones','public',1,'content','about');
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('companies','Companies','A','/companies','companies','account_balance',2,'content','about');
-insert into categories (id,name,status,path,resource_key,icon,sequence,type,parent) values ('leadership','Leadership','A','/leadership','leadership','person',3,'content','about');
-
-update categories set version = 1;
-
-create table companies (
-  id character varying(40) not null primary key,
-  name character varying(300),
-  description character varying(2000),
-  slogan character varying(300),
-  image_url varchar(500),
-  cover_url varchar(500),
-  sequence integer
-);
-insert into companies (id,name,description,slogan,image_url,cover_url,sequence) values
-	 ('fpt-automotive','FPT Automotive','With two decades of experience in the Automotive industry, FPT Software''s automotive technology subsidiary, FPT Automotive was launched in 2023 with a mission to drive the advancement of software-defined vehicles and shape the new mobility era.
-
-Our team of automotive experts is equipped and experienced to accompany car manufacturers and suppliers in advancing the mobility ecosystem, having enabled the world''s leading automakers, OEMs, Tier-1 suppliers, and semiconductor companies to innovate, optimize and maintain a competitive edge in the automotive industry. This support is crucial for navigating challenges such as industry volatility, disrupted supply chains, and rapidly evolving market demands.','Moving into the fast lane of smart, software-defined mobility.','https://fptsoftware.com/-/media/project/fpt-software/fso/industries/automotive/automotive-lp_banner-3_mobile.png','https://fptsoftware.com/-/media/project/fpt-software/fso/industries/automotive/automotive-lp_banner-3.png',1);
-
-create table if not exists contacts (
-  id varchar(40) primary key,
-  name varchar(120),
-  country varchar(120),
-  company varchar(120),
-  job_title varchar(120),
-  email varchar(120),
-  phone varchar(45),
-  message varchar(1000),
-  submitted_at timestamptz,
-  contacted_by varchar(120),
-  contacted_at timestamptz
-);
-
-insert into contacts (id,"name",country,company,job_title,email,phone,message,submitted_at) values
-  ('E7UBXeHrp','Duc Nguyen','Vietnam','TMA','Manager','duc.n@tma.com.vn','0987654321','I want to hire 8 developers','2024-10-20 18:59:47.820962+07'),
-  ('xRjjveHrM','Hieu Vo','Vietnam','TMA','Developer','hieu.v@tma.com.vn','0987654321','I want to hire 6 developers','2024-10-20 19:01:04.940217+07'),
-  ('bPyY39I842','Minh Ha','Vietnam','OhStem','Product Owner','minh.h@ohstem.vn','0987654321','I need 4 developers',NULL),
-  ('mkiJ5_vXKo','Triet Nguyen','Vietnam','KMS','Test Enginner','triet.n@kms.com.vn','0987654321','I need 6 testers',NULL),
-  ('yoobcu9kvR','Trinh Minh Chieu','Vietnam','Shinhan','Manager','chieu.t@shinhan.com.vn','0987654321','I need 7 developers',NULL),
-  ('V5Ua8be1Wg','Quy Nguyen','New Zealand','TMA','Project Manager','quy.n@tma.com.vn','0987654321','I need 10 developers',NULL),
-  ('PxnNIy6LVf','Hiep Nguyen','Vietnam','KBTGVN','Software engineer','hiep.n@kbtgvn.tech','0987654321','I need 5 developers',NULL),
-  ('6EnNY-kISB','Nguyen Viet Anh','Vietnam','KBTGVN','Android Developer','anh.n@kbtgvn.tech','0987654321','I need 5 developers',NULL),
-  ('l74fvAHrp','Phu Huynh','Vietnam','FPT','Developer','phu.h@tma.com.vn','0987654321','I want to hire 5 developers','2024-10-20 19:02:12.209824+07'),
-  ('XTotvATrp','Tan Truong','Vietnam','FPT','Senior Developer','tan.t@fpt.com.vn','0987654321','I want to hire 4 developers','2024-10-20 19:02:39.317878+07'),
-  ('SrmtXAH9p','Bao Nguyen','Vietnam','Cho Tot','Senior Developer','bao.n@chotot.com.vn','0987654321','I want to hire 4 developers','2024-10-20 19:03:10.218696+07'),
-  ('hS1KKeH9M','Tin Hoang','Vietnam','TMA','Senior Developer','tin.h@tma.com.vn','0987654321','I want to hire 4 developers','2024-10-20 19:29:21.103008+07'),
-  ('0T44GbLvtH','Nguyen Viet Anh','Vietnam','KBTGVN','Android Developer','anh.n@kbtgvn.tech','0987654321','I need 5 developers','2024-11-24 18:08:30.814+07'),
-  ('OnaE1s9i95','Nguyen Huu Vinh','Vietnam','TMA','Developer','vinh.n@tma.com.vn','0987654321','I need 4 developers','2024-11-24 19:31:03.055+07'),
-  ('hPcqMTlCA6','Tuan Nguyen','Vietnam','TMA','Developer','tuan.n@tma.com.vn','0987654321','I need 2 developers','2024-11-24 19:36:32.057+07');
