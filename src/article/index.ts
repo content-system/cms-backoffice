@@ -1,33 +1,16 @@
 import { nanoid } from "nanoid"
-import { ApproversPort, Log, Notification, NotificationPort, SearchResult, Transaction } from "onecore"
-import { buildToSave } from "pg-extension"
-import { DB, Repository, SqlViewRepository } from "query-core"
+import { ApproversPort, Log, Notification, NotificationPort, SearchResult } from "onecore"
+import { DB } from "query-core"
 import { slugify } from "../common/slug"
 import { ApproversAdapter } from "../shared/approvers"
 import { Action, History, HistoryAdapter, HistoryRepository, ignoreFields } from "../shared/history"
 import { createNotification, NotificationAdapter } from "../shared/notification"
 import { canReject, canUpdate, Status } from "../shared/status"
-import { Article, ArticleFilter, articleModel, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
+import { Article, ArticleFilter, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
 import { ArticleController } from "./controller"
-import { buildQuery } from "./query"
+import { SqlArticleRepository, SqlDraftArticleRepository } from "./query"
 export * from "./article"
 export * from "./controller"
-
-export class SqlDraftArticleRepository extends Repository<Article, string, ArticleFilter> implements DraftArticleRepository {
-  constructor(db: DB) {
-    super(db, "draft_articles", articleModel, buildQuery)
-  }
-}
-export class SqlArticleRepository extends SqlViewRepository<Article, string> implements ArticleRepository {
-  constructor(protected db: DB) {
-    super(db, "articles", articleModel)
-  }
-  save(article: Article, tx?: Transaction): Promise<number> {
-    const stmt = buildToSave(article, "articles", articleModel)
-    const db = tx ? tx : this.db
-    return db.execute(stmt.query, stmt.params)
-  }
-}
 
 export class ArticleUseCase implements ArticleService {
   constructor(

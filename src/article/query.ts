@@ -1,6 +1,23 @@
-import { param } from "pg-extension"
-import { buildSort, Statement } from "query-core"
-import { ArticleFilter, articleModel } from "./article"
+import { DB, Transaction } from "onecore"
+import { buildToSave, param } from "pg-extension"
+import { buildSort, Repository, SqlViewRepository, Statement } from "query-core"
+import { Article, ArticleFilter, articleModel, ArticleRepository, DraftArticleRepository } from "./article"
+
+export class SqlDraftArticleRepository extends Repository<Article, string, ArticleFilter> implements DraftArticleRepository {
+  constructor(db: DB) {
+    super(db, "draft_articles", articleModel, buildQuery)
+  }
+}
+export class SqlArticleRepository extends SqlViewRepository<Article, string> implements ArticleRepository {
+  constructor(protected db: DB) {
+    super(db, "articles", articleModel)
+  }
+  save(article: Article, tx?: Transaction): Promise<number> {
+    const stmt = buildToSave(article, "articles", articleModel)
+    const db = tx ? tx : this.db
+    return db.execute(stmt.query, stmt.params)
+  }
+}
 
 export function buildQuery(filter: ArticleFilter): Statement {
   let query = `select * from draft_articles `
@@ -8,12 +25,12 @@ export function buildQuery(filter: ArticleFilter): Statement {
   const params = []
   let i = 1
 
-  if (filter.id && filter.id.length > 0) {
+  if (filter.id) {
     where.push(`id = ${param(i++)}`)
     params.push(filter.id)
   }
 
-  if (filter.authorId && filter.authorId.length > 0) {
+  if (filter.authorId) {
     params.push(filter.authorId)
     where.push(`author_id = ${param(i++)}`)
   }

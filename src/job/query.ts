@@ -1,11 +1,23 @@
-import { Statement } from "query-core"
-import { JobFilter } from "./job"
+import { DB } from "onecore"
+import { Repository, Statement } from "query-core"
+import { Job, JobFilter, jobModel, JobRepository } from "./job"
+
+export class SqlJobRepository extends Repository<Job, string, JobFilter> implements JobRepository {
+  constructor(db: DB) {
+    super(db, "jobs", jobModel, buildQuery)
+  }
+}
 
 export function buildQuery(filter: JobFilter): Statement {
   let query = `select * from jobs`
   const where = []
   const params = []
   let i = 1
+
+  if (filter.id) {
+    where.push(`id = $${i++}`);
+    params.push(filter.id);
+  }
 
   if (filter.skills && filter.skills.length > 0) {
     params.push(filter.skills)
@@ -23,12 +35,7 @@ export function buildQuery(filter: JobFilter): Statement {
     }
   }
 
-  if (filter.id && filter.id.length > 0) {
-    where.push(`id = $${i++}`);
-    params.push(filter.id);
-  }
-
-  if (filter.q && filter.q.length > 0) {
+  if (filter.q) {
     const q = "%" + filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_") + "%"
     where.push(`title ilike $${i++}`)
     params.push(q)

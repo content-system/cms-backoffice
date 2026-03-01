@@ -114,7 +114,7 @@ function insertUserRoles(stmts: Statement[], userId: string, roles: string[] | u
       return userRole
     })
     const stmt = buildToInsertBatch(userRoles, "user_roles", userRoleModel, param)
-    if (stmt) {
+    if (stmt.query) {
       stmts.push(stmt)
     }
   }

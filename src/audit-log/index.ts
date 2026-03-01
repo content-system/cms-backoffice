@@ -2,7 +2,6 @@ import { SearchController, Search as SearchManager, useSearchController } from "
 import { Log, Search } from "onecore"
 import { DB, SearchBuilder, useGet } from "query-core"
 import { AuditLog, AuditLogFilter, auditLogModel } from "./audit-log"
-
 export * from "./audit-log"
 
 export function useAuditLogController(log: Log, db: DB): SearchManager {
