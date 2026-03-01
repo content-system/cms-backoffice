@@ -1,6 +1,6 @@
 import { AuthenticationController, PrivilegeController } from "authen-express"
 import { Authenticator, initializeStatus, PrivilegeRepository, PrivilegesReader, SqlAuthConfig, User, useUserRepository } from "authen-service"
-import { compare } from "bcrypt"
+import { compare, hash } from "bcryptjs"
 import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources, Search, useSearchController } from "express-ext"
 import { buildJwtError, generateToken, Payload, verify } from "jsonwebtoken-plus"
 import { StringMap } from "onecore"
@@ -48,6 +48,22 @@ export interface ApplicationContext {
   job: JobController
   contact: ContactController
 }
+
+export class Comparator {
+  constructor(saltOrRounds?: string|number) {
+    this.saltOrRounds = (saltOrRounds ? saltOrRounds : 10);
+    this.compare = this.compare.bind(this);
+    this.hash = this.hash.bind(this);
+  }
+  saltOrRounds: string|number;
+  compare(data: string, encrypted: string): Promise<boolean> {
+    return compare(data, encrypted);
+  }
+  hash(data: string): Promise<string> {
+    return hash(data, this.saltOrRounds);
+  }
+}
+
 export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: Config, mapper?: TemplateMap): ApplicationContext {
   const log = new LogController(logger)
   const middleware = new MiddlewareController(midLogger)
