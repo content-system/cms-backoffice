@@ -21,7 +21,7 @@ export class SqlArticleRepository extends SqlViewRepository<Article, string> imp
 
 export function buildQuery(filter: ArticleFilter): Statement {
   let query = `select * from draft_articles `
-  const where = []
+  const where: string[] = []
   const params = []
   let i = 1
 
@@ -60,7 +60,7 @@ export function buildQuery(filter: ArticleFilter): Statement {
     where.push(`status in (${arr.join(",")})`)
   }
 
-  if (filter.q && filter.q.length > 0) {
+  if (filter.q) {
     const q = "%" + filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_") + "%"
     where.push(`(title ilike ${param(i++)} or description ilike ${param(i++)})`)
     params.push(q)
@@ -70,7 +70,7 @@ export function buildQuery(filter: ArticleFilter): Statement {
     query = query + ` where ` + where.join(` and `)
   }
   const orderBy = buildSort(filter.sort, articleModel)
-  if (orderBy.length > 0) {
+  if (orderBy) {
     query = query + ` order by ${orderBy}`
   }
   return { query, params }

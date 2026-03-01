@@ -1,5 +1,5 @@
 import { DB } from "onecore"
-import { Repository, Statement } from "query-core"
+import { buildSort, Repository, Statement } from "query-core"
 import { Job, JobFilter, jobModel, JobRepository } from "./job"
 
 export class SqlJobRepository extends Repository<Job, string, JobFilter> implements JobRepository {
@@ -10,7 +10,7 @@ export class SqlJobRepository extends Repository<Job, string, JobFilter> impleme
 
 export function buildQuery(filter: JobFilter): Statement {
   let query = `select * from jobs`
-  const where = []
+  const where: string[] = []
   const params = []
   let i = 1
 
@@ -43,6 +43,10 @@ export function buildQuery(filter: JobFilter): Statement {
 
   if (where.length > 0) {
     query = query + ` where ` + where.join(` and `)
+  }
+  const orderBy = buildSort(filter.sort, jobModel)
+  if (orderBy) {
+    query = query + ` order by ${orderBy}`
   }
 
   return { query, params }

@@ -17,6 +17,7 @@ export interface User {
 export interface UserFilter extends Filter {
   id?: string
   username?: string
+  displayName: string
   email?: string
   phone?: string
   status?: string

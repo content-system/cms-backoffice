@@ -35,7 +35,7 @@ export class JobUseCase implements JobService {
     return this.repository.update(job)
   }
   async patch(job: Partial<Job>): Promise<number> {
-    if (job.title && job.title.length > 0) {
+    if (job.title) {
       const id = job.id as string
       const existingJob = await this.repository.load(id)
       if (!existingJob) {

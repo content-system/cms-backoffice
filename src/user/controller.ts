@@ -18,7 +18,7 @@ export class UserController {
   async all(req: Request, res: Response) {
     const roleId = req.query.roleId as string
     try {
-      if (roleId && roleId.length > 0) {
+      if (roleId) {
         const users = await this.service.getUsersOfRole(roleId)
         res.status(200).json(users).end()
       } else {
