@@ -8,7 +8,7 @@ import { createNotification, NotificationAdapter } from "../shared/notification"
 import { canReject, canUpdate, Status } from "../shared/status"
 import { Article, ArticleFilter, ArticleRepository, ArticleService, DraftArticleRepository } from "./article"
 import { ArticleController } from "./controller"
-import { SqlArticleRepository, SqlDraftArticleRepository } from "./query"
+import { SqlArticleRepository, SqlDraftArticleRepository } from "./repository"
 export * from "./article"
 export * from "./controller"
 

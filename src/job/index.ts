@@ -4,7 +4,7 @@ import { DB } from "query-core"
 import { slugify } from "../common/slug"
 import { JobController } from "./controller"
 import { Job, JobFilter, JobRepository, JobService, Status } from "./job"
-import { SqlJobRepository } from "./query"
+import { SqlJobRepository } from "./repository"
 export * from "./controller"
 export * from "./job"
 
