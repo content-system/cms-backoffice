@@ -55,7 +55,7 @@ export class UserController {
     user.updatedBy = userId
     let language = res.locals.lang || "en"
     const resource = getResource(language)
-    const errors = validate<User>(user, userModel, resource)
+    const errors = validate<User>(user, userModel, resource, true)
     if (errors.length > 0) {
       return respondError(res, errors)
     }
@@ -75,7 +75,7 @@ export class UserController {
     user.updatedBy = userId
     let language = res.locals.lang || "en"
     const resource = getResource(language)
-    const errors = validate<User>(user, userModel, resource)
+    const errors = validate<User>(user, userModel, resource, true)
     if (errors.length > 0) {
       return respondError(res, errors)
     }
@@ -95,7 +95,7 @@ export class UserController {
     user.updatedBy = userId
     let language = res.locals.lang || "en"
     const resource = getResource(language)
-    const errors = validate<User>(user, userModel, resource, false, true)
+    const errors = validate<User>(user, userModel, resource, true, true)
     if (errors.length > 0) {
       return respondError(res, errors)
     }
