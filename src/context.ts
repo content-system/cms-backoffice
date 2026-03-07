@@ -50,12 +50,12 @@ export interface ApplicationContext {
 }
 
 export class Comparator {
-  constructor(saltOrRounds?: string|number) {
+  constructor(saltOrRounds?: string | number) {
     this.saltOrRounds = (saltOrRounds ? saltOrRounds : 10);
     this.compare = this.compare.bind(this);
     this.hash = this.hash.bind(this);
   }
-  saltOrRounds: string|number;
+  saltOrRounds: string | number;
   compare(data: string, encrypted: string): Promise<boolean> {
     return compare(data, encrypted);
   }
@@ -64,20 +64,20 @@ export class Comparator {
   }
 }
 
-export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: Config, mapper?: TemplateMap): ApplicationContext {
+export function useContext(db: DB, logger: Logger, midLogger: Middleware, cfg: Config, mapper?: TemplateMap): ApplicationContext {
   const log = new LogController(logger)
   const middleware = new MiddlewareController(midLogger)
   const sqlChecker = createChecker(db)
   const health = new HealthController([sqlChecker])
 
-  const auth = conf.auth
-  const privilegeLoader = new PrivilegeLoader(conf.sql.permission, db.query)
-  const token = useToken<Payload>(auth.token.secret, verify, buildJwtError, conf.cookie)
+  const auth = cfg.auth
+  const privilegeLoader = new PrivilegeLoader(cfg.sql.permission, db.query)
+  const token = useToken<Payload>(auth.token.secret, verify, buildJwtError, cfg.cookie)
   const authorizer = new Authorizer<Payload>(token, privilegeLoader.privilege, buildJwtError, true)
 
   const status = initializeStatus(auth.status)
-  const privilegeRepository = new PrivilegeRepository(db.query, conf.sql.privileges)
-  const userRepository = useUserRepository<string, SqlAuthConfig>(db, auth, conf.map)
+  const privilegeRepository = new PrivilegeRepository(db.query, cfg.sql.privileges)
+  const userRepository = useUserRepository<string, SqlAuthConfig>(db, auth, cfg.map)
   const authenticator = new Authenticator(
     status,
     compare,
@@ -90,8 +90,8 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
     auth.lockedMinutes,
     auth.maxPasswordFailed,
   )
-  const authentication = new AuthenticationController(logger.error, authenticator.authenticate, conf.cookie)
-  const privilegesLoader = new PrivilegesReader(db.query, conf.sql.allPrivileges)
+  const authentication = new AuthenticationController(logger.error, authenticator.authenticate, cfg.cookie)
+  const privilegesLoader = new PrivilegesReader(db.query, cfg.sql.allPrivileges)
   const privilege = new PrivilegeController(logger.error, privilegesLoader.privileges)
 
   const role = useRoleController(db, mapper)

@@ -30,7 +30,7 @@ export class UserController {
     }
   }
   async search(req: Request, res: Response) {
-    const filter = fromRequest<UserFilter>(req, ["status"])
+    const filter = fromRequest<UserFilter>(req, ["status", "excluding"])
     const { limit, page, fields } = filter
     try {
       const result = await this.service.search(filter, limit, page, fields)
