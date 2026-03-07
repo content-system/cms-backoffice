@@ -10,7 +10,7 @@ export function buildQuery(filter: UserFilter): Statement {
   let i = 1
 
   if (filter.userId) {
-    where.push(`id = $${i++}`);
+    where.push(`id = $${param(i++)}`);
     params.push(filter.userId);
   }
 
@@ -33,22 +33,22 @@ export function buildQuery(filter: UserFilter): Statement {
   }
 
   if (filter.email) {
-    where.push(`email ilike $${i++}`);
+    where.push(`email ilike $${param(i++)}`);
     params.push(`${filter.email}%`);
   }
   if (filter.username) {
-    where.push(`username ilike $${i++}`);
+    where.push(`username ilike $${param(i++)}`);
     params.push(`${filter.username}%`);
   }
   if (filter.displayName) {
-    where.push(`display_name ilike $${i++}`);
+    where.push(`display_name ilike $${param(i++)}`);
     params.push(`%${filter.displayName}%`);
   }
 
   if (filter.q) {
-    const q = "%" + filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_") + "%"
-    where.push(`(username ilike ${param(i++)} or email ilike ${param(i++)} or display_name ilike ${param(i++)})`)
-    params.push(q, q, q)
+    const q = filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_")
+    where.push(`(email ilike ${param(i++)} or username ilike ${param(i++)} or display_name ilike ${param(i++)})`)
+    params.push(`${q}%`, `%${q}%`, `%${q}%`)
   }
 
   if (where.length > 0) {

@@ -25,11 +25,6 @@ export function buildQuery(filter: ArticleFilter): Statement {
   const params = []
   let i = 1
 
-  if (filter.id) {
-    where.push(`id = ${param(i++)}`)
-    params.push(filter.id)
-  }
-
   if (filter.authorId) {
     params.push(filter.authorId)
     where.push(`author_id = ${param(i++)}`)
@@ -61,9 +56,9 @@ export function buildQuery(filter: ArticleFilter): Statement {
   }
 
   if (filter.q) {
-    const q = "%" + filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_") + "%"
+    const q = filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_")
     where.push(`(title ilike ${param(i++)} or description ilike ${param(i++)})`)
-    params.push(q)
+    params.push(`%${q}%`, `%${q}%`)
   }
 
   if (where.length > 0) {

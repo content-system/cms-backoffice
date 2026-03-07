@@ -1,4 +1,5 @@
 import { DB } from "onecore"
+import { param } from "pg-extension"
 import { buildSort, Repository, Statement } from "query-core"
 import { Job, JobFilter, jobModel, JobRepository } from "./job"
 
@@ -14,31 +15,26 @@ export function buildQuery(filter: JobFilter): Statement {
   const params = []
   let i = 1
 
-  if (filter.id) {
-    where.push(`id = $${i++}`);
-    params.push(filter.id);
-  }
-
   if (filter.skills && filter.skills.length > 0) {
     params.push(filter.skills)
-    where.push(`skills && $${i++}`)
+    where.push(`skills && ${param(i++)}`)
   }
 
   if (filter.publishedAt) {
     if (filter.publishedAt.min) {
-      where.push(`published_at >= $${i++}`)
+      where.push(`published_at >= ${param(i++)}`)
       params.push(filter.publishedAt.min)
     }
     if (filter.publishedAt.max) {
-      where.push(`published_at <= $${i++}`)
+      where.push(`published_at <= ${param(i++)}`)
       params.push(filter.publishedAt.max)
     }
   }
 
   if (filter.q) {
-    const q = "%" + filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_") + "%"
-    where.push(`title ilike $${i++}`)
-    params.push(q)
+    const q = filter.q.replace(/%/g, "\\%").replace(/_/g, "\\_")
+    where.push(`title ilike ${param(i++)}`)
+    params.push(`%${q}%`)
   }
 
   if (where.length > 0) {
@@ -48,6 +44,5 @@ export function buildQuery(filter: JobFilter): Statement {
   if (orderBy) {
     query = query + ` order by ${orderBy}`
   }
-
   return { query, params }
 }
