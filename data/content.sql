@@ -2,7 +2,7 @@ create table contents (
   id varchar(80) not null,
   lang varchar(10) not null,
   title varchar(255) not null,
-  body varchar(9500),
+  body text,
   published_at timestamptz,
   tags character varying[],
   status char(1),
