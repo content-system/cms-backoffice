@@ -54,6 +54,9 @@ export function buildQuery(filter: UserFilter): Statement {
   if (where.length > 0) {
     query = query + ` where ` + where.join(` and `)
   }
+  if (!filter.sort) {
+    filter.sort = "userId"
+  }
   const orderBy = buildSort(filter.sort, userModel)
   if (orderBy) {
     query = query + ` order by ${orderBy}`
