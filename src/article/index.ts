@@ -55,10 +55,10 @@ export class ArticleUseCase implements ArticleService {
         this.notifyApprovers(article.id, article.submittedBy)
       }
 
-      tx.commit()
+      await tx.commit()
       return res
     } catch (err) {
-      tx.rollback()
+      await tx.rollback()
       throw err
     }
   }
@@ -90,10 +90,10 @@ export class ArticleUseCase implements ArticleService {
         this.notifyApprovers(article.id, article.submittedBy)
       }
 
-      tx.commit()
+      await tx.commit()
       return res
     } catch (err) {
-      tx.rollback()
+      await tx.rollback()
       throw err
     }
   }
@@ -142,10 +142,10 @@ export class ArticleUseCase implements ArticleService {
       const msg = `This article was approved (id: '${id}').`
       this.notify(id, approvedBy, article.submittedBy, msg)
 
-      tx.commit()
+      await tx.commit()
       return res
     } catch (err) {
-      tx.rollback()
+      await tx.rollback()
       throw err
     }
   }
@@ -173,10 +173,10 @@ export class ArticleUseCase implements ArticleService {
       const msg = `This article was rejected (id: '${id}').`
       this.notify(id, rejectedBy, article.submittedBy, msg)
 
-      tx.commit()
+      await tx.commit()
       return res
     } catch (err) {
-      tx.rollback()
+      await tx.rollback()
       throw err
     }
   }
