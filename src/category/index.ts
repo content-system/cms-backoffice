@@ -1,5 +1,5 @@
 import { UseCase } from "onecore"
-import { DB, Repository } from "query-core"
+import { DB, Repository } from "sql-core"
 import { Category, CategoryFilter, categoryModel, CategoryRepository, CategoryService } from "./category"
 import { CategoryController } from "./controller"
 

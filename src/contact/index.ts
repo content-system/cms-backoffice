@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid"
 import { UseCase } from "onecore"
-import { DB, Repository } from "query-core"
+import { DB, Repository } from "sql-core"
 import { Contact, ContactFilter, contactModel, ContactRepository, ContactService } from "./contact"
 import { ContactController } from "./controller"
 export * from "./contact"

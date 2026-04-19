@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid"
 import { UseCase } from "onecore"
-import { DB } from "query-core"
 import { TemplateMap } from "query-mappers"
+import { DB } from "sql-core"
 import { UserController } from "./controller"
 import { SqlUserRepository } from "./repository"
 import { User, UserFilter, UserRepository, UserService } from "./user"

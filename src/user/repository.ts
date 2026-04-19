@@ -1,6 +1,6 @@
 import { Attributes, StringMap } from "onecore"
 import { param } from "pg-extension"
-import { buildMap, buildSort, buildToInsert, buildToInsertBatch, buildToUpdate, DB, SearchRepository, Statement } from "query-core"
+import { buildMap, buildSort, buildToInsert, buildToInsertBatch, buildToUpdate, DB, SearchRepository, Statement } from "sql-core"
 import { User, UserFilter, userModel, UserRepository } from "./user"
 
 export function buildQuery(filter: UserFilter): Statement {

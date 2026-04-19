@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid"
 import { SearchResult } from "onecore"
-import { DB } from "query-core"
+import { DB } from "sql-core"
 import { slugify } from "../common/slug"
 import { JobController } from "./controller"
 import { Job, JobFilter, JobRepository, JobService, Status } from "./job"
