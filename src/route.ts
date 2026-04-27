@@ -1,5 +1,5 @@
 import { Application, NextFunction, Request, Response } from "express"
-import { check } from "express-ext"
+import { check } from "express-core-web"
 import { verify } from "jsonwebtoken"
 import multer from "multer"
 import { del, get, patch, post, put, read, write } from "security-express"

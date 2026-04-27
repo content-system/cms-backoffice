@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import { create, fromRequest, handleError, respondError, update } from "express-ext"
-import { validate } from "xvalidators"
+import { create, fromRequest, handleError, respondError, update } from "express-core-web"
+import { validate } from "validation-core"
 import { getResource } from "../resources"
 import { Category, CategoryFilter, categoryModel, CategoryService } from "./category"
 

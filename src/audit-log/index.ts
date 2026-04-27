@@ -1,4 +1,4 @@
-import { SearchController, Search as SearchManager, useSearchController } from "express-ext"
+import { SearchController, Search as SearchManager, useSearchController } from "express-core-web"
 import { Log, Search } from "onecore"
 import { DB, SearchBuilder, useGet } from "sql-core"
 import { AuditLog, AuditLogFilter, auditLogModel } from "./audit-log"

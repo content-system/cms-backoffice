@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import { buildArray, fromRequest, getStatusCode, handleError, isSuccessful } from "express-ext"
-import { validate } from "xvalidators"
+import { buildArray, fromRequest, getStatusCode, handleError, isSuccessful } from "express-core-web"
+import { validate } from "validation-core"
 import { getResource } from "../resources"
 import { Content, ContentFilter, contentModel, ContentService } from "./content"
 
