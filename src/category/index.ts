@@ -1,15 +1,10 @@
-import { UseCase } from "onecore"
-import { DB, Repository } from "sql-core"
-import { Category, CategoryFilter, categoryModel, CategoryRepository, CategoryService } from "./category"
+import { DB, UseCase } from "onecore"
+import { Category, CategoryFilter, CategoryRepository, CategoryService } from "./category"
 import { CategoryController } from "./controller"
+import { SqlCategoryRepository } from "./repository"
 
 export * from "./controller"
 
-export class SqlCategoryRepository extends Repository<Category, string, CategoryFilter> implements CategoryRepository {
-  constructor(db: DB) {
-    super(db, "categories", categoryModel)
-  }
-}
 export class CategoryUseCase extends UseCase<Category, string, CategoryFilter> implements CategoryService {
   constructor(repository: CategoryRepository) {
     super(repository)

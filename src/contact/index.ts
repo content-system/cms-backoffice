@@ -1,16 +1,11 @@
 import { nanoid } from "nanoid"
-import { UseCase } from "onecore"
-import { DB, Repository } from "sql-core"
-import { Contact, ContactFilter, contactModel, ContactRepository, ContactService } from "./contact"
+import { DB, UseCase } from "onecore"
+import { Contact, ContactFilter, ContactRepository, ContactService } from "./contact"
 import { ContactController } from "./controller"
+import { SqlContactRepository } from "./repository"
 export * from "./contact"
 export * from "./controller"
 
-export class SqlContactRepository extends Repository<Contact, string, ContactFilter> implements ContactRepository {
-  constructor(db: DB) {
-    super(db, "contacts", contactModel)
-  }
-}
 export class ContactUseCase extends UseCase<Contact, string, ContactFilter> implements ContactService {
   constructor(repository: ContactRepository) {
     super(repository)
