@@ -9,8 +9,7 @@ export * from "./controller"
 export * from "./job"
 
 export class JobUseCase implements JobService {
-  constructor(protected repository: JobRepository) {
-  }
+  constructor(protected repository: JobRepository) {}
   search(filter: JobFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Job>> {
     return this.repository.search(filter, limit, page, fields)
   }

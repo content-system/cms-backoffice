@@ -28,7 +28,10 @@ export class ContentController {
     const lang = req.params.lang
     try {
       const content = await this.service.load(id, lang)
-      res.status(content ? 200 : 404).json(content).end()
+      res
+        .status(content ? 200 : 404)
+        .json(content)
+        .end()
     } catch (err) {
       handleError(err, res)
     }
@@ -97,7 +100,10 @@ export class ContentController {
     const lang = req.params.lang
     try {
       const result = await this.service.delete(id, lang)
-      res.status(result > 0 ? 200 : 410).json(result).end()
+      res
+        .status(result > 0 ? 200 : 410)
+        .json(result)
+        .end()
     } catch (err) {
       handleError(err, res)
     }

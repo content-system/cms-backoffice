@@ -20,9 +20,8 @@ export class ArticleUseCase implements ArticleService {
     protected historyRepository: HistoryRepository<Article>,
     protected approversPort: ApproversPort,
     protected notificationPort: NotificationPort,
-    protected log: Log
-  ) {
-  }
+    protected log: Log,
+  ) {}
   search(filter: ArticleFilter, limit: number, page?: number, fields?: string[]): Promise<SearchResult<Article>> {
     return this.draftRepository.search(filter, limit, page, fields)
   }

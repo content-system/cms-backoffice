@@ -1,9 +1,9 @@
 import { Attributes, Filter, SearchResult, TimeRange } from "onecore"
 
 export class Status {
-  static readonly Draft = 'D'
-  static readonly Submitted = 'S'
-  static readonly Approved = 'A'
+  static readonly Draft = "D"
+  static readonly Submitted = "S"
+  static readonly Approved = "A"
 }
 
 export interface Job {
@@ -131,6 +131,6 @@ export const jobModel: Attributes = {
   updatedAt: {
     column: "updated_at",
     type: "datetime",
-    updatedAt: true
+    updatedAt: true,
   },
 }

@@ -36,7 +36,10 @@ export class ArticleController {
     const id = req.params.id as string
     try {
       const article = await this.service.loadDraft(id)
-      res.status(article ? 200 : 404).json(article).end()
+      res
+        .status(article ? 200 : 404)
+        .json(article)
+        .end()
     } catch (err) {
       handleError(err, res)
     }
@@ -45,7 +48,10 @@ export class ArticleController {
     const id = req.params.id as string
     try {
       const article = await this.service.load(id)
-      res.status(article ? 200 : 404).json(article).end()
+      res
+        .status(article ? 200 : 404)
+        .json(article)
+        .end()
     } catch (err) {
       handleError(err, res)
     }
@@ -174,7 +180,10 @@ export class ArticleController {
     const id = req.params.id as string
     try {
       const result = await this.service.delete(id)
-      res.status(result > 0 ? 200 : 410).json(result).end()
+      res
+        .status(result > 0 ? 200 : 410)
+        .json(result)
+        .end()
     } catch (err) {
       handleError(err, res)
     }

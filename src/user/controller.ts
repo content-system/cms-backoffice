@@ -18,7 +18,7 @@ export class UserController {
   async all(req: Request, res: Response) {
     const roleId = req.query.roleId as string
     try {
-      if (roleId) {
+      if (roleId && roleId.length > 0) {
         const users = await this.service.getUsersOfRole(roleId)
         res.status(200).json(users).end()
       } else {
@@ -43,7 +43,10 @@ export class UserController {
     const id = req.params.id as string
     try {
       const user = await this.service.load(id)
-      res.status(user ? 200 : 404).json(user).end()
+      res
+        .status(user ? 200 : 404)
+        .json(user)
+        .end()
     } catch (err) {
       handleError(err, res)
     }
@@ -55,7 +58,7 @@ export class UserController {
     user.updatedBy = userId
     let language = res.locals.lang || "en"
     const resource = getResource(language)
-    const errors = validate<User>(user, userModel, resource, true)
+    const errors = validate<User>(user, userModel, resource)
     if (errors.length > 0) {
       return respondError(res, errors)
     }
@@ -75,7 +78,7 @@ export class UserController {
     user.updatedBy = userId
     let language = res.locals.lang || "en"
     const resource = getResource(language)
-    const errors = validate<User>(user, userModel, resource, true)
+    const errors = validate<User>(user, userModel, resource)
     if (errors.length > 0) {
       return respondError(res, errors)
     }
@@ -95,7 +98,7 @@ export class UserController {
     user.updatedBy = userId
     let language = res.locals.lang || "en"
     const resource = getResource(language)
-    const errors = validate<User>(user, userModel, resource, true, true)
+    const errors = validate<User>(user, userModel, resource, false, true)
     if (errors.length > 0) {
       return respondError(res, errors)
     }
@@ -111,7 +114,10 @@ export class UserController {
     const id = req.params.id as string
     try {
       const result = await this.service.delete(id)
-      res.status(result > 0 ? 200 : 410).json(result).end()
+      res
+        .status(result > 0 ? 200 : 410)
+        .json(result)
+        .end()
     } catch (err) {
       handleError(err, res)
     }

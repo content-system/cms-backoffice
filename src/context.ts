@@ -1,8 +1,7 @@
-import { AuthenticationController, PrivilegeController } from "authen-express"
-import { Authenticator, initializeStatus, PrivilegeRepository, PrivilegesReader, SqlAuthConfig, User, useUserRepository } from "authen-service"
+import { Authenticator, initializeStatus, PrivilegeRepository, PrivilegesReader, SqlAuthConfig, Token, User, useUserRepository } from "authen-service"
 import { compare, hash } from "bcryptjs"
 import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources, Search, useSearchController } from "express-core-web"
-import { buildJwtError, generateToken, Payload, verify } from "jsonwebtoken-plus"
+import { buildJwtError, Payload, verify } from "jsonwebtoken-plus"
 import { StringMap } from "onecore"
 import { TemplateMap } from "query-mappers"
 import { Authorize, Authorizer, PrivilegeLoader, useToken } from "security-express"
@@ -11,6 +10,7 @@ import { check } from "types-validation"
 import { createValidator } from "validation-core"
 import { ArticleController, useArticleController } from "./article"
 import { AuditLog, AuditLogFilter, auditLogModel } from "./audit-log"
+import { AuthenticationController, PrivilegeController } from "./authentication"
 import { CategoryController, useCategoryController } from "./category"
 import { ContactController, useContactController } from "./contact"
 import { ContentController, useContentController } from "./content"
@@ -23,6 +23,7 @@ resources.check = check
 
 export interface Config {
   cookie?: boolean
+  token: Token
   auth: SqlAuthConfig
   map: StringMap
   sql: {
@@ -51,16 +52,16 @@ export interface ApplicationContext {
 
 export class Comparator {
   constructor(saltOrRounds?: string | number) {
-    this.saltOrRounds = (saltOrRounds ? saltOrRounds : 10);
-    this.compare = this.compare.bind(this);
-    this.hash = this.hash.bind(this);
+    this.saltOrRounds = saltOrRounds ? saltOrRounds : 10
+    this.compare = this.compare.bind(this)
+    this.hash = this.hash.bind(this)
   }
-  saltOrRounds: string | number;
+  saltOrRounds: string | number
   compare(data: string, encrypted: string): Promise<boolean> {
-    return compare(data, encrypted);
+    return compare(data, encrypted)
   }
   hash(data: string): Promise<string> {
-    return hash(data, this.saltOrRounds);
+    return hash(data, this.saltOrRounds)
   }
 }
 
@@ -72,7 +73,7 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, cfg: C
 
   const auth = cfg.auth
   const privilegeLoader = new PrivilegeLoader(cfg.sql.permission, db.query)
-  const token = useToken<Payload>(auth.token.secret, verify, buildJwtError, cfg.cookie)
+  const token = useToken<Payload>(cfg.token.secret, verify, buildJwtError, cfg.cookie)
   const authorizer = new Authorizer<Payload>(token, privilegeLoader.privilege, buildJwtError, true)
 
   const status = initializeStatus(auth.status)
@@ -81,16 +82,13 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, cfg: C
   const authenticator = new Authenticator(
     status,
     compare,
-    generateToken,
-    auth.token,
-    auth.payload,
     auth.account,
     userRepository,
     privilegeRepository.privileges,
     auth.lockedMinutes,
     auth.maxPasswordFailed,
   )
-  const authentication = new AuthenticationController(logger.error, authenticator.authenticate, cfg.cookie)
+  const authentication = new AuthenticationController(logger.error, authenticator.authenticate, cfg.token.secret, cfg.token.expires, "token", cfg.cookie)
   const privilegesLoader = new PrivilegesReader(db.query, cfg.sql.allPrivileges)
   const privilege = new PrivilegeController(logger.error, privilegesLoader.privileges)
 

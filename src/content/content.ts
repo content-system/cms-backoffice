@@ -92,6 +92,6 @@ export const contentModel: Attributes = {
   updatedAt: {
     column: "updated_at",
     type: "datetime",
-    updatedAt: true
+    updatedAt: true,
   },
 }

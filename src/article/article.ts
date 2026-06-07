@@ -139,6 +139,6 @@ export const articleModel: Attributes = {
   updatedAt: {
     column: "updated_at",
     type: "datetime",
-    updatedAt: true
+    updatedAt: true,
   },
 }

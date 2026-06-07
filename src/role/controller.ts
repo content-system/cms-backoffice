@@ -37,7 +37,10 @@ export class RoleController {
     const id = req.params.id as string
     try {
       const role = await this.service.load(id)
-      res.status(role ? 200 : 404).json(role).end()
+      res
+        .status(role ? 200 : 404)
+        .json(role)
+        .end()
     } catch (err) {
       handleError(err, res)
     }
@@ -105,13 +108,16 @@ export class RoleController {
     const id = req.params.id as string
     try {
       const result = await this.service.delete(id)
-      res.status(result > 0 ? 200 : 410).json(result).end()
+      res
+        .status(result > 0 ? 200 : 410)
+        .json(result)
+        .end()
     } catch (err) {
       handleError(err, res)
     }
   }
   async assign(req: Request, res: Response) {
-    const id = req.params.id
+    const id = req.params.id as string
     const users: string[] = req.body
     if (!Array.isArray(users)) {
       res.status(400).end(`Body must be an array`)

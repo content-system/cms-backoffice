@@ -9,7 +9,7 @@ export * from "./controller"
 export class ContactUseCase extends UseCase<Contact, string, ContactFilter> implements ContactService {
   constructor(repository: ContactRepository) {
     super(repository)
-    this.create = this.create.bind(this);
+    this.create = this.create.bind(this)
   }
   create(contact: Contact): Promise<number> {
     contact.id = nanoid(10)
