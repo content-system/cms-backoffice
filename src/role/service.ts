@@ -1,9 +1,5 @@
-import { DB, UseCase } from "onecore"
-import { TemplateMap, useQuery } from "query-mappers"
-import { RoleController } from "./controller"
-import { SqlRoleRepository } from "./repository"
-import { Role, RoleFilter, roleModel, RoleRepository, RoleService } from "./role"
-export * from "./controller"
+import { UseCase } from "onecore"
+import { Role, RoleFilter, RoleRepository, RoleService } from "./role"
 
 export class RoleUseCase extends UseCase<Role, string, RoleFilter> implements RoleService {
   constructor(protected repository: RoleRepository) {
@@ -15,11 +11,4 @@ export class RoleUseCase extends UseCase<Role, string, RoleFilter> implements Ro
   assign(id: string, users: string[]): Promise<number> {
     return this.repository.assign(id, users)
   }
-}
-
-export function useRoleController(db: DB, mapper?: TemplateMap): RoleController {
-  const query = useQuery("role", mapper, roleModel, true)
-  const repository = new SqlRoleRepository(db, query)
-  const service = new RoleUseCase(repository)
-  return new RoleController(service)
 }
