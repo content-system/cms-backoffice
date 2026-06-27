@@ -1,6 +1,5 @@
 import { SearchWriter } from "onecore"
 import { Content, ContentFilter, ContentRepository, ContentService } from "./content"
-export * from "./controller"
 
 export class ContentUseCase extends SearchWriter<Content, ContentFilter> implements ContentService {
   constructor(protected repository: ContentRepository) {
