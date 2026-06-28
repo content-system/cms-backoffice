@@ -24,6 +24,7 @@ resources.check = check
 export interface Config {
   cookie?: boolean
   token: Token
+  rememberToken: Token
   auth: SqlAuthConfig
   map: StringMap
   sql: {
@@ -88,7 +89,17 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, cfg: C
     auth.lockedMinutes,
     auth.maxPasswordFailed,
   )
-  const authentication = new AuthenticationController(logger.error, authenticator.authenticate, cfg.token.secret, cfg.token.expires, "token", cfg.cookie)
+  const authentication = new AuthenticationController(
+    logger.error,
+    authenticator.authenticate,
+    "token",
+    cfg.token.secret,
+    cfg.token.expires,
+    "remember",
+    cfg.rememberToken.secret,
+    cfg.rememberToken.expires,
+    cfg.cookie,
+  )
   const privilegesLoader = new PrivilegesReader(db.query, cfg.sql.allPrivileges)
   const privilege = new PrivilegeController(logger.error, privilegesLoader.privileges)
 

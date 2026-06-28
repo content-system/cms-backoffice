@@ -7,9 +7,12 @@ export class AuthenticationController<T extends User, ID> {
   constructor(
     protected log: Log,
     protected login: (user: T) => Promise<AuthResult>,
+    private token: string,
     private secret: string,
     private expiresIn: number,
-    private token: string,
+    private remember: string,
+    private rememberSecret: string,
+    private rememberExpiresIn: number,
     protected cookie?: boolean,
     protected decrypt?: (cipherText: string) => string | undefined,
   ) {
@@ -48,8 +51,14 @@ export class AuthenticationController<T extends User, ID> {
               expiresIn: this.expiresIn,
             },
           )
+          const remember = sign(
+            { id: account.id, username: user.username, displayName: account.displayName, language: account.language, dateFormat: account.dateFormat },
+            this.rememberSecret,
+            { expiresIn: this.rememberExpiresIn },
+          )
           if (this.cookie && this.token) {
             res.cookie(this.token, token, { path: "/", httpOnly: true, secure: true, sameSite: "strict", maxAge: this.expiresIn })
+            res.cookie(this.remember, remember, { httpOnly: true, secure: true, sameSite: "strict", maxAge: this.rememberExpiresIn })
           } else {
             r.token = token
           }

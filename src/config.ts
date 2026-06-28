@@ -31,6 +31,10 @@ export const config = {
     secret: "secretbackoffice",
     expires: 86400000,
   },
+  rememberToken: {
+    secret: "secretremember",
+    expires: 30 * 24 * 60 * 60 * 1000,
+  },
   auth: {
     status: {
       success: 1,

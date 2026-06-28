@@ -1,4 +1,5 @@
 import { merge } from "config-plus"
+import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import express, { json } from "express"
 import { allow, loadTemplates, MiddlewareLogger, resources } from "express-core-web"
@@ -21,8 +22,8 @@ resources.log = logger.error
 const middleware = new MiddlewareLogger(logger.info, cfg.middleware)
 app.use(allow(cfg.allow), json())
 
-const verifier = new TokenVerifier(cfg.token.secret, "account", "userId", "id")
-app.use(verifier.verify)
+const verifier = new TokenVerifier("account", "token", cfg.token.secret, cfg.token.expires, "remember", cfg.rememberToken.secret)
+app.use(cookieParser(), verifier.verify)
 
 const templates = loadTemplates(cfg.template, buildTemplates, trim, ["./config/query.xml"])
 const pool = new Pool(cfg.db)
