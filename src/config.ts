@@ -27,6 +27,7 @@ export const config = {
     connectionString: "postgres://postgres:abcd1234@localhost/cms",
   },
   template: false,
+  cookie: true,
   token: {
     secret: "secretbackoffice",
     expires: 86400000,

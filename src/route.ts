@@ -2,7 +2,7 @@ import { Application, NextFunction, Request, Response } from "express"
 import { check } from "express-core-web"
 import { sign, verify } from "jsonwebtoken"
 import multer from "multer"
-import { del, get, patch, post, put, read, write } from "security-express"
+import { read, write } from "security-express"
 import { articleModel } from "./article"
 import { contactModel } from "./contact"
 import { ApplicationContext } from "./context"
@@ -11,17 +11,22 @@ import { jobModel } from "./job"
 export const approve = 8
 
 export class TokenVerifier {
+  protected username: string
+  protected payloadUsername: string
   constructor(
-    private account: string,
-    private userId: string,
-    private payloadId: string,
-    private username: string,
-    private token: string,
-    private secret: string,
-    private expiresIn: number,
-    private remember: string,
-    private rememberSecret: string,
+    protected account: string,
+    protected userId: string,
+    protected payloadId: string,
+    protected token: string,
+    protected secret: string,
+    protected expiresIn: number,
+    protected remember: string,
+    protected rememberSecret: string,
+    username?: string,
+    payloadUsername?: string,
   ) {
+    this.username = username ? username : "username"
+    this.payloadUsername = payloadUsername ? payloadUsername : "username"
     this.verify = this.verify.bind(this)
   }
 
@@ -44,9 +49,9 @@ export class TokenVerifier {
             const newToken = sign(decoded2, this.secret, { expiresIn: this.expiresIn })
             res.cookie(this.token, newToken, { httpOnly: true, secure: true, sameSite: "lax", maxAge: this.expiresIn })
             res.locals[this.account] = decoded2
-            res.locals[this.userId] = decoded2.payloadId
+            res.locals[this.userId] = decoded2[this.payloadId]
             if (decoded2[this.username]) {
-              res.locals[this.username] = decoded2[this.username]
+              res.locals[this.username] = decoded2[this.payloadUsername]
             }
             next()
           }
@@ -66,9 +71,9 @@ export class TokenVerifier {
                 const newToken = sign(decoded2, this.secret, { expiresIn: this.expiresIn })
                 res.cookie(this.token, newToken, { httpOnly: true, secure: true, sameSite: "lax", maxAge: this.expiresIn })
                 res.locals[this.account] = decoded2
-                res.locals[this.userId] = decoded2.payloadId
+                res.locals[this.userId] = decoded2[this.payloadId]
                 if (decoded2[this.username]) {
-                  res.locals[this.username] = decoded2[this.username]
+                  res.locals[this.username] = decoded2[this.payloadUsername]
                 }
                 next()
               }
@@ -76,13 +81,10 @@ export class TokenVerifier {
           }
         } else {
           removeJWTFields(decoded)
-          if (!decoded.displayName) {
-            decoded.displayName = decoded.username
-          }
           res.locals[this.account] = decoded
-          res.locals[this.userId] = decoded.payloadId
+          res.locals[this.userId] = decoded[this.payloadId]
           if (decoded[this.username]) {
-            res.locals[this.username] = decoded[this.username]
+            res.locals[this.username] = decoded[this.payloadUsername]
           }
           next()
         }
@@ -104,15 +106,15 @@ export function route(app: Application, ctx: ApplicationContext, secure?: boolea
 
   const readRole = ctx.authorize("role", read)
   const writeRole = ctx.authorize("role", write)
-  get(app, "/privileges", readRole, ctx.privilege.all, secure)
-  put(app, "/roles/:id/assign", writeRole, ctx.role.assign, secure)
-  post(app, "/roles/search", readRole, ctx.role.search, secure)
-  get(app, "/roles/search", readRole, ctx.role.search, secure)
-  get(app, "/roles/:id", readRole, ctx.role.load, secure)
-  post(app, "/roles", writeRole, ctx.role.create, secure)
-  put(app, "/roles/:id", writeRole, ctx.role.update, secure)
-  patch(app, "/roles/:id", writeRole, ctx.role.patch, secure)
-  del(app, "/roles/:id", writeRole, ctx.role.delete, secure)
+  app.get("/privileges", readRole, ctx.privilege.all)
+  app.put("/roles/:id/assign", writeRole, ctx.role.assign)
+  app.post("/roles/search", readRole, ctx.role.search)
+  app.get("/roles/search", readRole, ctx.role.search)
+  app.get("/roles/:id", readRole, ctx.role.load)
+  app.post("/roles", writeRole, ctx.role.create)
+  app.put("/roles/:id", writeRole, ctx.role.update)
+  app.patch("/roles/:id", writeRole, ctx.role.patch)
+  app.delete("/roles/:id", writeRole, ctx.role.delete)
 
   const readUser = ctx.authorize("user", read)
   const writeUser = ctx.authorize("user", write)
