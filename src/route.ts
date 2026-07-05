@@ -13,6 +13,9 @@ export const approve = 8
 export class TokenVerifier {
   constructor(
     private account: string,
+    private userId: string,
+    private payloadId: string,
+    private username: string,
     private token: string,
     private secret: string,
     private expiresIn: number,
@@ -41,9 +44,9 @@ export class TokenVerifier {
             const newToken = sign(decoded2, this.secret, { expiresIn: this.expiresIn })
             res.cookie(this.token, newToken, { httpOnly: true, secure: true, sameSite: "lax", maxAge: this.expiresIn })
             res.locals[this.account] = decoded2
-            res.locals.userId = decoded2.id
-            if (decoded2.username) {
-              res.locals.username = decoded2.username
+            res.locals[this.userId] = decoded2.payloadId
+            if (decoded2[this.username]) {
+              res.locals[this.username] = decoded2[this.username]
             }
             next()
           }
@@ -62,13 +65,10 @@ export class TokenVerifier {
                 removeJWTFields(decoded2)
                 const newToken = sign(decoded2, this.secret, { expiresIn: this.expiresIn })
                 res.cookie(this.token, newToken, { httpOnly: true, secure: true, sameSite: "lax", maxAge: this.expiresIn })
-                if (!decoded2.displayName) {
-                  decoded2.displayName = decoded2.username
-                }
                 res.locals[this.account] = decoded2
-                res.locals.userId = decoded2.id
-                if (decoded2.username) {
-                  res.locals.username = decoded2.username
+                res.locals[this.userId] = decoded2.payloadId
+                if (decoded2[this.username]) {
+                  res.locals[this.username] = decoded2[this.username]
                 }
                 next()
               }
@@ -80,9 +80,9 @@ export class TokenVerifier {
             decoded.displayName = decoded.username
           }
           res.locals[this.account] = decoded
-          res.locals.userId = decoded.id
-          if (decoded.username) {
-            res.locals.username = decoded.username
+          res.locals[this.userId] = decoded.payloadId
+          if (decoded[this.username]) {
+            res.locals[this.username] = decoded[this.username]
           }
           next()
         }

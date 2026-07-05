@@ -22,7 +22,7 @@ resources.log = logger.error
 const middleware = new MiddlewareLogger(logger.info, cfg.middleware)
 app.use(allow(cfg.allow), json())
 
-const verifier = new TokenVerifier("account", "token", cfg.token.secret, cfg.token.expires, "remember", cfg.rememberToken.secret)
+const verifier = new TokenVerifier("account", "userId", "id", "username", "token", cfg.token.secret, cfg.token.expires, "remember", cfg.rememberToken.secret)
 app.use(cookieParser(), verifier.verify)
 
 const templates = loadTemplates(cfg.template, buildTemplates, trim, ["./config/query.xml"])

@@ -4,7 +4,6 @@ import { HealthController, LogController, Logger, Middleware, MiddlewareControll
 import { buildJwtError, Payload, verify } from "jsonwebtoken-plus"
 import { StringMap } from "onecore"
 import { TemplateMap } from "query-mappers"
-import { Authorize, Authorizer, PrivilegeLoader, useToken } from "security-express"
 import { createChecker, DB, SearchBuilder, useGet } from "sql-core"
 import { check } from "types-validation"
 import { createValidator } from "validation-core"
@@ -16,6 +15,7 @@ import { ContactController, useContactController } from "./contact"
 import { ContentController, useContentController } from "./content"
 import { JobController, useJobController } from "./job"
 import { RoleController, useRoleController } from "./role"
+import { Authorize, Authorizer, PrivilegeLoader, useToken } from "./security"
 import { UserController, useUserController } from "./user"
 
 resources.createValidator = createValidator
