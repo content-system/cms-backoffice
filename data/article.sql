@@ -11,14 +11,14 @@ create table draft_articles (
   author_id varchar(40),
   status char(1),
 
-  submitted_by varchar(40),
+  submitted_by varchar(40) default '',
   submitted_at timestamptz,
-  approved_by varchar(40),
+  approved_by varchar(40) default '',
   approved_at timestamptz,
 
-  created_by varchar(40),
+  created_by varchar(40) default '',
   created_at timestamptz,
-  updated_by varchar(40),
+  updated_by varchar(40) default '',
   updated_at timestamptz
 );
 
@@ -35,14 +35,14 @@ create table articles (
   author_id varchar(40),
   status char(1),
 
-  submitted_by varchar(40),
+  submitted_by varchar(40) default '',
   submitted_at timestamptz,
-  approved_by varchar(40),
+  approved_by varchar(40) default '',
   approved_at timestamptz,
 
-  created_by varchar(40),
+  created_by varchar(40) default '',
   created_at timestamptz,
-  updated_by varchar(40),
+  updated_by varchar(40) default '',
   updated_at timestamptz
 );
 
