@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { buildArray, fromRequest, getStatusCode, handleError, isSuccessful } from "express-core-web"
+import { buildArray, fromRequest, getStatusCode, handleError, isSuccessful } from "express-web-kit"
 import { validate } from "validation-core"
 import { getResource } from "../resources"
 import { Content, ContentFilter, contentModel, ContentService } from "./content"

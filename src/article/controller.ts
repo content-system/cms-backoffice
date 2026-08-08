@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { format, fromRequest, handleError, isSuccessful, query, queryNumber, resources, respondError } from "express-core-web"
+import { format, fromRequest, handleError, isSuccessful, query, queryNumber, resources, respondError } from "express-web-kit"
 import { validate } from "validation-core"
 import { getResource } from "../resources"
 import { Status } from "../shared/status"

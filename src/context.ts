@@ -1,15 +1,17 @@
 import { Authenticator, initializeStatus, PrivilegeRepository, PrivilegesReader, SqlAuthConfig, Token, User, useUserRepository } from "authen-service"
+import { AuthenticationController, PrivilegeController } from "authentication-express"
 import { compare, hash } from "bcryptjs"
-import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources, Search, useSearchController } from "express-core-web"
+import { TokenController } from "express-jsonwebtoken"
+import { HealthController, LogController, resources } from "express-web-kit"
+import { Logger, updateLogger } from "logger-core"
+import { Middleware, MiddlewareController } from "middleware-logging"
 import { StringMap } from "onecore"
-import { TemplateMap } from "query-mappers"
 import { Authorize, Authorizer, PrivilegeLoader } from "security-express"
-import { createChecker, DB, SearchBuilder, useGet } from "sql-core"
+import { createChecker, DB } from "sql-core"
 import { check } from "types-validation"
 import { createValidator } from "validation-core"
 import { ArticleController, useArticleController } from "./article"
-import { AuditLog, AuditLogFilter, auditLogModel } from "./audit-log"
-import { AuthenticationController, PrivilegeController } from "./authentication"
+import { AuditLogController, useAuditLogController } from "./audit-log"
 import { CategoryController, useCategoryController } from "./category"
 import { ContactController, useContactController } from "./contact"
 import { ContentController, useContentController } from "./content"
@@ -24,6 +26,7 @@ export interface Config {
   cookie?: boolean
   token: Token
   rememberToken: Token
+  payload: StringMap
   auth: SqlAuthConfig
   map: StringMap
   sql: {
@@ -38,11 +41,12 @@ export interface ApplicationContext {
   log: LogController
   middleware: MiddlewareController
   authorize: Authorize
-  authentication: AuthenticationController<User, string>
+  authentication: AuthenticationController<User>
   privilege: PrivilegeController
+  token: TokenController
   role: RoleController
   user: UserController
-  auditLog: Search
+  auditLog: AuditLogController
   category: CategoryController
   content: ContentController
   article: ArticleController
@@ -65,8 +69,8 @@ export class Comparator {
   }
 }
 
-export function useContext(db: DB, logger: Logger, midLogger: Middleware, cfg: Config, mapper?: TemplateMap): ApplicationContext {
-  const log = new LogController(logger)
+export function useContext(db: DB, logger: Logger, midLogger: Middleware, cfg: Config): ApplicationContext {
+  const log = new LogController(logger, updateLogger)
   const middleware = new MiddlewareController(midLogger)
   const sqlChecker = createChecker(db)
   const health = new HealthController([sqlChecker])
@@ -88,31 +92,47 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, cfg: C
     auth.maxPasswordFailed,
   )
   const authentication = new AuthenticationController(
-    logger.error,
     authenticator.authenticate,
-    "token",
+    logger.error,
+    "access_token",
     cfg.token.secret,
     cfg.token.expires,
-    "remember",
+    "strict",
+    cfg.payload,
+    "remember_token",
     cfg.rememberToken.secret,
     cfg.rememberToken.expires,
     cfg.cookie,
   )
   const privilegesLoader = new PrivilegesReader(db.query, cfg.sql.allPrivileges)
-  const privilege = new PrivilegeController(logger.error, privilegesLoader.privileges)
+  const privilege = new PrivilegeController(privilegesLoader.privileges, logger.error)
+  const tokenController = new TokenController("token", cfg.token.secret, cfg.token.expires, "strict", "remember", cfg.rememberToken.secret, logger.error)
 
-  const role = useRoleController(db, mapper)
-  const user = useUserController(db, mapper)
+  const role = useRoleController(db)
+  const user = useUserController(db)
+  const auditLog = useAuditLogController(db)
 
-  const builder = new SearchBuilder<AuditLog, AuditLogFilter>(db, "audit_logs", auditLogModel)
-  const getAuditLog = useGet<AuditLog, string>(db, "audit_logs", auditLogModel)
-  const auditLog = useSearchController(builder.search, getAuditLog, ["status"], ["timestamp"])
-
-  const content = useContentController(db)
   const category = useCategoryController(db)
+  const content = useContentController(db)
   const article = useArticleController(db, logger.error)
   const job = useJobController(db)
   const contact = useContactController(db)
 
-  return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, content, category, article, job, contact }
+  return {
+    health,
+    log,
+    middleware,
+    authorize: authorizer.authorize,
+    authentication,
+    privilege,
+    token: tokenController,
+    role,
+    user,
+    auditLog,
+    category,
+    content,
+    article,
+    job,
+    contact,
+  }
 }

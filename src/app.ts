@@ -2,33 +2,48 @@ import { merge } from "config-plus"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import express, { json } from "express"
-import { allow, loadTemplates, MiddlewareLogger, resources } from "express-core-web"
+import { AuthenticationVerifier } from "express-jsonwebtoken"
+import { allow, resources } from "express-web-kit"
 import http from "http"
-import { createLogger } from "logger-core"
+import { createLogger, updateLog } from "logger-core"
+import { MiddlewareLogger } from "middleware-logging"
 import { Pool } from "pg"
-import { PoolManager } from "pg-extension"
-import { buildTemplates, trim } from "query-mappers"
-import { config, env } from "./config"
+import { PoolManager } from "postgres-kit"
+import { config, environments } from "./config"
 import { useContext } from "./context"
-import { route, TokenVerifier } from "./route"
+import { route } from "./route"
+
+const logger = createLogger(config.log)
 
 dotenv.config()
-const cfg = merge(config, process.env, env, process.env.ENV)
+const cfg = merge(config, process.env, environments, process.env.ENV)
+updateLog(logger, cfg.log)
 
 const app = express()
-const logger = createLogger(cfg.log)
 resources.log = logger.error
 
 const middleware = new MiddlewareLogger(logger.info, cfg.middleware)
 app.use(allow(cfg.allow), json())
 
-const verifier = new TokenVerifier("account", "userId", "id", "token", cfg.token.secret, cfg.token.expires, "remember", cfg.rememberToken.secret, "username")
+const verifier = new AuthenticationVerifier(
+  cfg.middleware.skips,
+  logger.error,
+  "account",
+  "userId",
+  "id",
+  "access_token",
+  cfg.token.secret,
+  cfg.token.expires,
+  "strict",
+  "remember_token",
+  cfg.rememberToken.secret,
+  "username",
+)
 app.use(cookieParser(), verifier.verify)
 
-const templates = loadTemplates(cfg.template, buildTemplates, trim, ["./config/query.xml"])
 const pool = new Pool(cfg.db)
 const db = new PoolManager(pool)
-const ctx = useContext(db, logger, middleware, cfg, templates)
+const ctx = useContext(db, logger, middleware, cfg)
 route(app, ctx)
 http.createServer(app).listen(cfg.port, () => {
   console.log("Start server at port " + cfg.port)

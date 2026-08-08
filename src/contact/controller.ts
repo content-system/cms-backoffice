@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { create, fromRequest, handleError, respondError, update } from "express-core-web"
+import { create, fromRequest, handleError, respondError, update } from "express-web-kit"
 import { validate } from "validation-core"
 import { getResource } from "../resources"
 import { Contact, ContactFilter, contactModel, ContactService } from "./contact"

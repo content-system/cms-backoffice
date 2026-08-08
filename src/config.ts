@@ -36,6 +36,13 @@ export const config = {
     secret: "secretremember",
     expires: 30 * 24 * 60 * 60 * 1000,
   },
+  payload: {
+    id: "id",
+    username: "username",
+    displayName: "displayName",
+    language: "language",
+    dateFormat: "dateFormat",
+  },
   auth: {
     status: {
       success: 1,
@@ -46,14 +53,9 @@ export const config = {
     },
     lockedMinutes: 2,
     maxPasswordFailed: 5,
-    payload: {
-      id: "id",
-      username: "username",
-      email: "email",
-      userType: "userType",
-    },
     account: {
       displayName: "displayname",
+      dateFormat: "date_format",
     },
     userStatus: {
       activated: "A",
@@ -73,7 +75,7 @@ export const config = {
       lockedUntilTime: "locked_until_time",
     },
     query: `
-      select u.user_id, u.username, u.display_name, email, u.status, u.max_password_age, 
+      select u.user_id, u.username, u.display_name, language, dateformat as date_format, email, u.status, u.max_password_age, 
         p.password, p.success_time, p.fail_time, p.fail_count, p.locked_until_time, p.changed_time
       from users u
       inner join passwords p
@@ -128,7 +130,7 @@ export const config = {
   },
 }
 
-export const env = {
+export const environments = {
   sit: {
     db: {
       database: "masterdata_sit",

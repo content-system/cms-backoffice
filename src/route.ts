@@ -1,6 +1,5 @@
-import { Application, NextFunction, Request, Response } from "express"
-import { check } from "express-core-web"
-import { sign, verify } from "jsonwebtoken"
+import { Application } from "express"
+import { check } from "express-web-kit"
 import multer from "multer"
 import { read, write } from "security-express"
 import { articleModel } from "./article"
@@ -10,99 +9,13 @@ import { jobModel } from "./job"
 
 export const approve = 8
 
-export class TokenVerifier {
-  protected username: string
-  protected payloadUsername: string
-  constructor(
-    protected account: string,
-    protected userId: string,
-    protected payloadId: string,
-    protected token: string,
-    protected secret: string,
-    protected expiresIn: number,
-    protected remember: string,
-    protected rememberSecret: string,
-    username?: string,
-    payloadUsername?: string,
-  ) {
-    this.username = username ? username : "username"
-    this.payloadUsername = payloadUsername ? payloadUsername : "username"
-    this.verify = this.verify.bind(this)
-  }
-
-  verify(req: Request, res: Response, next: NextFunction) {
-    let token: string | undefined
-    let remember: string | undefined
-    if (req.cookies) {
-      token = req.cookies[this.token]
-      remember = req.cookies[this.remember]
-    }
-    if (!token) {
-      if (!remember) {
-        next()
-      } else {
-        verify(remember, this.rememberSecret, (err2: any, decoded2: any) => {
-          if (err2) {
-            next()
-          } else {
-            removeJWTFields(decoded2)
-            const newToken = sign(decoded2, this.secret, { expiresIn: this.expiresIn })
-            res.cookie(this.token, newToken, { httpOnly: true, secure: true, sameSite: "lax", maxAge: this.expiresIn })
-            res.locals[this.account] = decoded2
-            res.locals[this.userId] = decoded2[this.payloadId]
-            if (decoded2[this.username]) {
-              res.locals[this.username] = decoded2[this.payloadUsername]
-            }
-            next()
-          }
-        })
-      }
-    } else {
-      verify(token, this.secret, (err: any, decoded: any) => {
-        if (err) {
-          if (!remember) {
-            next()
-          } else {
-            verify(remember, this.rememberSecret, (err2: any, decoded2: any) => {
-              if (err2) {
-                next()
-              } else {
-                removeJWTFields(decoded2)
-                const newToken = sign(decoded2, this.secret, { expiresIn: this.expiresIn })
-                res.cookie(this.token, newToken, { httpOnly: true, secure: true, sameSite: "lax", maxAge: this.expiresIn })
-                res.locals[this.account] = decoded2
-                res.locals[this.userId] = decoded2[this.payloadId]
-                if (decoded2[this.username]) {
-                  res.locals[this.username] = decoded2[this.payloadUsername]
-                }
-                next()
-              }
-            })
-          }
-        } else {
-          removeJWTFields(decoded)
-          res.locals[this.account] = decoded
-          res.locals[this.userId] = decoded[this.payloadId]
-          if (decoded[this.username]) {
-            res.locals[this.username] = decoded[this.payloadUsername]
-          }
-          next()
-        }
-      })
-    }
-  }
-}
-function removeJWTFields(obj: any) {
-  delete obj.iat
-  delete obj.exp
-}
-
-export function route(app: Application, ctx: ApplicationContext, secure?: boolean): void {
+export function route(app: Application, ctx: ApplicationContext): void {
   const parser = multer()
   app.get("/health", ctx.health.check)
   app.patch("/log", ctx.log.config)
   app.patch("/middleware", ctx.middleware.config)
   app.post("/authenticate", parser.none(), ctx.authentication.authenticate)
+  app.post("/refesh-token", parser.none(), ctx.token.refresh)
 
   const readRole = ctx.authorize("role", read)
   const writeRole = ctx.authorize("role", write)
@@ -132,7 +45,6 @@ export function route(app: Application, ctx: ApplicationContext, secure?: boolea
   app.get("/audit-logs", readAuditLog, ctx.auditLog.search)
   app.post("/audit-logs/search", readAuditLog, ctx.auditLog.search)
   app.get("/audit-logs/search", readAuditLog, ctx.auditLog.search)
-  app.get("/audit-logs/:id", readAuditLog, ctx.auditLog.load)
 
   const readCategory = ctx.authorize("category", read)
   const writeCategory = ctx.authorize("category", write)
