@@ -24,8 +24,8 @@ export class ContentController {
     }
   }
   async load(req: Request, res: Response) {
-    const id = req.params.id
-    const lang = req.params.lang
+    const id = req.params.id as string
+    const lang = req.params.lang as string
     try {
       const content = await this.service.load(id, lang)
       res
@@ -59,8 +59,8 @@ export class ContentController {
   }
   async update(req: Request, res: Response) {
     const content = req.body as Content
-    content.id = req.params.id
-    content.lang = req.params.lang
+    content.id = req.params.id as string
+    content.lang = req.params.lang as string
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<Content>(content, contentModel, resource)
@@ -78,8 +78,8 @@ export class ContentController {
   }
   async patch(req: Request, res: Response) {
     const content = req.body as Content
-    content.id = req.params.id
-    content.lang = req.params.lang
+    content.id = req.params.id as string
+    content.lang = req.params.lang as string
     let language = res.locals.lang || "en"
     const resource = getResource(language)
     const errors = validate<Content>(content, contentModel, resource, false, true)
@@ -96,8 +96,8 @@ export class ContentController {
     }
   }
   async delete(req: Request, res: Response) {
-    const id = req.params.id
-    const lang = req.params.lang
+    const id = req.params.id as string
+    const lang = req.params.lang as string
     try {
       const result = await this.service.delete(id, lang)
       res
